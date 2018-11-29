@@ -1,0 +1,24 @@
+---
+api: /api/V1/AdminUser/GetUsers
+User: ed
+Warning: This is an error message for the log file
+
+---
+
+api: /api/V1/AdminUser/GetUsers
+User: ed
+Warning: A slightly different error message.
+
+---
+
+api: /api/V1/User/GetUsers
+id: 0
+testUser: {"xxxxx":"xx","id":0,"name":"x","email":"x"}
+testUsers: {"val":"param1","user":{"xxxxx":"xx"}}
+
+---
+
+api: /api/V1/User/GetUsers
+id: 0
+testUser: {"xxxxx":"xx","id":0,"name":"x","email":"x"}
+testUsers: {"val":"param1","user":{"xxxxx":"xx"}}

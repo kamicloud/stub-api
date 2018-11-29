@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group 'com.zhh'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "http://repo.spring.io/plugins-release" }
+    maven { url "https://plugins.gradle.org/m2/" }
+}
+
+dependencies {
+    // java抽象语法树
+    compile 'com.github.javaparser:javaparser-core:3.7.1'
+    compile 'com.github.javaparser:javaparser-symbol-solver-core:3.7.1'
+    compile 'com.github.javaparser:javaparser-core-serialization:3.7.1'
+    // google gson
+    compile 'com.google.code.gson:gson:2.8.5'
+    // 字符串处理库
+    compile 'com.google.guava:guava:26.0-jre'
+    compile 'org.dom4j:dom4j:2.1.1'
+    compile 'org.yaml:snakeyaml:1.17'
+    compile 'com.squareup.okhttp3:okhttp:3.12.0'
+
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

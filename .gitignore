@@ -1,0 +1,4 @@
+.gradle
+.idea
+out
+src/main/php
