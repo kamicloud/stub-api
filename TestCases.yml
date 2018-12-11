@@ -22,3 +22,9 @@ api: /api/V1/User/GetUsers
 id: 0
 testUser: {"xxxxx":"xx","id":0,"name":"x","email":"x"}
 testUsers: {"val":"param1","user":{"xxxxx":"xx"}}
+---
+
+api: /api/V1/User/CreateUser
+email: cy6@qq.com
+
+---

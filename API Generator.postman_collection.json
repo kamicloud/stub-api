@@ -1,0 +1,412 @@
+{
+  "info": {
+    "_postman_id": "xxxxxxxxxxxx",
+    "name": "API Generator",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "AdminUser * 后台用户控制器，用来提供和用户相关的后台接口\n* 多行文本",
+      "item": [
+        {
+          "name": "GetUsers ",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "strings",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "ints",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                }
+              ],
+              "urlencoded": [
+                {
+                  "key": "strings",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "ints",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "path": [
+                "AdminUser",
+                "GetUsers"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "User * 用户控制器",
+      "item": [
+        {
+          "name": "GetUsers ",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 查询的ID",
+                  "disabled": false
+                },
+                {
+                  "key": "page",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "testUser",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "testUsers",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                }
+              ],
+              "urlencoded": [
+                {
+                  "key": "id",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 查询的ID",
+                  "disabled": false
+                },
+                {
+                  "key": "page",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "testUser",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "testUsers",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "path": [
+                "User",
+                "GetUsers"
+              ]
+            }
+          }
+        },
+        {
+          "name": "CreateUser ",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 查询的ID",
+                  "disabled": false
+                }
+              ],
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 查询的ID",
+                  "disabled": false
+                }
+              ]
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "path": [
+                "User",
+                "CreateUser"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teacher * 老师控制器用来提供前台老师接口",
+      "item": [
+        {
+          "name": "List * 约课搜索老师",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "sType",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 教材分类",
+                  "disabled": false
+                },
+                {
+                  "key": "catalog",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "date",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "p",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 分页",
+                  "disabled": false
+                },
+                {
+                  "key": "bind",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "gender",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "toolAllow",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "marks",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "timeHH",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "timeMM",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                }
+              ],
+              "urlencoded": [
+                {
+                  "key": "sType",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 教材分类",
+                  "disabled": false
+                },
+                {
+                  "key": "catalog",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "date",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "p",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 分页",
+                  "disabled": false
+                },
+                {
+                  "key": "bind",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "gender",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "toolAllow",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "marks",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "timeHH",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "timeMM",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "path": [
+                "Teacher",
+                "List"
+              ]
+            },
+            "description": "* 约课搜索老师"
+          }
+        },
+        {
+          "name": "UpdateUserName * 更新用户的昵称",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "userId",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 用户id",
+                  "disabled": false
+                },
+                {
+                  "key": "name",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                }
+              ],
+              "urlencoded": [
+                {
+                  "key": "userId",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 用户id",
+                  "disabled": false
+                },
+                {
+                  "key": "name",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                }
+              ]
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "path": [
+                "Teacher",
+                "UpdateUserName"
+              ]
+            },
+            "description": "* 更新用户的昵称"
+          }
+        }
+      ]
+    }
+  ]
+}
