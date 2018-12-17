@@ -63,7 +63,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             try {
                 ClassCombiner modelClassCombiner = new ClassCombiner(
                     "App\\Generated\\" + version + "\\Models\\" + modelName + "Model",
-                    "App\\Abstracts\\BaseModel"
+                    "Kamicloud\\YetAnotherGenerator\\BaseModel"
                 );
 
                 modelClassCombiner.addTrait("App\\Traits\\QueryData");
@@ -105,7 +105,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         ClassCombiner messageClassCombiner = new ClassCombiner(
                                 "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + messageClassName,
-                                "App\\Abstracts\\BaseMessage"
+                                "Kamicloud\\YetAnotherGenerator\\BaseMessage"
                         );
 
                         String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
