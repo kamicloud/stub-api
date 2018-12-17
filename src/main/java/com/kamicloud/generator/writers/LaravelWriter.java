@@ -66,8 +66,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     "Kamicloud\\YetAnotherGenerator\\BaseModel"
                 );
 
-                modelClassCombiner.addTrait("App\\Traits\\QueryData");
-                modelClassCombiner.addImplement("JsonSerializable");
+                modelClassCombiner.addTrait("Kamicloud\\YetAnotherGenerator\\QueryData");
+//                modelClassCombiner.addImplement("JsonSerializable");
                 writeParameterAttributes(modelStub.getParameters(), modelClassCombiner);
                 writeParameterGetters(modelStub.getParameters(), modelClassCombiner);
                 writeParameterSetters(modelStub.getParameters(), modelClassCombiner);
