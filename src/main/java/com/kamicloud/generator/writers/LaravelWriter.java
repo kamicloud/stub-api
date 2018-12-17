@@ -222,7 +222,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 String exceptionName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName());
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
                         "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
-                        "App\\Exceptions\\BaseException"
+                        "Kamicloud\\YetAnotherGenerator\\BaseException"
                 );
 
                 ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner("__construct");

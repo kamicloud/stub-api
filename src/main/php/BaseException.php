@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator;
+namespace Kamicloud\YetAnotherGenerator;
 
 use Exception;
 
