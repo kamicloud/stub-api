@@ -30,7 +30,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
     public AutoTestWriter(Environment env) {
         super(env);
-        outputDir = new File(env.getProperty("generator.auto-test-path", dir.getAbsolutePath()) + "/src/main/php/laravel");
+        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
         testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
     }
 

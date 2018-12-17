@@ -19,10 +19,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Observable;
+import java.util.*;
 
 public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransformerInterface {
     private String version;
@@ -33,7 +30,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
     public LaravelWriter(Environment env) throws Exception {
         super(env);
-        outputDir = new File(env.getProperty("generator.laravel-path", dir.getAbsolutePath() + "/src/main/php/laravel"));
+        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.laravel-path")));
         if (!outputDir.exists()) {
             throw new Exception("未找到laravel目录");
         }

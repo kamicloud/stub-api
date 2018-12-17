@@ -1,0 +1,13 @@
+{
+    "name": "kamicloud/yet-another-generator",
+    "description": "API Generator",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ttdnts",
+            "email": "cy602939074@qq.com"
+        }
+    ],
+    "require": {}
+}

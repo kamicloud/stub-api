@@ -12,6 +12,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.Observable;
 
 public class DocWriter extends BaseWriter {
@@ -19,7 +20,7 @@ public class DocWriter extends BaseWriter {
 
     public DocWriter(Environment env) {
         super(env);
-        outputDir = new File(env.getProperty("generator.doc-path", dir.getAbsolutePath() + "/src/main/php/laravel/resources/docs/1.0"));
+        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.doc-path")) + "/resources/docs/1.0");
     }
 
     @Override

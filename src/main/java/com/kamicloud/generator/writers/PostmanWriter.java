@@ -13,13 +13,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 import java.util.Observable;
 
 public class PostmanWriter extends BaseWriter {
     private File outputPath;
     public PostmanWriter(Environment env) {
         super(env);
-        outputPath = new File(env.getProperty("generator.postman-path", dir.getAbsolutePath()) + "/API Generator.postman_collection.json");
+        outputPath = new File(Objects.requireNonNull(env.getProperty("generator.postman-path")) + "/API Generator.postman_collection.json");
     }
 
     @Override
