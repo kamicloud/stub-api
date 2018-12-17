@@ -3,3 +3,4 @@
 out
 src/main/php
 /vendor/
+*.log

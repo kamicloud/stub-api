@@ -9,5 +9,10 @@
             "email": "cy602939074@qq.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "YetAnotherGenerator\\": "src/main/php/"
+        }
+    },
     "require": {}
 }
