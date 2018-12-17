@@ -14,5 +14,7 @@
             "YetAnotherGenerator\\": "src/main/php/"
         }
     },
-    "require": {}
+    "require-dev": {
+        "binarytorch/larecipe": "^1.2"
+    }
 }
