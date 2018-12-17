@@ -1,6 +1,5 @@
 .gradle
 .idea
 out
-src/main/php
 /vendor/
 *.log
