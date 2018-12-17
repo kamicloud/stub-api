@@ -15,8 +15,8 @@ public class OutputStub extends Observable {
         this.templates = templates;
     }
 
-    public void addTemplate(String key, TemplateStub templateStub) {
+    public void addTemplate(TemplateStub templateStub) {
         setChanged();
-        this.templates.put(key, templateStub);
+        this.templates.put(templateStub.getName(), templateStub);
     }
 }

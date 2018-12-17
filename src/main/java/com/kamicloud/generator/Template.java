@@ -44,6 +44,7 @@ public class Template implements TemplateInterface {
         enum TeacherCatalog {
             PHH,
             NSH,
+            XXX,
         }
 
         /**
@@ -201,8 +202,7 @@ public class Template implements TemplateInterface {
             }
 
             @API(methods = {MethodType.POST})
-            @Transactional
-            class CreateUser {
+             class CreateUser {
                 /**
                  * 查询的ID
                  */

@@ -1,7 +1,7 @@
 package com.kamicloud.generator.writers.components.php;
 
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
-import com.kamicloud.generator.writers.CombinerInterface;
+import com.kamicloud.generator.interfaces.CombinerInterface;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,7 +72,8 @@ public class ClassCombiner implements CombinerInterface {
         if (traits.contains(trait)) {
             return;
         }
-        traits.add(trait);
+        addUse(trait);
+        traits.add(getClassNameFromNamespace(trait));
     }
 
     public ClassCombiner addMethod(ClassMethodCombiner method) {
@@ -173,5 +174,9 @@ public class ClassCombiner implements CombinerInterface {
 
     public File getFile() {
         return new File(fileName);
+    }
+
+    public boolean exists() {
+        return new File(fileName).exists();
     }
 }

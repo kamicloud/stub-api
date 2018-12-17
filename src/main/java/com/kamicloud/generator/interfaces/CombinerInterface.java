@@ -1,4 +1,4 @@
-package com.kamicloud.generator.writers;
+package com.kamicloud.generator.interfaces;
 
 public interface CombinerInterface {
     String write();

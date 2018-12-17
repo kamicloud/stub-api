@@ -6,6 +6,7 @@ import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.stubs.ParameterStub;
 import com.kamicloud.generator.utils.FileUtil;
+import org.springframework.core.env.Environment;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -14,7 +15,12 @@ import java.util.HashMap;
 import java.util.Observable;
 
 public class DocWriter extends BaseWriter {
-    private File outputDir = new File(dir.getAbsolutePath() + "/src/main/php/laravel/resources/docs/1.0");
+    private File outputDir;
+
+    public DocWriter(Environment env) {
+        super(env);
+        outputDir = new File(env.getProperty("generator.doc-path", dir.getAbsolutePath() + "/src/main/php/laravel/resources/docs/1.0"));
+    }
 
     @Override
     public void update(Observable o, Object arg) {
@@ -22,12 +28,9 @@ public class DocWriter extends BaseWriter {
         output.getTemplates().forEach((version, templateStub) -> {
             boolean res;
             if (outputDir.exists()) {
-                res = outputDir.delete();
                 FileUtil.deleteAllFilesOfDir(outputDir);
             }
-            res = outputDir.mkdir();
-            res = (new File(outputDir.getAbsolutePath() + "/generated")).mkdir();
-            res = (new File(outputDir.getAbsolutePath() + "/generated/apis")).mkdir();
+            res = (new File(outputDir.getAbsolutePath() + "/generated/apis")).mkdirs();
 
             writeIndex(templateStub);
             writeModels(templateStub);
@@ -85,7 +88,7 @@ public class DocWriter extends BaseWriter {
                 }
                 outputStreamWriter.write("\n---\n\n");
 
-                controller.getActions().forEach(action -> {
+                controller.getActions().forEach((actionName, action) -> {
                     try {
                         outputStreamWriter.write("  - [" + action.getName() + "](#" + action.getName() + ")\n");
                     } catch (IOException e) {
@@ -94,7 +97,7 @@ public class DocWriter extends BaseWriter {
                 });
                 outputStreamWriter.write("\n");
 
-                controller.getActions().forEach(action -> {
+                controller.getActions().forEach((actionName, action) -> {
                     try {
                         outputStreamWriter.write("<a name=\"" + action.getName() + "\"></a>\n");
                         outputStreamWriter.write("## " + action.getName() + "\n");
@@ -145,16 +148,16 @@ public class DocWriter extends BaseWriter {
             FileOutputStream fileOutputStream = new FileOutputStream(outputDir.getAbsolutePath() + "/generated/models.md");
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
 
-            output.getModels().forEach(model -> {
+            output.getModels().forEach((modelName, model) -> {
                 try {
-                    outputStreamWriter.write("  - [" + model.getName() + "](#" + model.getName() + ")\n");
+                    outputStreamWriter.write("  - [" + modelName + "](#" + modelName + ")\n");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             });
             outputStreamWriter.write("\n");
 
-            output.getModels().forEach(model -> {
+            output.getModels().forEach((modelName, model) -> {
                 try {
                     outputStreamWriter.write("<a name=\"" + model.getName() + "\"></a>\n");
                     outputStreamWriter.write("## " + model.getName() + "\n");
@@ -224,7 +227,7 @@ public class DocWriter extends BaseWriter {
      * @param parameters 参数
      * @throws IOException IO异常
      */
-    private void writeParameters(String title, OutputStreamWriter outputStreamWriter, ArrayList<ParameterStub> parameters) throws IOException {
+    private void writeParameters(String title, OutputStreamWriter outputStreamWriter, HashMap<String, ParameterStub> parameters) throws IOException {
         outputStreamWriter.write("### " + title + "\n");
         writeParameters(outputStreamWriter, parameters);
         outputStreamWriter.write("\n");
@@ -236,10 +239,10 @@ public class DocWriter extends BaseWriter {
      * @param parameters 参数
      * @throws IOException IO异常
      */
-    private void writeParameters(OutputStreamWriter outputStreamWriter, ArrayList<ParameterStub> parameters) throws IOException {
+    private void writeParameters(OutputStreamWriter outputStreamWriter, HashMap<String, ParameterStub> parameters) throws IOException {
         outputStreamWriter.write("|Key|Description|Type|Required|\n|:-|:-|:-|:-|\n");
         // 输出模型每一个请求参数
-        parameters.forEach(parameter -> writeParameter(outputStreamWriter, parameter));
+        parameters.forEach((parameterName, parameter) -> writeParameter(outputStreamWriter, parameter));
     }
 
     private void writeParameter(OutputStreamWriter outputStreamWriter, ParameterStub parameter) {

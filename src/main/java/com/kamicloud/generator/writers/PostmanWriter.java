@@ -6,6 +6,7 @@ import com.kamicloud.generator.stubs.AnnotationStub;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.stubs.postman.*;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,12 +16,17 @@ import java.nio.charset.StandardCharsets;
 import java.util.Observable;
 
 public class PostmanWriter extends BaseWriter {
+    private File outputPath;
+    public PostmanWriter(Environment env) {
+        super(env);
+        outputPath = new File(env.getProperty("generator.postman-path", dir.getAbsolutePath()) + "/API Generator.postman_collection.json");
+    }
+
     @Override
     public void update(Observable o, Object arg) {
         OutputStub output = (OutputStub) o;
         output.getTemplates().forEach((version, templateStub) -> {
             try {
-                File dir = new File("");
                 String jsonString;
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -28,7 +34,7 @@ public class PostmanWriter extends BaseWriter {
 
                 jsonString = gson.toJson(postmanStub);
 
-                FileOutputStream fileOutputStream = new FileOutputStream(dir.getAbsolutePath() + "/API Generator.postman_collection.json");
+                FileOutputStream fileOutputStream = new FileOutputStream(outputPath.getAbsolutePath());
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
                 outputStreamWriter.write(jsonString);
 
@@ -47,8 +53,8 @@ public class PostmanWriter extends BaseWriter {
             PostmanItemStub postmanItemStub = new PostmanItemStub(controller.getName() + " " + (controller.getComment() == null ? "" : controller.getComment()));
             postmanStub.addItem(postmanItemStub);
 
-            controller.getActions().forEach(action -> {
-                PostmanItemStub actionStub = new PostmanItemStub(action.getName() + " " + (action.getComment() == null ? "" : action.getComment()));
+            controller.getActions().forEach((actionName, action) -> {
+                PostmanItemStub actionStub = new PostmanItemStub(actionName + " " + (action.getComment() == null ? "" : action.getComment()));
                 postmanItemStub.addItem(actionStub);
 
                 //
@@ -70,7 +76,7 @@ public class PostmanWriter extends BaseWriter {
 
 
 
-                action.getRequests().forEach(parameter -> {
+                action.getRequests().forEach((parameterName, parameter) -> {
                     if (parameter.getAnnotations().contains(new AnnotationStub("Request"))) {
                         PostmanParameterStub postmanParameterStub = new PostmanParameterStub(parameter.getName());
                         String comment = parameter.getComment();

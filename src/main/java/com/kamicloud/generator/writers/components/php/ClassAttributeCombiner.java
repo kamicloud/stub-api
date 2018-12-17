@@ -1,6 +1,6 @@
 package com.kamicloud.generator.writers.components.php;
 
-import com.kamicloud.generator.writers.CombinerInterface;
+import com.kamicloud.generator.interfaces.CombinerInterface;
 
 public class ClassAttributeCombiner implements CombinerInterface {
     private String name;

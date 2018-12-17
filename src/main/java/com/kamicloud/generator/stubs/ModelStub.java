@@ -1,19 +1,19 @@
 package com.kamicloud.generator.stubs;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ModelStub extends BaseWithAnnotationStub {
-    private ArrayList<ParameterStub> parameters = new ArrayList<>();
+    private HashMap<String, ParameterStub> parameters = new HashMap<>();
 
     public ModelStub(String name) {
         super(name);
     }
 
-    public ArrayList<ParameterStub> getParameters() {
+    public HashMap<String, ParameterStub> getParameters() {
         return parameters;
     }
 
     public void addParameter(ParameterStub parameterStub) {
-        parameters.add(parameterStub);
+        parameters.put(parameterStub.getName(), parameterStub);
     }
 }

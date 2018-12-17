@@ -10,6 +10,9 @@ import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.stubs.ParameterStub;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.php.*;
+import org.springframework.core.env.Environment;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -18,57 +21,31 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.Observable;
 
 public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransformerInterface {
     private String version;
 
-    private File outputDir = new File(dir.getAbsolutePath() + "/src/main/php/laravel");
-    private File appDir = new File(outputDir.getAbsolutePath() + "/app");
-    private File servicesDir = new File(appDir.getAbsolutePath() + "/Http/Services");
-    private File serviceVersionDir;
-    private File generatedDir = new File(appDir.getAbsolutePath() + "/Generated");
-    private File generatedVersionDir;
+    private File outputDir;
+    private File generatedDir;
+    private File routePath;
 
-    private File routePath = new File(outputDir.getAbsolutePath() + "/routes/generated_routes.php");
-    private File exceptionsDir = new File(generatedDir.getAbsolutePath() + "/Exceptions");
-    private File enumsDir;
-    private File modelsDir;
-    private File businessObjectsDir;
-    private File httpDir;
-    private File controllersDir;
-    private File messagesDir;
+    public LaravelWriter(Environment env) throws Exception {
+        super(env);
+        outputDir = new File(env.getProperty("generator.laravel-path", dir.getAbsolutePath() + "/src/main/php/laravel"));
+        if (!outputDir.exists()) {
+            throw new Exception("未找到laravel目录");
+        }
+        generatedDir = new File(outputDir.getAbsolutePath() + "/app/Generated");
+        routePath = new File(outputDir.getAbsolutePath() + "/routes/generated_routes.php");
+    }
 
     @Override
     public void update(Observable o, Object arg) {
-        OutputStub output = (OutputStub) o;
         FileUtil.deleteAllFilesOfDir(generatedDir);
         ((OutputStub) o).getTemplates().forEach((version, templateStub) -> {
-            boolean res;
             this.version = version;
-            serviceVersionDir = new File(servicesDir.getAbsolutePath() + "/" + version);
-            generatedVersionDir = new File(generatedDir.getAbsolutePath() + "/" + version);
-
-            enumsDir = new File(generatedVersionDir.getAbsolutePath() + "/Enums");
-            modelsDir = new File(generatedVersionDir.getAbsolutePath() + "/Models");
-            businessObjectsDir = new File(generatedDir.getAbsolutePath() + "/BusinessObjects");
-            httpDir = new File(generatedDir.getAbsolutePath() + "/Controllers");
-            controllersDir = new File(httpDir.getAbsolutePath() + "/" + version);
-            messagesDir = new File(generatedVersionDir.getAbsolutePath() + "/Messages");
-
-            res = servicesDir.mkdir();
-            res = generatedDir.mkdir();
-            res = serviceVersionDir.mkdir();
-            res = generatedVersionDir.mkdir();
-            res = routePath.delete();
-            res = exceptionsDir.mkdir();
-            res = enumsDir.mkdir();
-            res = modelsDir.mkdir();
-            res = businessObjectsDir.mkdir();
-            res = httpDir.mkdir();
-            res = messagesDir.mkdir();
-            res = controllersDir.mkdir();
 
             try {
                 ClassCombiner.setNamespacePathTransformer(this);
@@ -84,16 +61,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         });
     }
 
-    private void writeModels(TemplateStub o) throws IOException {
-        o.getModels().forEach(modelStub -> {
+    private void writeModels(TemplateStub o) {
+        o.getModels().forEach((modelName, modelStub) -> {
             try {
                 ClassCombiner modelClassCombiner = new ClassCombiner(
-                    "App\\Generated\\" + version + "\\Models\\" + modelStub.getName() + "Model",
+                    "App\\Generated\\" + version + "\\Models\\" + modelName + "Model",
                     "App\\Abstracts\\BaseModel"
                 );
 
-                modelClassCombiner.addUse("App\\Traits\\QueryData");
-                modelClassCombiner.addTrait("QueryData");
+                modelClassCombiner.addTrait("App\\Traits\\QueryData");
                 modelClassCombiner.addImplement("JsonSerializable");
                 writeParameterAttributes(modelStub.getParameters(), modelClassCombiner);
                 writeParameterGetters(modelStub.getParameters(), modelClassCombiner);
@@ -115,28 +91,24 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
      * 1、不使用
      *
      * @param o 模板解析文件
-     * @throws IOException 异常
      */
-    private void writeHttp(TemplateStub o) throws IOException {
+    private void writeHttp(TemplateStub o) {
         o.getControllers().forEach(controllerStub -> {
             try {
-                (new File(messagesDir + "/" + controllerStub.getName())).mkdir();
-//                (new File(requestsDir + "/" + controllerStub.getName())).mkdir();
-//                (new File(servicesDir + "/" + controllerStub.getName() + "Service.php")).createNewFile();
                 ClassCombiner controllerClassCombiner = new ClassCombiner(
-                    "App\\Generated\\Controllers\\" + version + "\\" + controllerStub.getName() + "Controller",
-                    "App\\Http\\Controllers\\Controller"
+                        "App\\Generated\\Controllers\\" + version + "\\" + controllerStub.getName() + "Controller",
+                        "App\\Http\\Controllers\\Controller"
                 );
 
 
-                controllerStub.getActions().forEach(action -> {
+                controllerStub.getActions().forEach((actionName, action) -> {
                     try {
                         String requestClassName = "Request";
-                        String messageClassName = action.getName() + "Message";
+                        String messageClassName = actionName + "Message";
 
                         ClassCombiner messageClassCombiner = new ClassCombiner(
-                            "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + messageClassName,
-                            "App\\Abstracts\\BaseMessage"
+                                "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + messageClassName,
+                                "App\\Abstracts\\BaseMessage"
                         );
 
                         String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
@@ -152,36 +124,34 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         controllerClassCombiner.addMethod(actionClassMethodCombiner);
 
-                        actionClassMethodCombiner.setBody(new ArrayList<>(Arrays.asList(
-                            "$message = new " + action.getName() + "Message($request);",
-                            "$message->validateInput();",
-                            controllerStub.getName() + "Service::" + lowerCamelActionName + "($message);",
-                            "$message->validateOutput();",
-                            "return $message->getResponse();"
-                        )));
+                        actionClassMethodCombiner.setBody(
+                                "$message = new " + action.getName() + "Message($request);",
+                                "$message->validateInput();",
+                                controllerStub.getName() + "Service::" + lowerCamelActionName + "($message);",
+                                "$message->validateOutput();",
+                                "return $message->getResponse();"
+                        );
                         if (action.getAnnotations().contains(new AnnotationStub(Transactional.name))) {
-                            actionClassMethodCombiner.wrapBody(new ArrayList<>(Collections.singletonList(
-                                "return DB::transaction(function () use ($request) {"
-                            )), new ArrayList<>(Collections.singletonList(
-                                "});"
-                            )));
+                            actionClassMethodCombiner.wrapBody(
+                                    "return DB::transaction(function () use ($request) {",
+                                    "});"
+                            );
                         }
 
                         ClassMethodCombiner constructClassMethodCombiner = new ClassMethodCombiner("__construct");
                         constructClassMethodCombiner.addParameter(new ClassMethodParameterCombiner("request", requestClassName));
-                        constructClassMethodCombiner.setBody(new ArrayList<>(Arrays.asList(
+                        constructClassMethodCombiner.setBody(
                             "$this->request = $request;\n",
                             "$data = $request->all();\n"
-                        )));
+                        );
 
-                        action.getRequests().forEach(parameterStub -> {
+                        action.getRequests().forEach((parameterName, parameterStub) -> {
                             String dataInArray = "$data['" + parameterStub.getName() + "']";
                             constructClassMethodCombiner.addBody(
                                 "$this->" + parameterStub.getName() + " = " + dataInArray + " ?? null;"
                             );
 
                             writeModelSerialize(parameterStub, constructClassMethodCombiner, messageClassCombiner);
-//                            constructClassMethodCombiner.addBody("\n");
                         });
 
                         messageClassCombiner.addMethod(constructClassMethodCombiner);
@@ -198,21 +168,16 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         writeParameterAttributes(action.getRequests(), messageClassCombiner);
 
                         writeParameterAttributes(action.getResponses(), messageClassCombiner);
-                        action.getResponses().forEach(parameterStub -> {
-                            getResponseClassMethodCombiner.addBody("'"  + parameterStub.getName() + "' => $this->" + parameterStub.getName() + ",");
-                        });
+                        action.getResponses().forEach((parameterName, parameterStub) -> getResponseClassMethodCombiner.addBody("'"  + parameterStub.getName() + "' => $this->" + parameterStub.getName() + ","));
                         getResponseClassMethodCombiner.wrapBody(new ArrayList<>(Arrays.asList(
                             "'status' => 0,",
                             "'message' => 'success',",
                             "'data' => ["
-                        )), new ArrayList<>(Collections.singletonList(
-                            "],"
-                        )));
-                        getResponseClassMethodCombiner.wrapBody(new ArrayList<>(Collections.singletonList(
-                            "return ["
-                        )), new ArrayList<>(Collections.singletonList(
-                            "];"
-                        )));
+                        )), "],");
+                        getResponseClassMethodCombiner.wrapBody(
+                                "return [",
+                                "];"
+                        );
 
                         writeMethodParameters(action.getResponses(), setResponseMethod);
                         writeParameterRules("requestRules", action.getRequests(), messageClassCombiner);
@@ -231,11 +196,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         });
     }
 
-    private void writeEnums(TemplateStub o) throws IOException {
+    private void writeEnums(TemplateStub o) {
         o.getEnums().forEach(enumStub -> {
             try {
                 ClassCombiner enumClassCombiner = new ClassCombiner(
-                    "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName() + "Enum"
+                        "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName() + "Enum"
                 );
                 enumStub.getItems().forEach((key, value) -> {
                     ClassConstantCombiner enumClassConstantCombiner = new ClassConstantCombiner(key, value.getName(), value.getType());
@@ -259,8 +224,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 errorCodeClassCombiner.addConstant(new ClassConstantCombiner(error.getName(), error.getCode(), null));
                 String exceptionName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName());
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
-                    "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
-                    "App\\Exceptions\\BaseException"
+                        "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
+                        "App\\Exceptions\\BaseException"
                 );
 
                 ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner("__construct");
@@ -282,27 +247,21 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
         outputStreamWriter.write("<?php\n");
 
-        o.getControllers().forEach(controller -> {
-            controller.getActions().forEach(action -> {
-                try {
-                    outputStreamWriter.write("Route::post('/" + version + "/" + controller.getName() + "/" + action.getName() + "', '" + version + "\\" + controller.getName() + "Controller@" + action.getName() + "');\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            });
-        });
+        o.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
+            try {
+                outputStreamWriter.write("Route::post('/" + version + "/" + controller.getName() + "/" + actionName + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "');\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }));
 
         outputStreamWriter.close();
         fileOutputStream.close();
     }
 
-    private String getPathFromNamespace(String namespace, boolean isFile) {
-        return outputDir.getAbsolutePath() + "/" + namespace.replace("App", "app").replace("\\", "/") + (isFile ? ".php" : "");
-    }
-
     @Override
     public String namespaceToPath(String namespace) {
-        return getPathFromNamespace(namespace, true);
+        return outputDir.getAbsolutePath() + "/" + namespace.replace("App\\", "app/").replace("\\", "/") + ".php";
     }
 
     @Override
@@ -310,16 +269,16 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         return null;
     }
 
-    private void writeParameterAttributes(ArrayList<ParameterStub> parameters, ClassCombiner classCombiner) {
-        parameters.forEach(parameterStub -> writeParameterAttribute(parameterStub, classCombiner));
+    private void writeParameterAttributes(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+        parameters.forEach((parameterName, parameterStub) -> writeParameterAttribute(parameterStub, classCombiner));
     }
 
     private void writeParameterAttribute(ParameterStub parameterStub, ClassCombiner classCombiner) {
         classCombiner.addAttribute(new ClassAttributeCombiner(parameterStub.getName(), "private"));
     }
 
-    private void writeParameterGetters(ArrayList<ParameterStub> parameters, ClassCombiner classCombiner) {
-        parameters.forEach(parameterStub -> writeParameterGetter(parameterStub, classCombiner));
+    private void writeParameterGetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+        parameters.forEach((parameterName, parameterStub) -> writeParameterGetter(parameterStub, classCombiner));
     }
 
     private void writeParameterGetter(ParameterStub parameterStub, ClassCombiner classCombiner) {
@@ -330,14 +289,12 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             parameterName = "get" + parameterName;
         }
         ClassMethodCombiner cn = new ClassMethodCombiner(parameterName);
-        cn.setBody(new ArrayList<>(Collections.singletonList(
-            "return $this->" + parameterStub.getName() + ";"
-        )));
+        cn.setBody("return $this->" + parameterStub.getName() + ";");
         classCombiner.addMethod(cn);
     }
 
-    private void writeParameterSetters(ArrayList<ParameterStub> parameters, ClassCombiner classCombiner) {
-        parameters.forEach(parameterStub -> writeParameterSetter(parameterStub, classCombiner));
+    private void writeParameterSetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+        parameters.forEach((parameterName, parameterStub) -> writeParameterSetter(parameterStub, classCombiner));
     }
 
     private void writeParameterSetter(ParameterStub parameterStub, ClassCombiner classCombiner) {
@@ -348,11 +305,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         classCombiner.addMethod(classMethodCombiner);
     }
 
-    private void writeParameterRules(String methodName, ArrayList<ParameterStub> parameters, ClassCombiner classCombiner) {
+    private void writeParameterRules(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(methodName);
-        parameters.forEach(parameterStub -> {
+        parameters.forEach((parameterName, parameterStub) -> {
             ArrayList<String> ruleList = new ArrayList<>();
-            String parameterName = parameterStub.getName();
             String typeName = parameterStub.getType();
             // 参数校验
             ruleList.add("bail");
@@ -371,19 +327,16 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             classMethodCombiner.addBody("'" + parameterName + "' => '" + String.join("|", ruleList) + "',");
         });
 
-        classMethodCombiner.wrapBody(new ArrayList<>(Collections.singletonList("return [")), new ArrayList<>(Collections.singletonList("];")));
+        classMethodCombiner.wrapBody("return [", "];");
         classCombiner.addMethod(classMethodCombiner);
     }
 
-    private void writeMethodParameters(ArrayList<ParameterStub> parameters, ClassMethodCombiner classMethodCombiner) {
-        parameters.forEach(parameterStub -> writeMethodParameter(parameterStub, classMethodCombiner));
+    private void writeMethodParameters(HashMap<String, ParameterStub> parameters, ClassMethodCombiner classMethodCombiner) {
+        parameters.forEach((parameterName, parameterStub) -> writeMethodParameter(parameterStub, classMethodCombiner));
     }
 
     private void writeMethodParameter(ParameterStub parameterStub, ClassMethodCombiner classMethodCombiner) {
-        String typeName = getModelNameFromType(parameterStub.getType());
-        ClassMethodParameterCombiner classMethodParameterCombiner = new ClassMethodParameterCombiner(
-            parameterStub.getName()
-        );
+        ClassMethodParameterCombiner classMethodParameterCombiner = new ClassMethodParameterCombiner(parameterStub.getName());
 
         classMethodCombiner.addParameter(classMethodParameterCombiner);
         classMethodCombiner.addBody("$this->" + parameterStub.getName() + " = $" + parameterStub.getName() + ";");
@@ -394,12 +347,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
      * @param parameters 参数
      * @param classCombiner 目标类
      */
-    private void writeGetAttributeMapMethod(ArrayList<ParameterStub> parameters, ClassCombiner classCombiner) {
+    private void writeGetAttributeMapMethod(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("getAttributeMap");
 
 
-        parameters.forEach(parameterStub -> {
-            String parameterName = parameterStub.getName();
+        parameters.forEach((parameterName, parameterStub) -> {
             String typeName = parameterStub.getType();
             boolean isArray = false;
             boolean isModel = false;
@@ -418,11 +370,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             ));
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
         });
-        classMethodCombiner.wrapBody(new ArrayList<>(Collections.singletonList(
-            "return ["
-        )), new ArrayList<>(Collections.singletonList(
-            "];"
-        )));
+        classMethodCombiner.wrapBody("return [", "];");
         classCombiner.addMethod(classMethodCombiner);
     }
 
@@ -451,9 +399,6 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 (isScalar ? ", " + parameterType + "Model::class" : "") +
                 ");"
             );
-        } else if (isArray) {
-
-            return;
         }
     }
 }

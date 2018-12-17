@@ -3,6 +3,7 @@ package com.kamicloud.generator.writers;
 import com.kamicloud.generator.stubs.testcase.RequestStub;
 import okhttp3.*;
 import org.dom4j.io.SAXReader;
+import org.springframework.core.env.Environment;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -14,6 +15,10 @@ import java.util.Observable;
 
 public class TestCaseWriter extends BaseWriter {
     private final OkHttpClient client = (new OkHttpClient.Builder()).readTimeout(Duration.ofMinutes(1)).build();
+
+    public TestCaseWriter(Environment env) {
+        super(env);
+    }
 
     @Override
     public void update(Observable o, Object arg) {

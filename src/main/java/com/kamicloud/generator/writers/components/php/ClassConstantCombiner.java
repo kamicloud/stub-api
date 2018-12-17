@@ -1,7 +1,7 @@
 package com.kamicloud.generator.writers.components.php;
 
 import com.kamicloud.generator.stubs.EnumStub;
-import com.kamicloud.generator.writers.CombinerInterface;
+import com.kamicloud.generator.interfaces.CombinerInterface;
 
 import java.util.ArrayList;
 

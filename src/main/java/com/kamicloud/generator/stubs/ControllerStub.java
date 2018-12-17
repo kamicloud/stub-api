@@ -1,19 +1,19 @@
 package com.kamicloud.generator.stubs;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ControllerStub extends BaseWithAnnotationStub {
-    private ArrayList<ActionStub> actions = new ArrayList<>();
+    private HashMap<String, ActionStub> actions = new HashMap<>();
 
     public ControllerStub(String name) {
         super(name);
     }
 
-    public ArrayList<ActionStub> getActions() {
+    public HashMap<String, ActionStub> getActions() {
         return actions;
     }
 
     public void addAction(ActionStub actionStub) {
-        actions.add(actionStub);
+        actions.put(actionStub.getName(), actionStub);
     }
 }

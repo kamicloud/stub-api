@@ -1,22 +1,18 @@
 package com.kamicloud.generator.stubs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class TemplateStub {
-    private String version = "V1";
+public class TemplateStub extends BaseWithAnnotationStub {
     private ArrayList<String> constants = new ArrayList<>();
     private ArrayList<ErrorStub> errors = new ArrayList<>();
     private ArrayList<EnumStub> enums = new ArrayList<>();
-    private ArrayList<ModelStub> models = new ArrayList<>();
+    private HashMap<String, ModelStub> models = new HashMap<>();
     private ArrayList<ControllerStub> controllers = new ArrayList<>();
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getVersion() {
-        return version;
+    public TemplateStub(String name) {
+        super(name);
     }
 
     public ArrayList getConstants() {
@@ -27,12 +23,12 @@ public class TemplateStub {
         constants.add(constant);
     }
 
-    public ArrayList<ModelStub> getModels() {
+    public HashMap<String, ModelStub> getModels() {
         return models;
     }
 
     public void addModel(ModelStub modelStub) {
-        models.add(modelStub);
+        models.put(modelStub.getName(), modelStub);
     }
 
     public void addController(ControllerStub controllerStub) {
@@ -62,7 +58,7 @@ public class TemplateStub {
     public ModelStub getModelByName(String name) {
         String realname = name.replace("Models.", "");
         AtomicReference<ModelStub> model = new AtomicReference<>();
-        models.forEach(modelStub -> {
+        models.forEach((modelName, modelStub) -> {
             if (modelStub.getName().equals(realname)) {
                 model.set(modelStub);
             }

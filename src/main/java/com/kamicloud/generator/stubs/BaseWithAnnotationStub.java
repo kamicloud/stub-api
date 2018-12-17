@@ -8,7 +8,7 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
     private String comment;
     private String extendsFrom;
 
-    public BaseWithAnnotationStub(String name) {
+    BaseWithAnnotationStub(String name) {
         this.name = name;
     }
 

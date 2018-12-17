@@ -66,6 +66,44 @@
       "name": "User * 用户控制器",
       "item": [
         {
+          "name": "CreateUser ",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "email",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 查询的ID",
+                  "disabled": false
+                }
+              ],
+              "urlencoded": [
+                {
+                  "key": "email",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 查询的ID",
+                  "disabled": false
+                }
+              ]
+            },
+            "url": {
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "path": [
+                "User",
+                "CreateUser"
+              ]
+            }
+          }
+        },
+        {
           "name": "GetUsers ",
           "request": {
             "method": "POST",
@@ -144,9 +182,14 @@
               ]
             }
           }
-        },
+        }
+      ]
+    },
+    {
+      "name": "Teacher * 老师控制器用来提供前台老师接口",
+      "item": [
         {
-          "name": "CreateUser ",
+          "name": "UpdateUserName * 更新用户的昵称",
           "request": {
             "method": "POST",
             "header": [],
@@ -154,19 +197,33 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "email",
+                  "key": "name",
                   "value": "",
                   "type": "text",
-                  "description": "* 查询的ID",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "userId",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 用户id",
                   "disabled": false
                 }
               ],
               "urlencoded": [
                 {
-                  "key": "email",
+                  "key": "name",
                   "value": "",
                   "type": "text",
-                  "description": "* 查询的ID",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "userId",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 用户id",
                   "disabled": false
                 }
               ]
@@ -177,17 +234,13 @@
                 "localhost"
               ],
               "path": [
-                "User",
-                "CreateUser"
+                "Teacher",
+                "UpdateUserName"
               ]
-            }
+            },
+            "description": "* 更新用户的昵称"
           }
-        }
-      ]
-    },
-    {
-      "name": "Teacher * 老师控制器用来提供前台老师接口",
-      "item": [
+        },
         {
           "name": "List * 约课搜索老师",
           "request": {
@@ -197,20 +250,6 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "sType",
-                  "value": "",
-                  "type": "text",
-                  "description": "* 教材分类",
-                  "disabled": false
-                },
-                {
-                  "key": "catalog",
-                  "value": "",
-                  "type": "text",
-                  "description": "",
-                  "disabled": false
-                },
-                {
                   "key": "date",
                   "value": "",
                   "type": "text",
@@ -222,6 +261,27 @@
                   "value": "",
                   "type": "text",
                   "description": "* 分页",
+                  "disabled": false
+                },
+                {
+                  "key": "sType",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 教材分类",
+                  "disabled": false
+                },
+                {
+                  "key": "timeHH",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "timeMM",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
                   "disabled": false
                 },
                 {
@@ -239,6 +299,13 @@
                   "disabled": false
                 },
                 {
+                  "key": "catalog",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
                   "key": "toolAllow",
                   "value": "",
                   "type": "text",
@@ -247,20 +314,6 @@
                 },
                 {
                   "key": "marks",
-                  "value": "",
-                  "type": "text",
-                  "description": "",
-                  "disabled": false
-                },
-                {
-                  "key": "timeHH",
-                  "value": "",
-                  "type": "text",
-                  "description": "",
-                  "disabled": false
-                },
-                {
-                  "key": "timeMM",
                   "value": "",
                   "type": "text",
                   "description": "",
@@ -269,20 +322,6 @@
               ],
               "urlencoded": [
                 {
-                  "key": "sType",
-                  "value": "",
-                  "type": "text",
-                  "description": "* 教材分类",
-                  "disabled": false
-                },
-                {
-                  "key": "catalog",
-                  "value": "",
-                  "type": "text",
-                  "description": "",
-                  "disabled": false
-                },
-                {
                   "key": "date",
                   "value": "",
                   "type": "text",
@@ -294,6 +333,27 @@
                   "value": "",
                   "type": "text",
                   "description": "* 分页",
+                  "disabled": false
+                },
+                {
+                  "key": "sType",
+                  "value": "",
+                  "type": "text",
+                  "description": "* 教材分类",
+                  "disabled": false
+                },
+                {
+                  "key": "timeHH",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "timeMM",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
                   "disabled": false
                 },
                 {
@@ -311,6 +371,13 @@
                   "disabled": false
                 },
                 {
+                  "key": "catalog",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
                   "key": "toolAllow",
                   "value": "",
                   "type": "text",
@@ -319,20 +386,6 @@
                 },
                 {
                   "key": "marks",
-                  "value": "",
-                  "type": "text",
-                  "description": "",
-                  "disabled": false
-                },
-                {
-                  "key": "timeHH",
-                  "value": "",
-                  "type": "text",
-                  "description": "",
-                  "disabled": false
-                },
-                {
-                  "key": "timeMM",
                   "value": "",
                   "type": "text",
                   "description": "",
@@ -351,59 +404,6 @@
               ]
             },
             "description": "* 约课搜索老师"
-          }
-        },
-        {
-          "name": "UpdateUserName * 更新用户的昵称",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "userId",
-                  "value": "",
-                  "type": "text",
-                  "description": "* 用户id",
-                  "disabled": false
-                },
-                {
-                  "key": "name",
-                  "value": "",
-                  "type": "text",
-                  "description": "",
-                  "disabled": false
-                }
-              ],
-              "urlencoded": [
-                {
-                  "key": "userId",
-                  "value": "",
-                  "type": "text",
-                  "description": "* 用户id",
-                  "disabled": false
-                },
-                {
-                  "key": "name",
-                  "value": "",
-                  "type": "text",
-                  "description": "",
-                  "disabled": false
-                }
-              ]
-            },
-            "url": {
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "path": [
-                "Teacher",
-                "UpdateUserName"
-              ]
-            },
-            "description": "* 更新用户的昵称"
           }
         }
       ]

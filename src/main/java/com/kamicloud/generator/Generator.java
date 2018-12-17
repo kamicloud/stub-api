@@ -10,30 +10,63 @@ import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.IntegerLiteralExpr;
 import com.github.javaparser.ast.expr.StringLiteralExpr;
 import com.kamicloud.generator.annotations.Request;
+import com.kamicloud.generator.config.ApplicationProperties;
+import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.stubs.*;
-import com.kamicloud.generator.writers.DocWriter;
-import com.kamicloud.generator.writers.LaravelWriter;
-import com.kamicloud.generator.writers.PostmanWriter;
-import com.kamicloud.generator.writers.TestCaseWriter;
+import com.kamicloud.generator.writers.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.core.env.Environment;
+import org.springframework.boot.SpringApplication;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
+
+
+@SpringBootApplication
+@EnableConfigurationProperties({ApplicationProperties.class})
 public class Generator {
+    private final Environment env;
+
+
+    public Generator(Environment env) {
+        this.env = env;
+    }
+
+    @PostConstruct
+    public void initApplication() {
+        OutputStub output = this.parse();
+
+        String process = env.getProperty("process", "code");
+
+        try {
+            if (process.equals("code")) {
+                output.addObserver(new PostmanWriter(env));
+//                output.addObserver(new TestCaseWriter(env));
+                output.addObserver(new DocWriter(env));
+                output.addObserver(new LaravelWriter(env));
+            } else {
+                output.addObserver(new AutoTestWriter(env));
+            }
+            output.notifyObservers();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public static void main(String[] args) {
-        Generator generator = new Generator();
-        OutputStub output = generator.parse();
-
-
-            output.addObserver(new PostmanWriter());
-//        output.addObserver(new TestCaseWriter());
-            output.addObserver(new DocWriter());
-            output.addObserver(new LaravelWriter());
-
-        output.notifyObservers();
+        SpringApplication app = new SpringApplication(Generator.class);
+        DefaultProfileUtil.addDefaultProfile(app);
+        app.run(args);
     }
 
     public OutputStub parse() {
@@ -46,7 +79,7 @@ public class Generator {
     private void parseTemplate(OutputStub output) {
         try {
             File dir = new File("");
-            TemplateStub templateStub = new TemplateStub();
+            TemplateStub templateStub = new TemplateStub("V1");
 
             ClassOrInterfaceDeclaration template = getClassOrInterfaceByNameFromFile(dir.getAbsolutePath() + "/src/main/java/com/kamicloud/generator/Template.java", "Template");
             template.getMembers().forEach(groupTemplate -> {
@@ -68,7 +101,7 @@ public class Generator {
             EnumDeclaration errors = getEnumDeclarationByNameFromFile(dir.getAbsolutePath() + "/src/main/java/com/kamicloud/generator/Errors.java", "Errors");
             parseErrors(errors, templateStub);
 
-            output.addTemplate("V1", templateStub);
+            output.addTemplate(templateStub);
         } catch (Exception e) {
             e.printStackTrace();
         }

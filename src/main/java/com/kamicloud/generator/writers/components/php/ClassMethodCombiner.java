@@ -1,8 +1,10 @@
 package com.kamicloud.generator.writers.components.php;
 
-import com.kamicloud.generator.writers.CombinerInterface;
+import com.kamicloud.generator.interfaces.CombinerInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 public class ClassMethodCombiner implements CombinerInterface {
     private String name;
@@ -28,8 +30,19 @@ public class ClassMethodCombiner implements CombinerInterface {
         this.parameters.add(parameterCombiner);
     }
 
-    public void wrapBody(ArrayList<String> header, ArrayList<String> footer) {
+    public void wrapBody(String header, String footer) {
+        wrapBody(header, new ArrayList<>(Collections.singleton(footer)));
+    }
 
+    public void wrapBody(String header, ArrayList<String> footer) {
+        wrapBody(new ArrayList<>(Collections.singletonList(header)), footer);
+    }
+
+    public void wrapBody(ArrayList<String> header, String footer) {
+        wrapBody(header, new ArrayList<>(Collections.singleton(footer)));
+    }
+
+    public void wrapBody(ArrayList<String> header, ArrayList<String> footer) {
         ArrayList<String> body = new ArrayList<>(header);
 
         this.body.forEach(line -> {
@@ -39,6 +52,10 @@ public class ClassMethodCombiner implements CombinerInterface {
         body.addAll(footer);
 
         this.body = body;
+    }
+
+    public void setBody(String ...body) {
+        setBody(new ArrayList<>(Arrays.asList(body)));
     }
 
     public void setBody(ArrayList<String> body) {

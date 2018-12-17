@@ -2,7 +2,6 @@ package com.kamicloud.generator.stubs.testcase;
 
 import okhttp3.Response;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class RequestStub {

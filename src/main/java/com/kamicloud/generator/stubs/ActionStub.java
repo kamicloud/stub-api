@@ -1,29 +1,39 @@
 package com.kamicloud.generator.stubs;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class ActionStub extends BaseWithAnnotationStub {
-    private ArrayList<ParameterStub> requests = new ArrayList<>();
-    private ArrayList<ParameterStub> responses = new ArrayList<>();
+    private HashMap<String, ParameterStub> requests = new HashMap<>();
+    private HashMap<String, ParameterStub> responses = new HashMap<>();
+
+    private String uri;
 
     public ActionStub(String name) {
         super(name);
     }
 
 
-    public ArrayList<ParameterStub> getRequests() {
+    public HashMap<String, ParameterStub> getRequests() {
         return requests;
     }
 
-    public ArrayList<ParameterStub> getResponses() {
+    public HashMap<String, ParameterStub> getResponses() {
         return responses;
     }
 
     public void addRequest(ParameterStub parameterStub) {
-        requests.add(parameterStub);
+        requests.put(parameterStub.getName(), parameterStub);
     }
 
     public void addResponse(ParameterStub parameterStub) {
-        responses.add(parameterStub);
+        responses.put(parameterStub.getName(), parameterStub);
+    }
+
+    public String getUri() {
+        return uri;
+    }
+
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 }
