@@ -63,10 +63,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             try {
                 ClassCombiner modelClassCombiner = new ClassCombiner(
                     "App\\Generated\\" + version + "\\Models\\" + modelName + "Model",
-                    "Kamicloud\\YetAnotherGenerator\\BaseModel"
+                    "YetAnotherGenerator\\BaseModel"
                 );
 
-                modelClassCombiner.addTrait("Kamicloud\\YetAnotherGenerator\\QueryData");
+                modelClassCombiner.addTrait("YetAnotherGenerator\\QueryData");
 //                modelClassCombiner.addImplement("JsonSerializable");
                 writeParameterAttributes(modelStub.getParameters(), modelClassCombiner);
                 writeParameterGetters(modelStub.getParameters(), modelClassCombiner);
@@ -105,7 +105,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         ClassCombiner messageClassCombiner = new ClassCombiner(
                                 "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + messageClassName,
-                                "Kamicloud\\YetAnotherGenerator\\BaseMessage"
+                                "YetAnotherGenerator\\BaseMessage"
                         );
 
                         String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
@@ -222,7 +222,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 String exceptionName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName());
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
                         "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
-                        "Kamicloud\\YetAnotherGenerator\\BaseException"
+                        "YetAnotherGenerator\\BaseException"
                 );
 
                 ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner("__construct");
@@ -246,7 +246,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
         o.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
             try {
-                outputStreamWriter.write("Route::post('/" + version + "/" + controller.getName() + "/" + actionName + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "');\n");
+                outputStreamWriter.write("Route::post('" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "');\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }

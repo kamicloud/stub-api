@@ -1,6 +1,6 @@
 <?php
 
-namespace Kamicloud\YetAnotherGenerator;
+namespace YetAnotherGenerator;
 
 use Exception;
 use Illuminate\Contracts\Support\Responsable;

@@ -48,6 +48,7 @@ public class Generator {
         String process = env.getProperty("process", "code");
 
         try {
+            output.setActionUrl();
             if (process.equals("code")) {
                 output.addObserver(new PostmanWriter(env));
 //                output.addObserver(new TestCaseWriter(env));

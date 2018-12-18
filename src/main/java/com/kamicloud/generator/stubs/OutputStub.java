@@ -19,4 +19,14 @@ public class OutputStub extends Observable {
         setChanged();
         this.templates.put(templateStub.getName(), templateStub);
     }
+
+    public void setActionUrl() {
+        templates.forEach((version, templateStub) -> {
+            templateStub.getControllers().forEach((controllerStub -> {
+                controllerStub.getActions().forEach((actionName, action) -> {
+                    action.setUri("/api/" + version + "/" + controllerStub.getName() + "/" + actionName);
+                });
+            }));
+        });
+    }
 }

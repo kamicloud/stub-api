@@ -1,17 +1,17 @@
 <?php
 
-namespace Kamicloud\YetAnotherGenerator;
+namespace YetAnotherGenerator;
 
 use JsonSerializable;
 
 class BaseModel implements JsonSerializable
 {
-    public function fromJsonModel($model, $classname)
+    public static function fromJsonModel($model, $classname)
     {
 
     }
 
-    public function fromJsonModels($models, $classname)
+    public static function fromJsonModels($models, $classname)
     {
 
     }

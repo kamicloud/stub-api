@@ -1,6 +1,6 @@
 <?php
 
-namespace Kamicloud\YetAnotherGenerator;
+namespace YetAnotherGenerator;
 
 trait QueryData
 {
