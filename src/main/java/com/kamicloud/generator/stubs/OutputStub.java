@@ -24,7 +24,9 @@ public class OutputStub extends Observable {
         templates.forEach((version, templateStub) -> {
             templateStub.getControllers().forEach((controllerStub -> {
                 controllerStub.getActions().forEach((actionName, action) -> {
-                    action.setUri("/api/" + version + "/" + controllerStub.getName() + "/" + actionName);
+                    String uri = "/" + version + "/" + controllerStub.getName() + "/" + actionName;
+                    action.setUri(uri);
+                    action.setFullUri("/api" + uri);
                 });
             }));
         });

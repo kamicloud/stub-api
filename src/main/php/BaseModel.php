@@ -6,28 +6,55 @@ use JsonSerializable;
 
 class BaseModel implements JsonSerializable
 {
+
     public static function fromJsonModel($model, $classname)
     {
-
+//        if (is_string($model)) {
+//            $model = json_decode($model, true);
+//        }
+//        if (empty($model)) {
+//            return null;
+//        }
+//        foreach
     }
 
-    public static function fromJsonModels($models, $classname)
+    public static function initFromEloquent($orm)
     {
+        $model = new static;
+        if ($orm instanceof Arrayable) {
+            $values = $orm->toArray();
+        }
 
+        foreach ($model->getAttributeMap() as $attributeMap) {
+            [$field, $dbField, $isModel, $isArray, $type] = $attributeMap;
+            $value = data_get($values, $dbField);
+            if ($type === 'Date' && !empty($value)) {
+                $value = strtotime($value);
+            } elseif ($isArray && is_array($value)) {
+                $value = array_map('initFromEloquent', $value);
+            }
+            $model->{$field} = $value;
+        }
+
+        return $model;
     }
 
-    /**
-     * Specify data which should be serialized to JSON.
-     *
-     * @link http://php.net/manual/en/jsonserializable.jsonserialize.php
-     *
-     * @return mixed data which can be serialized by <b>json_encode</b>,
-     *               which is a value of any type other than a resource.
-     *
-     * @since 5.4.0
-     */
+    public static function initFromEloquents(Collection $orms)
+    {
+        return $orms->map(function ($orm) {
+            return self::initFromEloquent($orm);
+        });
+    }
+
     public function jsonSerialize()
     {
-        // TODO: Implement jsonSerialize() method.
+        return [
+            ''
+        ];
+    }
+
+    public function mock()
+    {
+
     }
 }

@@ -7,6 +7,7 @@ public class ActionStub extends BaseWithAnnotationStub {
     private HashMap<String, ParameterStub> responses = new HashMap<>();
 
     private String uri;
+    private String fullUri;
 
     public ActionStub(String name) {
         super(name);
@@ -35,5 +36,13 @@ public class ActionStub extends BaseWithAnnotationStub {
 
     public void setUri(String uri) {
         this.uri = uri;
+    }
+
+    public String getFullUri() {
+        return fullUri;
+    }
+
+    public void setFullUri(String fullUri) {
+        this.fullUri = fullUri;
     }
 }

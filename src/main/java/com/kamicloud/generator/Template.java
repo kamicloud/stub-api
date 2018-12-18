@@ -62,8 +62,6 @@ public class Template implements TemplateInterface {
     }
 
 
-
-
     public class Models {
         /**
          * 用户信息
@@ -170,6 +168,7 @@ public class Template implements TemplateInterface {
                 int[] ints;
             }
         }
+
         /**
          * 用户控制器
          */
@@ -202,7 +201,7 @@ public class Template implements TemplateInterface {
             }
 
             @API(methods = {MethodType.POST})
-             class CreateUser {
+            class CreateUser {
                 /**
                  * 查询的ID
                  */
