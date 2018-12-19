@@ -2,9 +2,11 @@
 
 namespace YetAnotherGenerator;
 
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use JsonSerializable;
 
-class BaseModel implements JsonSerializable
+abstract class BaseModel implements JsonSerializable
 {
 
     public static function fromJsonModel($model, $classname)
@@ -18,43 +20,37 @@ class BaseModel implements JsonSerializable
 //        foreach
     }
 
-    public static function initFromEloquent($orm)
+    abstract public static function initFromEloquent(?Model $orm);
+
+    public static function initFromEloquents(?Collection $orms)
     {
-        $model = new static;
-        if ($orm instanceof Arrayable) {
-            $values = $orm->toArray();
+        if ($orms === null) {
+            return [];
         }
-
-        foreach ($model->getAttributeMap() as $attributeMap) {
-            [$field, $dbField, $isModel, $isArray, $type] = $attributeMap;
-            $value = data_get($values, $dbField);
-            if ($type === 'Date' && !empty($value)) {
-                $value = strtotime($value);
-            } elseif ($isArray && is_array($value)) {
-                $value = array_map('initFromEloquent', $value);
-            }
-            $model->{$field} = $value;
-        }
-
-        return $model;
-    }
-
-    public static function initFromEloquents(Collection $orms)
-    {
         return $orms->map(function ($orm) {
             return self::initFromEloquent($orm);
-        });
+        })->all();
     }
 
     public function jsonSerialize()
     {
-        return [
-            ''
-        ];
+        foreach ($this->getAttributeMap() as $attributeMap) {
+            [$field] = $attributeMap;
+
+        }
+        return array_reduce($this->getAttributeMap(), function ($c, $attributeMap) {
+            [$field] = $attributeMap;
+
+            $c[$field] = $this->{$field};
+
+            return $c;
+        }, []);
     }
 
     public function mock()
     {
 
     }
+
+    abstract public function getAttributeMap();
 }

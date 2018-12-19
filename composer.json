@@ -19,5 +19,15 @@
     },
     "require-dev": {
         "binarytorch/larecipe": "^1.2"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "YetAnotherGenerator\\GeneratorServiceProvider"
+            ]
+        }
+    },
+    "suggest": {
+        "binarytorch/larecipe": "Docs support"
     }
 }

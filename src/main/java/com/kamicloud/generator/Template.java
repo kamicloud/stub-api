@@ -7,6 +7,7 @@ import com.kamicloud.generator.interfaces.TemplateInterface;
 
 import java.util.Date;
 
+@SuppressWarnings("unused")
 public class Template implements TemplateInterface {
 
     public static class Enums {
@@ -97,12 +98,15 @@ public class Template implements TemplateInterface {
             @DBField
             @Optional
             Models.User child;
+            @DBField
+            @Optional
+            Models.User[] children;
         }
 
         /**
          * 用户的基本信息
          */
-        public class UserProfile {
+        class UserProfile {
             @DBField
             String name;
             @DBField
@@ -112,7 +116,7 @@ public class Template implements TemplateInterface {
         /**
          * 模拟一个老师的信息
          */
-        public class Teacher {
+        class Teacher {
             @DBField(name = "id")
             int teacherId;
             String nickname;

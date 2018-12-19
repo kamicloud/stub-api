@@ -66,14 +66,12 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     "YetAnotherGenerator\\BaseModel"
                 );
 
-                modelClassCombiner.addTrait("YetAnotherGenerator\\QueryData");
-//                modelClassCombiner.addImplement("JsonSerializable");
                 writeParameterAttributes(modelStub.getParameters(), modelClassCombiner);
                 writeParameterGetters(modelStub.getParameters(), modelClassCombiner);
                 writeParameterSetters(modelStub.getParameters(), modelClassCombiner);
                 writeParameterRules("rules", modelStub.getParameters(), modelClassCombiner);
                 writeGetAttributeMapMethod(modelStub.getParameters(), modelClassCombiner);
-//                writeInitFromEloquentMethod(modelStub.getParameters(), modelClassCombiner);
+                writeInitFromEloquentMethod(modelStub.getParameters(), modelClassCombiner);
 
                 modelClassCombiner.toFile();
             } catch (Exception e) {
@@ -167,9 +165,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         writeParameterAttributes(action.getResponses(), messageClassCombiner);
                         action.getResponses().forEach((parameterName, parameterStub) -> getResponseClassMethodCombiner.addBody("'"  + parameterStub.getName() + "' => $this->" + parameterStub.getName() + ","));
                         getResponseClassMethodCombiner.wrapBody(new ArrayList<>(Arrays.asList(
-                            "'status' => 0,",
-                            "'message' => 'success',",
-                            "'data' => ["
+                                "'status' => 0,",
+                                "'message' => 'success',",
+                                "'data' => ["
                         )), "],");
                         getResponseClassMethodCombiner.wrapBody(
                                 "return [",
@@ -271,7 +269,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeParameterAttribute(ParameterStub parameterStub, ClassCombiner classCombiner) {
-        classCombiner.addAttribute(new ClassAttributeCombiner(parameterStub.getName(), "private"));
+        classCombiner.addAttribute(new ClassAttributeCombiner(parameterStub.getName(), "protected"));
     }
 
     private void writeParameterGetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
@@ -369,6 +367,67 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         });
         classMethodCombiner.wrapBody("return [", "];");
         classCombiner.addMethod(classMethodCombiner);
+    }
+
+    private void writeInitFromEloquentMethod(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("initFromEloquent");
+        classMethodCombiner.setStatical();
+
+        classCombiner.addUse("Illuminate\\Database\\Eloquent\\Model");
+
+        ClassMethodParameterCombiner classMethodParameterCombiner = new ClassMethodParameterCombiner("orm", "?Model");
+        classMethodCombiner.addParameter(classMethodParameterCombiner);
+
+        classMethodCombiner.setBody(
+                "if ($orm === null) {",
+                "    return null;",
+                "}",
+                "$model = new self();",
+                "",
+                "$values = $orm->attributesToArray() + $orm->getRelations();",
+                ""
+        );
+
+        parameters.forEach((parameterName, parameterStub) -> {
+            String typeName = getModelNameFromType(parameterStub.getType());
+            String lowerParameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName);
+            boolean isArray = false;
+            boolean isModel = false;
+            if (parameterStub.getType().endsWith("[]")) {
+                isArray = true;
+            }
+            if (parameterStub.getType().startsWith("Models")) {
+                isModel = true;
+            }
+            classMethodCombiner.addBody("$model->" + parameterName + " = $values['" + lowerParameterName + "'] ?? null;");
+            if (isModel) {
+                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeName + "Model");
+                classMethodCombiner.addBody("$model->" + parameterName + " = " + typeName + "Model::initFromEloquent" + (isArray ? "s" : "") + "($model->" + parameterName + ");");
+            }
+        });
+
+        classMethodCombiner.addBody("return $model;");
+        classCombiner.addMethod(classMethodCombiner);
+
+//        public static function initFromEloquent(?Model $orm)
+//        {
+//            if ($orm === null) {
+//                return null;
+//            }
+//            $model = new self();
+//
+//            $values = $orm->attributesToArray() + $orm->getRelations();
+//
+//            $model->createdAt = $values['created_at'] ?? null;
+//            $model->children = UserModel::initFromEloquents($values['children'] ?? null);
+//            $model->name = $values['name'] ?? null;
+//            $model->id = $values['id'] ?? null;
+//            $model->email = $values['email'] ?? null;
+//            $model->updatedAt = $values['updated_at'] ?? null;
+//            $model->child = UserModel::initFromEloquent($values['child'] ?? null);
+//
+//            return $model;
+//        }
     }
 
     private String getModelNameFromType(String type) {

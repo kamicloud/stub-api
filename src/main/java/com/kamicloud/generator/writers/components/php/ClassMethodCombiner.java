@@ -30,6 +30,10 @@ public class ClassMethodCombiner implements CombinerInterface {
         this.parameters.add(parameterCombiner);
     }
 
+    public void wrapBody(String[] header, String[] footer) {
+        wrapBody(new ArrayList<>(Arrays.asList(header)), new ArrayList<>(Arrays.asList(footer)));
+    }
+
     public void wrapBody(String header, String footer) {
         wrapBody(header, new ArrayList<>(Collections.singleton(footer)));
     }
