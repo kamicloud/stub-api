@@ -2,9 +2,7 @@
 
 namespace YetAnotherGenerator;
 
-use Tests\TestCase;
-
-class BaseTest extends TestCase
+trait ResponseAssertion
 {
     public function assertResponse($except, $actual)
     {
