@@ -1,6 +1,7 @@
 package com.kamicloud.generator.writers;
 
 import com.google.common.base.CaseFormat;
+import com.kamicloud.generator.annotations.Mutable;
 import com.kamicloud.generator.annotations.Optional;
 import com.kamicloud.generator.annotations.Transactional;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
@@ -11,8 +12,6 @@ import com.kamicloud.generator.stubs.ParameterStub;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.php.*;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -72,6 +71,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 writeParameterRules("rules", modelStub.getParameters(), modelClassCombiner);
                 writeGetAttributeMapMethod(modelStub.getParameters(), modelClassCombiner);
                 writeInitFromEloquentMethod(modelStub.getParameters(), modelClassCombiner);
+                writeInitFromModelMethod(modelStub.getParameters(), modelClassCombiner);
 
                 modelClassCombiner.toFile();
             } catch (Exception e) {
@@ -357,11 +357,12 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 isModel = true;
             }
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
-                "'" + parameterName + "'",
-                "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
-                Boolean.toString(isModel),
-                Boolean.toString(isArray),
-                "'" + typeName + "'"
+                    "'" + parameterName + "'",
+                    "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
+                    Boolean.toString(isModel),
+                    Boolean.toString(isArray),
+                    "'" + typeName + "'",
+                    Boolean.toString(parameterStub.hasAnnotation(Mutable.name))
             ));
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
         });
@@ -382,6 +383,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 "if ($orm === null) {",
                 "    return null;",
                 "}",
+                "",
                 "$model = new self();",
                 "",
                 "$values = $orm->attributesToArray() + $orm->getRelations();",
@@ -408,26 +410,49 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
         classMethodCombiner.addBody("return $model;");
         classCombiner.addMethod(classMethodCombiner);
+    }
 
-//        public static function initFromEloquent(?Model $orm)
-//        {
-//            if ($orm === null) {
-//                return null;
-//            }
-//            $model = new self();
-//
-//            $values = $orm->attributesToArray() + $orm->getRelations();
-//
-//            $model->createdAt = $values['created_at'] ?? null;
-//            $model->children = UserModel::initFromEloquents($values['children'] ?? null);
-//            $model->name = $values['name'] ?? null;
-//            $model->id = $values['id'] ?? null;
-//            $model->email = $values['email'] ?? null;
-//            $model->updatedAt = $values['updated_at'] ?? null;
-//            $model->child = UserModel::initFromEloquent($values['child'] ?? null);
-//
-//            return $model;
-//        }
+    private void writeInitFromModelMethod(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("initFromModel");
+        classMethodCombiner.setStatical();
+
+        classCombiner.addUse("Illuminate\\Database\\Eloquent\\Model");
+
+        ClassMethodParameterCombiner classMethodParameterCombiner = new ClassMethodParameterCombiner("values");
+        classMethodCombiner.addParameter(classMethodParameterCombiner);
+
+        classMethodCombiner.setBody(
+                "if (!$values) {",
+                "    return null;",
+                "}",
+                "if (is_string($values)) {",
+                "    $values = json_decode($values, true);",
+                "}",
+                "",
+                "$model = new self();",
+                ""
+        );
+
+        parameters.forEach((parameterName, parameterStub) -> {
+            String typeName = getModelNameFromType(parameterStub.getType());
+            String lowerParameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName);
+            boolean isArray = false;
+            boolean isModel = false;
+            if (parameterStub.getType().endsWith("[]")) {
+                isArray = true;
+            }
+            if (parameterStub.getType().startsWith("Models")) {
+                isModel = true;
+            }
+            classMethodCombiner.addBody("$model->" + parameterName + " = $values['" + lowerParameterName + "'] ?? null;");
+            if (isModel) {
+                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeName + "Model");
+                classMethodCombiner.addBody("$model->" + parameterName + " = " + typeName + "Model::initFromModel" + (isArray ? "s" : "") + "($model->" + parameterName + ");");
+            }
+        });
+
+        classMethodCombiner.addBody("return $model;");
+        classCombiner.addMethod(classMethodCombiner);
     }
 
     private String getModelNameFromType(String type) {

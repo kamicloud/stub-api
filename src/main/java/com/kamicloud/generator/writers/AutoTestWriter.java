@@ -81,6 +81,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                         "YetAnotherGenerator\\BaseTest"
                 );
                 classCombiner.addTrait("Illuminate\\Foundation\\Testing\\DatabaseTransactions");
+                classCombiner.addTrait("Tests\\CreatesApplication");
                 if (requests != null && !classCombiner.exists()) {
                     requests.forEach(requestStub -> {
                         try {
@@ -112,7 +113,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             transformResponseMutable(gsonMap, actionStub.getResponses());
 
                             classMethodCombiner.addBody("$expect = <<<JSON\n" + gson.toJson(gsonMap) + "\nJSON;");
-                            classMethodCombiner.addBody("$this->assertResponse($expect, $actual);");
+                            classMethodCombiner.addBody("$this->assertJsonStringEqualsJsonString($expect, $actual);");
                             classCombiner.addMethod(classMethodCombiner);
 
 

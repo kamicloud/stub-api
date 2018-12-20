@@ -9,18 +9,15 @@ use JsonSerializable;
 abstract class BaseModel implements JsonSerializable
 {
 
-    public static function fromJsonModel($model, $classname)
+    public static function initFromModels(?array $values)
     {
-//        if (is_string($model)) {
-//            $model = json_decode($model, true);
-//        }
-//        if (empty($model)) {
-//            return null;
-//        }
-//        foreach
+        if ($values === null) {
+            return [];
+        }
+        return array_map(function ($value) {
+            return static::initFromModel($value);
+        }, $values);
     }
-
-    abstract public static function initFromEloquent(?Model $orm);
 
     public static function initFromEloquents(?Collection $orms)
     {
@@ -32,16 +29,20 @@ abstract class BaseModel implements JsonSerializable
         })->all();
     }
 
+    abstract public static function initFromEloquent(?Model $orm);
+
+    abstract public static function initFromModel($values);
+
+    abstract public function getAttributeMap();
+
     public function jsonSerialize()
     {
-        foreach ($this->getAttributeMap() as $attributeMap) {
-            [$field] = $attributeMap;
+        $isTesting = config('app.env') === 'testing';
 
-        }
-        return array_reduce($this->getAttributeMap(), function ($c, $attributeMap) {
-            [$field] = $attributeMap;
+        return array_reduce($this->getAttributeMap(), function ($c, $attributeMap) use ($isTesting) {
+            [$field, $dbField, $isModel, $isArray, $type, $isMutable] = $attributeMap;
 
-            $c[$field] = $this->{$field};
+            $c[$field] = $isTesting && $isMutable ? '*' : $this->{$field};
 
             return $c;
         }, []);
@@ -52,5 +53,4 @@ abstract class BaseModel implements JsonSerializable
 
     }
 
-    abstract public function getAttributeMap();
 }

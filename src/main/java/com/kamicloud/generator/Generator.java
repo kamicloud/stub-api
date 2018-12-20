@@ -14,7 +14,6 @@ import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
@@ -24,8 +23,6 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,6 +39,7 @@ public class Generator {
     }
 
     @PostConstruct
+    @SuppressWarnings("unused")
     public void initApplication() {
         OutputStub output = this.parse();
 
