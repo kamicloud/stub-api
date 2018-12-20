@@ -28,6 +28,7 @@
         }
     },
     "suggest": {
-        "binarytorch/larecipe": "Docs support"
+        "binarytorch/larecipe": "Docs support",
+        "laravel/telescope": ""
     }
 }

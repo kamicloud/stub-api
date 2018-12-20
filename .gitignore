@@ -1,6 +1,8 @@
 .gradle
 .idea
+.settings
 out
+/bin/
 /vendor/
 *.log
 composer.lock

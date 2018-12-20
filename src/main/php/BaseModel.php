@@ -28,7 +28,7 @@ abstract class BaseModel implements JsonSerializable
             return [];
         }
         return $orms->map(function ($orm) {
-            return self::initFromEloquent($orm);
+            return static::initFromEloquent($orm);
         })->all();
     }
 
