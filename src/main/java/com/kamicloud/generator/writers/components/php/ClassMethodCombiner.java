@@ -71,6 +71,12 @@ public class ClassMethodCombiner implements CombinerInterface {
         body.add(line);
     }
 
+    public void addBody(String ...lines) {
+        for (String line : lines) {
+            addBody(line);
+        }
+    }
+
     public ClassMethodCombiner setStatical() {
         statical = true;
         return this;

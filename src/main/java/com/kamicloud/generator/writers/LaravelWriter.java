@@ -65,13 +65,18 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     "YetAnotherGenerator\\BaseModel"
                 );
 
-                writeParameterAttributes(modelStub.getParameters(), modelClassCombiner);
-                writeParameterGetters(modelStub.getParameters(), modelClassCombiner);
-                writeParameterSetters(modelStub.getParameters(), modelClassCombiner);
-                writeParameterRules("rules", modelStub.getParameters(), modelClassCombiner);
-                writeGetAttributeMapMethod(modelStub.getParameters(), modelClassCombiner);
-                writeInitFromEloquentMethod(modelStub.getParameters(), modelClassCombiner);
-                writeInitFromModelMethod(modelStub.getParameters(), modelClassCombiner);
+                modelClassCombiner.addUse("YetAnotherGenerator\\ValueHelper");
+
+                HashMap<String, ParameterStub> parameters = modelStub.getParameters();
+
+                writeParameterAttributes(parameters, modelClassCombiner);
+                writeParameterGetters(parameters, modelClassCombiner);
+                writeParameterSetters(parameters, modelClassCombiner);
+                writeParameterRules("rules", parameters, modelClassCombiner);
+                writeGetAttributeMapMethod(parameters, modelClassCombiner);
+//                writeInitFromEloquentMethod(parameters, modelClassCombiner);
+//                writeInitFromModelMethod(parameters, modelClassCombiner);
+//                writeValidateMethod("validate", parameters, modelClassCombiner);
 
                 modelClassCombiner.toFile();
             } catch (Exception e) {
@@ -150,12 +155,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         });
 
                         messageClassCombiner.addMethod(constructClassMethodCombiner);
-                        messageClassCombiner.addMethod(new ClassMethodCombiner("validateInput"));
-                        messageClassCombiner.addMethod(new ClassMethodCombiner("validateOutput"));
 
                         ClassMethodCombiner setResponseMethod = new ClassMethodCombiner("setResponse");
                         ClassMethodCombiner getResponseClassMethodCombiner = new ClassMethodCombiner("getResponse");
 
+                        messageClassCombiner.addUse("YetAnotherGenerator\\ValueHelper");
                         // message
                         messageClassCombiner.addUse("Illuminate\\Http\\Request");
                         messageClassCombiner.addAttribute(new ClassAttributeCombiner("request", "private"));
@@ -177,6 +181,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         writeMethodParameters(action.getResponses(), setResponseMethod);
                         writeParameterRules("requestRules", action.getRequests(), messageClassCombiner);
                         writeParameterRules("responseRules", action.getResponses(), messageClassCombiner);
+                        writeValidateMethod("validateInput", action.getRequests(), messageClassCombiner);
+                        writeValidateMethod("validateOutput", action.getResponses(), messageClassCombiner);
+
                         messageClassCombiner.addMethod(setResponseMethod).addMethod(getResponseClassMethodCombiner);
 
                         messageClassCombiner.toFile();
@@ -347,7 +354,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
 
         parameters.forEach((parameterName, parameterStub) -> {
-            String typeName = parameterStub.getType();
+            String typeName = getModelNameFromType(parameterStub.getType());
             boolean isArray = false;
             boolean isModel = false;
             if (parameterStub.getType().endsWith("[]")) {
@@ -355,13 +362,17 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             }
             if (parameterStub.getType().startsWith("Models")) {
                 isModel = true;
+                typeName = typeName + "Model::class";
+            } else {
+                typeName = "'" + typeName + "'";
             }
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
                     "'" + parameterName + "'",
                     "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
                     Boolean.toString(isModel),
                     Boolean.toString(isArray),
-                    "'" + typeName + "'",
+                    typeName,
+                    Boolean.toString(parameterStub.hasAnnotation(Optional.name)),
                     Boolean.toString(parameterStub.hasAnnotation(Mutable.name))
             ));
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
@@ -401,11 +412,14 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             if (parameterStub.getType().startsWith("Models")) {
                 isModel = true;
             }
-            classMethodCombiner.addBody("$model->" + parameterName + " = $values['" + lowerParameterName + "'] ?? null;");
+            classMethodCombiner.addBody("$" + parameterName + " = $values['" + lowerParameterName + "'] ?? null;");
             if (isModel) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeName + "Model");
-                classMethodCombiner.addBody("$model->" + parameterName + " = " + typeName + "Model::initFromEloquent" + (isArray ? "s" : "") + "($model->" + parameterName + ");");
+                classMethodCombiner.addBody("$model->" + parameterName + " = " + typeName + "Model::initFromEloquent" + (isArray ? "s" : "") + "($" + parameterName + ");");
+            } else {
+                classMethodCombiner.addBody("$model->" + parameterName + " = $" + parameterName + ";");
             }
+            classMethodCombiner.addBody("");
         });
 
         classMethodCombiner.addBody("return $model;");
@@ -444,14 +458,67 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             if (parameterStub.getType().startsWith("Models")) {
                 isModel = true;
             }
-            classMethodCombiner.addBody("$model->" + parameterName + " = $values['" + lowerParameterName + "'] ?? null;");
+            classMethodCombiner.addBody("$" + parameterName + " = $values['" + lowerParameterName + "'] ?? null;");
             if (isModel) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeName + "Model");
-                classMethodCombiner.addBody("$model->" + parameterName + " = " + typeName + "Model::initFromModel" + (isArray ? "s" : "") + "($model->" + parameterName + ");");
+                classMethodCombiner.addBody("$model->" + parameterName + " = " + typeName + "Model::initFromModel" + (isArray ? "s" : "") + "($" + parameterName + ");");
+            } else {
+                classMethodCombiner.addBody("$model->" + parameterName + " = $" + parameterName + ";");
             }
+            classMethodCombiner.addBody("");
         });
 
         classMethodCombiner.addBody("return $model;");
+        classCombiner.addMethod(classMethodCombiner);
+    }
+
+    private void writeValidateMethod(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(methodName);
+
+        classCombiner.addUse("Illuminate\\Database\\Eloquent\\Model");
+
+
+        classMethodCombiner.setBody(
+        );
+
+//        if (is_null($this->id)) {
+//            throw new InvalidParameterException();
+//        }
+//
+//        if (!is_null($this->testUser)) {
+//            $validator = Validator::make($this->testUser->jsonSerialize(), $this->testUser->rules());
+//            dd($validator->errors());
+//        }
+        classCombiner.addUse("App\\Generated\\Exceptions\\InvalidParameterException");
+        parameters.forEach((parameterName, parameterStub) -> {
+            String typeName = getModelNameFromType(parameterStub.getType()) + "Model";
+            String lowerParameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName);
+            String propRef = "$this->" + parameterName;
+            boolean isArray = false;
+            boolean isModel = false;
+            if (parameterStub.getType().endsWith("[]")) {
+                isArray = true;
+            }
+            if (parameterStub.getType().startsWith("Models")) {
+                isModel = true;
+                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeName);
+            }
+            if (!parameterStub.hasAnnotation(Optional.name)) {
+                classMethodCombiner.addBody(
+                        "if (is_null(" + propRef + ")) {",
+                        "    throw new InvalidParameterException('" + parameterName + " can not be null');",
+                        "}"
+                );
+            }
+            if (isModel) {
+                classMethodCombiner.addBody(
+                        "if (!is_object(" + propRef + ") || !" + propRef + " instanceof " + typeName + " || !" + propRef + "->validateModel()) {",
+                        "    throw new InvalidParameterException('" + parameterName + " can not be null');",
+                        "}"
+                );
+            }
+        });
+
         classCombiner.addMethod(classMethodCombiner);
     }
 
@@ -474,11 +541,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + parameterType + "Model");
 
             classMethodCombiner.addBody(
-                parameterInModel + " = " +
-                parameterType + "Model::fromJsonModel" + (isArray ? "s" : "") +
-                "(" + parameterInModel +
-                (isScalar ? ", " + parameterType + "Model::class" : "") +
-                ");"
+                    parameterInModel + " = " +
+                    parameterType + "Model::initFromModel" + (isArray ? "s" : "") +
+                    "(" + parameterInModel +
+                    (isScalar ? ", " + parameterType + "Model::class" : "") +
+                    ");"
             );
         }
     }

@@ -78,10 +78,10 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
             try {
                 ClassCombiner classCombiner = new ClassCombiner(
                         "Tests\\Generated\\" + version + "\\" + controllerStub.getName() + "\\" + actionStub.getName() + "Test",
-                        "YetAnotherGenerator\\BaseTest"
+                        "Tests\\TestCase"
                 );
                 classCombiner.addTrait("Illuminate\\Foundation\\Testing\\DatabaseTransactions");
-                classCombiner.addTrait("Tests\\CreatesApplication");
+//                classCombiner.addTrait("Tests\\CreatesApplication");
                 if (requests != null && !classCombiner.exists()) {
                     requests.forEach(requestStub -> {
                         try {

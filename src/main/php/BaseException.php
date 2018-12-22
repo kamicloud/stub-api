@@ -22,14 +22,8 @@ class BaseException extends Exception implements Responsable
         return $this->status;
     }
 
-    public function getMessage()
+    public function toResponse($request)
     {
-        return $this->message;
-    }
-
-    public function toResponse()
-    {
-        dd('hhh');
         return [
             'status' => $this->getStatus(),
             'message' => $this->getMessage(),
