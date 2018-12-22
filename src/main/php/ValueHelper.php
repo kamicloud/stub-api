@@ -23,7 +23,7 @@ trait ValueHelper
                     throw new InvalidParameterException("{$field} must be instance of {$field}");
                 }
 
-                $value->validate();
+                $value->validateModel($value->getAttributeMap());
             }
         }
     }

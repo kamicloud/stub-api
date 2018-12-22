@@ -65,7 +65,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     "YetAnotherGenerator\\BaseModel"
                 );
 
-                modelClassCombiner.addUse("YetAnotherGenerator\\ValueHelper");
+                modelClassCombiner.addTrait("YetAnotherGenerator\\ValueHelper");
 
                 HashMap<String, ParameterStub> parameters = modelStub.getParameters();
 
@@ -73,7 +73,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 writeParameterGetters(parameters, modelClassCombiner);
                 writeParameterSetters(parameters, modelClassCombiner);
                 writeParameterRules("rules", parameters, modelClassCombiner);
-                writeGetAttributeMapMethod(parameters, modelClassCombiner);
+                writeGetAttributeMapMethod("getAttributeMap", parameters, modelClassCombiner);
 //                writeInitFromEloquentMethod(parameters, modelClassCombiner);
 //                writeInitFromModelMethod(parameters, modelClassCombiner);
 //                writeValidateMethod("validate", parameters, modelClassCombiner);
@@ -159,7 +159,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         ClassMethodCombiner setResponseMethod = new ClassMethodCombiner("setResponse");
                         ClassMethodCombiner getResponseClassMethodCombiner = new ClassMethodCombiner("getResponse");
 
-                        messageClassCombiner.addUse("YetAnotherGenerator\\ValueHelper");
+                        messageClassCombiner.addTrait("YetAnotherGenerator\\ValueHelper");
                         // message
                         messageClassCombiner.addUse("Illuminate\\Http\\Request");
                         messageClassCombiner.addAttribute(new ClassAttributeCombiner("request", "private"));
@@ -179,10 +179,12 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         );
 
                         writeMethodParameters(action.getResponses(), setResponseMethod);
-                        writeParameterRules("requestRules", action.getRequests(), messageClassCombiner);
-                        writeParameterRules("responseRules", action.getResponses(), messageClassCombiner);
-                        writeValidateMethod("validateInput", action.getRequests(), messageClassCombiner);
-                        writeValidateMethod("validateOutput", action.getResponses(), messageClassCombiner);
+                        writeGetAttributeMapMethod("requestRules", action.getRequests(), messageClassCombiner);
+                        writeGetAttributeMapMethod("responseRules", action.getRequests(), messageClassCombiner);
+//                        writeParameterRules("requestRules", action.getRequests(), messageClassCombiner);
+//                        writeParameterRules("responseRules", action.getResponses(), messageClassCombiner);
+//                        writeValidateMethod("validateInput", action.getRequests(), messageClassCombiner);
+//                        writeValidateMethod("validateOutput", action.getResponses(), messageClassCombiner);
 
                         messageClassCombiner.addMethod(setResponseMethod).addMethod(getResponseClassMethodCombiner);
 
@@ -349,8 +351,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
      * @param parameters 参数
      * @param classCombiner 目标类
      */
-    private void writeGetAttributeMapMethod(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("getAttributeMap");
+    private void writeGetAttributeMapMethod(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(methodName);
 
 
         parameters.forEach((parameterName, parameterStub) -> {

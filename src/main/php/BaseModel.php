@@ -8,6 +8,8 @@ use JsonSerializable;
 
 abstract class BaseModel implements JsonSerializable
 {
+    use ValueHelper;
+
     public function validateModel(array $attributeMap)
     {
         $this->validate($this->getAttributeMap());
@@ -117,7 +119,7 @@ abstract class BaseModel implements JsonSerializable
     {
         $isTesting = config('app.env') === 'testing';
 
-        return array_reduce($this->getAttributeMap(), function ($c, $attributeMap) use ($isTesting) {
+        return array_reduce($this->getAttributeMap(), function ($c, $attribute) use ($isTesting) {
             [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable] = $attribute;
 
             // 测试模式会把非null的数据根据可测注解修改为通用数据
