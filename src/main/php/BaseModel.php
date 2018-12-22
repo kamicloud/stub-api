@@ -10,9 +10,9 @@ abstract class BaseModel implements JsonSerializable
 {
     use ValueHelper;
 
-    public function validateModel(array $attributeMap)
+    public function validate(array $attributeMap)
     {
-        $this->validate($this->getAttributeMap());
+        $this->validateAttributes($this->getAttributeMap());
     }
 
     public static function initFromModel($values)
@@ -108,10 +108,6 @@ abstract class BaseModel implements JsonSerializable
             return static::initFromEloquent($orm);
         })->all();
     }
-
-//    abstract public static function initFromEloquent(?Model $orm);
-
-//    abstract public static function initFromModel($value);
 
     abstract public function getAttributeMap();
 

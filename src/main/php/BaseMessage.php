@@ -8,12 +8,12 @@ abstract class BaseMessage
 
     public function validateInput()
     {
-        $this->validate($this->requestRules());
+        $this->validateAttributes($this->requestRules());
     }
 
     public function validateOutput()
     {
-        $this->validate($this->responseRules());
+        $this->validateAttributes($this->responseRules());
     }
 
     abstract public function requestRules();

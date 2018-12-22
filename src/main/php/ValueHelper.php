@@ -7,25 +7,42 @@ use Throwable;
 
 trait ValueHelper
 {
-    public function validate(array $attributeMap)
+    public function validateAttributes(array $attributeMap, $location = 'root')
     {
         foreach ($attributeMap as $attribute) {
             [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable] = $attribute;
 
             $value = $this->$field;
 
-            if (!$isOptional && is_null($value)) {
-                throw new InvalidParameterException("{$field} can not be null");
+            $this->validateValue($value, $field, $isModel, $isArray, $type, $isOptional, "$location > $field");
+        }
+    }
+
+    public function validateValue($value, $field, $isModel, $isArray, $type, $isOptional, $location)
+    {
+
+        if (!$isOptional && is_null($value)) {
+            throw new InvalidParameterException("{$location} can not be null");
+        }
+
+        if ($isArray) {
+            if (!is_array($value)) {
+                throw new InvalidParameterException("{$location} should be array");
             }
 
-            if (is_object($value) && $value instanceof BaseModel) {
-                if (get_class($value) !== $type) {
-                    throw new InvalidParameterException("{$field} must be instance of {$field}");
-                }
-
-                $value->validateModel($value->getAttributeMap());
+            foreach ($value as $index => $item) {
+                $this->validateValue($item, $field, $isModel, false, $type, $isOptional, "$location > $index");
             }
         }
+
+        if (is_object($value) && $value instanceof BaseModel) {
+            if (get_class($value) !== $type) {
+                throw new InvalidParameterException("{$location} must be instance of {$field}");
+            }
+
+            $value->validateAttributes($value->getAttributeMap(), $location);
+        }
+
     }
 
     public static function convertDate($value, $format = 'Y-m-d H:i:s')
