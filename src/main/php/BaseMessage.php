@@ -22,23 +22,6 @@ abstract class BaseMessage
         $attributeMap = $this->responseRules();
 
         $this->fromJson($data, $attributeMap);
-//        foreach ($attributeMap as $attribute) {
-//            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable, $isEnum] = $attribute;
-//
-//            $value = $data[$field] ?? null;
-//
-//            if ($isEnum) {
-//                $this->$field = $type::transform($value);
-//            } elseif ($isModel) {
-//                if ($isArray) {
-//                    $this->$field = $type::initFromModels($value);
-//                } else {
-//                    $this->$field = $type::initFromModel($value);
-//                }
-//            } else {
-//                $this->$field = $this->parseScalar($value, $type);
-//            }
-//        }
     }
 
     public function getRequest()

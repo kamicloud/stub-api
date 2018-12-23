@@ -104,12 +104,14 @@ trait ValueHelper
 
         if (!is_null($value)) {
             if ($isModel) {
+                /** @var BaseModel $type */
                 if (!is_object($value) || !($value instanceof BaseModel) || get_class($value) !== $type) {
                     throw new InvalidParameterException("{$location} must be instance of {$field}");
                 }
 
                 $value->validateAttributes($value->getAttributeMap(), $location);
             } elseif ($isEnum) {
+                /** @var BaseEnum $type */
                 if ($type::verify($value) === false) {
                     throw new InvalidParameterException("{$location} should match enum");
                 }
