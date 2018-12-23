@@ -3,18 +3,42 @@
 namespace YetAnotherGenerator;
 
 use App\Generated\Exceptions\InvalidParameterException;
+use Validator;
 use Throwable;
 
 trait ValueHelper
 {
+    /**
+     *
+     *
+     * @param array $attributeMap
+     * @param string $location
+     * @throws InvalidParameterException
+     */
     public function validateAttributes(array $attributeMap, $location = 'root')
     {
+        $rules = [];
+        $data = [];
         foreach ($attributeMap as $attribute) {
             [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable] = $attribute;
 
             $value = $this->$field;
 
-            $this->validateValue($value, $field, $isModel, $isArray, $type, $isOptional, "$location > $field");
+            if (!$isModel && !$isArray && $type !== 'Date') {
+                $data[$field] = $value;
+                $rules[$field] = $type;
+            } else {
+                $this->validateValue($value, $field, $isModel, $isArray, $type, $isOptional, "$location > $field");
+            }
+        }
+
+        $validator = Validator::make($data, $rules);
+
+        if ($validator->fails()) {
+            $messages = $validator->messages()->messages();
+            $messages = array_flatten($messages);
+
+            throw new InvalidParameterException($location . "\n-----\n" . join("\n--\n", $messages));
         }
     }
 
@@ -31,16 +55,23 @@ trait ValueHelper
             }
 
             foreach ($value as $index => $item) {
-                $this->validateValue($item, $field, $isModel, false, $type, $isOptional, "$location > $index");
+                $this->validateValue($item, $field, $isModel, false, $type, $isOptional, "$location(array) > $index");
             }
+            return ;
         }
 
-        if (is_object($value) && $value instanceof BaseModel) {
-            if (get_class($value) !== $type) {
-                throw new InvalidParameterException("{$location} must be instance of {$field}");
+        if (!is_null($value)) {
+            if ($isModel) {
+                if (!is_object($value) || !($value instanceof BaseModel) || get_class($value) !== $type) {
+                    throw new InvalidParameterException("{$location} must be instance of {$field}");
+                }
+
+                $value->validateAttributes($value->getAttributeMap(), $location);
+            } elseif ($type === 'Date') {
+                // 无需校验
+            } else {
             }
 
-            $value->validateAttributes($value->getAttributeMap(), $location);
         }
 
     }

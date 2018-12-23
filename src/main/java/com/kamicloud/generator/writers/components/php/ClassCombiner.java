@@ -3,10 +3,7 @@ package com.kamicloud.generator.writers.components.php;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.interfaces.CombinerInterface;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -117,7 +114,7 @@ public class ClassCombiner implements CombinerInterface {
         if (traits.size() > 0) {
             content.append("\n");
         }
-        constants.forEach(constant -> content.append(constant.write()));
+        constants.forEach(constant -> content.append(constant.write()).append("\n"));
         attributes.forEach(attribute -> content.append(attribute.write()));
         if (attributes.size() > 0) {
             content.append("\n");
@@ -178,5 +175,12 @@ public class ClassCombiner implements CombinerInterface {
 
     public boolean exists() {
         return new File(fileName).exists();
+    }
+
+    public void parse() throws Exception {
+        FileInputStream fileInputStream = new FileInputStream(fileName);
+        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+
+//        inputStreamReader
     }
 }

@@ -2,7 +2,6 @@ package com.kamicloud.generator;
 
 import com.kamicloud.generator.annotations.*;
 import com.kamicloud.generator.interfaces.FixedEnumValueInterface;
-import com.kamicloud.generator.interfaces.StringEnumValueInterface;
 import com.kamicloud.generator.interfaces.TemplateInterface;
 
 import java.util.Date;
@@ -14,7 +13,7 @@ public class Template implements TemplateInterface {
         /**
          * 用户状态
          */
-        public enum UserStatus implements FixedEnumValueInterface {
+        enum UserStatus implements FixedEnumValueInterface {
             INIT(0),
             DISABLED(2),
             IN_CLASS(4),
@@ -27,16 +26,10 @@ public class Template implements TemplateInterface {
             }
         }
 
-        public enum PayWay implements StringEnumValueInterface {
-            WECHAT("wechat"),
-            ALIPAY("alipay"),
-            ;
-
-            String value;
-
-            PayWay(String value) {
-                this.value = value;
-            }
+        @StringEnum
+        enum PayWay {
+            WECHAT,
+            ALIPAY,
         }
 
         /**
@@ -56,9 +49,9 @@ public class Template implements TemplateInterface {
         }
 
         enum Gender {
+            UNKNOWN,
             MALE,
             FEMALE,
-            TRANNY,
         }
     }
 
@@ -75,7 +68,7 @@ public class Template implements TemplateInterface {
              */
             @DBField(name = "id")
             @Mutable
-            Integer id;
+            Enums.Gender id;
             /**
              * 这里只是留了一个备注
              */

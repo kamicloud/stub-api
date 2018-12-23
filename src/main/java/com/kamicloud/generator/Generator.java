@@ -168,6 +168,9 @@ public class Generator {
             EnumStub enumStub = new EnumStub(((EnumDeclaration) enumTemplate).getNameAsString());
             output.addEnum(enumStub);
 
+
+            parseAnnotations(enumTemplate.getAnnotations(), enumStub);
+
             Optional<Comment> commentTemplate = enumTemplate.getComment();
             commentTemplate.ifPresent(comment -> enumStub.setComment((comment).getContent()));
 
@@ -178,15 +181,11 @@ public class Generator {
                 EnumStub.EnumStubItemType type = EnumStub.EnumStubItemType.INTEGER;
                 if (((EnumDeclaration) enumTemplate).getImplementedTypes().isEmpty()) {
                     // 不是自定义值的
+//                    type = EnumStub.EnumStubItemType.STRING;
                     value = String.valueOf(i.getAndIncrement());
                 } else {
                     Expression argument = entryTemplate.getArgument(0);
-                    if (argument.isStringLiteralExpr()) {
-                        value = argument.asStringLiteralExpr().getValue();
-                        type = EnumStub.EnumStubItemType.STRING;
-                    } else {
-                        value = argument.asIntegerLiteralExpr().getValue();
-                    }
+                    value = argument.asIntegerLiteralExpr().getValue();
                 }
                 enumStub.addItem(key, value, type);
             });

@@ -37,5 +37,6 @@ public class EnumStub extends BaseWithAnnotationStub {
     public enum EnumStubItemType {
         INTEGER,
         STRING,
+        EXPRESSION,
     }
 }
