@@ -80,6 +80,25 @@ trait ValueHelper
 
     }
 
+    /**
+     * 从标量数据类型中解析数据
+     *
+     * @param $value
+     * @param $type
+     * @return int|string|null
+     */
+    public function parseScalar($value, $type)
+    {
+        if (is_null($value)) {
+            return null;
+        }
+        if (stripos($type, 'int') !== false) {
+            return (int) $value;
+        } else {
+            return (string) $value;
+        }
+    }
+
     public static function convertDate($value, $format = 'Y-m-d H:i:s')
     {
         if (is_null($value)) {

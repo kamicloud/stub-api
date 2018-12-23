@@ -34,6 +34,8 @@ abstract class BaseMessage
                 } else {
                     $this->$field = $type::initFromModel($value);
                 }
+            } else {
+                $this->$field = $this->parseScalar($value, $type);
             }
         }
     }

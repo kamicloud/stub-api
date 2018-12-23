@@ -53,7 +53,7 @@ abstract class BaseModel implements JsonSerializable
                     $model->$field = ValueHelper::convertDate($value);
                 }
             } else {
-                $model->$field = $value;
+                $model->$field = $model->parseScalar($value, $type);
             }
         }
 
