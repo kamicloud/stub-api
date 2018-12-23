@@ -3,13 +3,13 @@ package com.kamicloud.generator.writers;
 import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.annotations.Mutable;
 import com.kamicloud.generator.annotations.Optional;
+import com.kamicloud.generator.annotations.StringEnum;
 import com.kamicloud.generator.annotations.Transactional;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.php.*;
 import org.springframework.core.env.Environment;
-import sun.jvm.hotspot.debugger.cdbg.EnumType;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -136,45 +136,47 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             );
                         }
 
-                        ClassMethodCombiner constructClassMethodCombiner = new ClassMethodCombiner("__construct");
-                        constructClassMethodCombiner.addParameter(new ClassMethodParameterCombiner("request", requestClassName));
-                        constructClassMethodCombiner.setBody(
-                            "$this->request = $request;\n",
-                            "$data = $request->all();\n"
-                        );
-
-                        action.getRequests().forEach((parameterName, parameterStub) -> {
-                            String dataInArray = "$data['" + parameterStub.getName() + "']";
-                            constructClassMethodCombiner.addBody(
-                                "$this->" + parameterStub.getName() + " = " + dataInArray + " ?? null;"
-                            );
-
-                            writeModelSerialize(parameterStub, constructClassMethodCombiner, messageClassCombiner);
-                        });
-
-                        messageClassCombiner.addMethod(constructClassMethodCombiner);
+//                        ClassMethodCombiner constructClassMethodCombiner = new ClassMethodCombiner("__construct");
+//                        constructClassMethodCombiner.addParameter(new ClassMethodParameterCombiner("request", requestClassName));
+//                        constructClassMethodCombiner.setBody(
+//                            "$this->request = $request;\n",
+//                            "$data = $request->all();\n"
+//                        );
+//
+//                        action.getRequests().forEach((parameterName, parameterStub) -> {
+//                            String dataInArray = "$data['" + parameterStub.getName() + "']";
+//                            constructClassMethodCombiner.addBody(
+//                                "$this->" + parameterStub.getName() + " = " + dataInArray + " ?? null;"
+//                            );
+//
+//                            writeModelSerialize(parameterStub, constructClassMethodCombiner, messageClassCombiner);
+//                        });
+//
+//                        messageClassCombiner.addMethod(constructClassMethodCombiner);
 
                         ClassMethodCombiner setResponseMethod = new ClassMethodCombiner("setResponse");
-                        ClassMethodCombiner getResponseClassMethodCombiner = new ClassMethodCombiner("getResponse");
+//                        ClassMethodCombiner getResponseClassMethodCombiner = new ClassMethodCombiner("getResponse");
 
                         messageClassCombiner.addTrait("YetAnotherGenerator\\ValueHelper");
                         // message
-                        messageClassCombiner.addUse("Illuminate\\Http\\Request");
-                        messageClassCombiner.addAttribute(new ClassAttributeCombiner("request", "private"));
+//                        messageClassCombiner.addUse("Illuminate\\Http\\Request");
+//                        messageClassCombiner.addAttribute(new ClassAttributeCombiner("request", "protected"));
                         writeParameterGetters(action.getRequests(), messageClassCombiner);
                         writeParameterAttributes(action.getRequests(), messageClassCombiner);
 
                         writeParameterAttributes(action.getResponses(), messageClassCombiner);
-                        action.getResponses().forEach((parameterName, parameterStub) -> getResponseClassMethodCombiner.addBody("'"  + parameterStub.getName() + "' => $this->" + parameterStub.getName() + ","));
-                        getResponseClassMethodCombiner.wrapBody(new ArrayList<>(Arrays.asList(
-                                "'status' => 0,",
-                                "'message' => 'success',",
-                                "'data' => ["
-                        )), "],");
-                        getResponseClassMethodCombiner.wrapBody(
-                                "return [",
-                                "];"
-                        );
+//                        action.getResponses().forEach((parameterName, parameterStub) ->
+//                                getResponseClassMethodCombiner.addBody("'"  + parameterStub.getName() + "' => $this->" + parameterStub.getName() + ",")
+//                        );
+//                        getResponseClassMethodCombiner.wrapBody(new ArrayList<>(Arrays.asList(
+//                                "'status' => 0,",
+//                                "'message' => 'success',",
+//                                "'data' => ["
+//                        )), "],");
+//                        getResponseClassMethodCombiner.wrapBody(
+//                                "return [",
+//                                "];"
+//                        );
 
                         writeMethodParameters(action.getResponses(), setResponseMethod);
                         writeGetAttributeMapMethod("requestRules", action.getRequests(), messageClassCombiner);
@@ -184,7 +186,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 //                        writeValidateMethod("validateInput", action.getRequests(), messageClassCombiner);
 //                        writeValidateMethod("validateOutput", action.getResponses(), messageClassCombiner);
 
-                        messageClassCombiner.addMethod(setResponseMethod).addMethod(getResponseClassMethodCombiner);
+                        messageClassCombiner.addMethod(setResponseMethod);
+//                        messageClassCombiner.addMethod(getResponseClassMethodCombiner);
 
                         messageClassCombiner.toFile();
                     } catch (Exception e) {
@@ -215,6 +218,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 enumStub.getItems().forEach((key, value) -> {
                     String valueName =  value.getName();
                     EnumStub.EnumStubItemType valueType = value.getType();
+
+                    if (enumStub.hasAnnotation(StringEnum.name)) {
+                        valueType = EnumStub.EnumStubItemType.STRING;
+                        valueName = key;
+                    }
                     ClassConstantCombiner enumClassConstantCombiner = new ClassConstantCombiner(key, valueType);
                     enumClassConstantCombiner.addLine(valueName);
                     enumClassCombiner.addConstant(enumClassConstantCombiner);
@@ -349,11 +357,17 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             ArrayList<String> ruleList = new ArrayList<>();
             boolean isArray = false;
             boolean isModel = false;
+            boolean isEnum = false;
             if (typeName.endsWith("[]")) {
                 isArray = true;
             }
             if (typeName.startsWith("Models")) {
                 isModel = true;
+                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeModelName);
+                typeModelName = typeModelName + "::class";
+            } else if (typeName.startsWith("Enums")) {
+                isEnum = true;
+                classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName);
                 typeModelName = typeModelName + "::class";
             } else if (typeModelName.equals("Date")) {
                 typeModelName = "'" + typeName + "'";
@@ -374,7 +388,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     Boolean.toString(isArray),
                     typeModelName,
                     Boolean.toString(parameterStub.hasAnnotation(Optional.name)),
-                    Boolean.toString(parameterStub.hasAnnotation(Mutable.name))
+                    Boolean.toString(parameterStub.hasAnnotation(Mutable.name)),
+                    Boolean.toString(isEnum)
             ));
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
         });
@@ -383,12 +398,26 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private String getModelNameFromType(String type) {
-        String typeName = type.replace("[]", "").replace("Models.", "");
+        String typeName = type
+                .replace("[]", "")
+                .replace("Models.", "")
+                .replace("Enums.", "");
         if (type.startsWith("Models.")) {
             typeName = typeName + "Model";
+        } else if (type.startsWith("Enums."))  {
+            typeName = typeName + "Enum";
         }
         return typeName;
     }
+
+
+
+
+
+
+
+
+
 
     private void writeModelSerialize(
         ParameterStub parameterStub,
@@ -398,30 +427,29 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         String parameterName = parameterStub.getName();
         String parameterType = parameterStub.getType();
         String parameterInModel = "$this->" + parameterName;
-        boolean isArray = parameterType.endsWith("[]");
-        boolean isScalar = !parameterType.startsWith("Models.[]");
-        if (parameterType.startsWith("Models.")) {
-            parameterType = getModelNameFromType(parameterType);
-            classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + parameterType);
+        boolean isArray = parameterStub.isArray();
+        boolean isModel = parameterStub.isModel();
+        boolean isEnum = parameterStub.isEnum();
+        if (isModel || isEnum) {
+            String parameterTypeName = getModelNameFromType(parameterType);
+            String methodName;
+
+            if (isModel) {
+                methodName = "initFromModel";
+            } else {
+                methodName = "transform";
+            }
+            methodName += (isArray ? "s" : "");
+            classCombiner.addUse("App\\Generated\\" + version + "\\" + (isModel ? "Models" : "Enums") + "\\" + parameterTypeName);
 
             classMethodCombiner.addBody(
                     parameterInModel + " = " +
-                    parameterType + "::initFromModel" + (isArray ? "s" : "") +
+                    parameterTypeName + "::" + methodName +
                     "(" + parameterInModel +
-                    (isScalar ? ", " + parameterType + "::class" : "") +
                     ");"
             );
         }
     }
-
-
-
-
-
-
-
-
-
 
     private void writeInitFromEloquentMethod(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("initFromEloquent");

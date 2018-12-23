@@ -87,7 +87,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                         try {
                             ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("testCase" + i);
                             ArrayList<String> params = new ArrayList<>();
-                            requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value + "',"));
+                            requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("'", "\\'") + "',"));
                             classMethodCombiner.setBody(params);
                             classMethodCombiner.wrapBody(
                                     "$response = $this->post('" + url + "', [",

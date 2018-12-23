@@ -30,7 +30,7 @@ abstract class BaseModel implements JsonSerializable
         $attributeMap = $model->getAttributeMap();
 
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable] = $attribute;
+            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable, $isEnum] = $attribute;
 
             $value = $values[$field] ?? null;
 
@@ -40,8 +40,16 @@ abstract class BaseModel implements JsonSerializable
                 } else {
                     $model->$field = $type::initFromModel($value);
                 }
+            } elseif ($isEnum) {
+                if ($isArray) {
+                    // TODO:
+                } else {
+                    $model->$field = $type::transform($value);
+                }
             } elseif ($type === 'Date') {
                 if ($isArray) {
+                    // TODO:
+                } else {
                     $model->$field = ValueHelper::convertDate($value);
                 }
             } else {

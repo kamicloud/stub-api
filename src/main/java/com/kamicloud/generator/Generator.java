@@ -146,8 +146,9 @@ public class Generator {
                     ParameterStub parameterStub = new ParameterStub(variableStub.getNameAsString(), variableStub.getTypeAsString());
 
                     // 注解
-                    NodeList<AnnotationExpr> annotationTemplates = parameterTemplate.getAnnotations();
-                    parseAnnotations(annotationTemplates, parameterStub);
+//                    NodeList<AnnotationExpr> annotationTemplates = parameterTemplate.getAnnotations();
+//                    parseAnnotations(annotationTemplates, parameterStub);
+                    parseAnnotations(parameterTemplate.getAnnotations(), parameterStub);
 
                     // 注释
                     Optional<Comment> parameterCommentTemplate = parameterTemplate.getComment();

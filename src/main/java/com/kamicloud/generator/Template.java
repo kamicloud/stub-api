@@ -179,6 +179,9 @@ public class Template implements TemplateInterface {
                 Integer id;
 
                 @Request
+                Enums.Gender gender;
+
+                @Request
                 @Optional
                 Integer page;
 

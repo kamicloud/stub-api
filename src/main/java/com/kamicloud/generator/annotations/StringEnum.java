@@ -6,4 +6,5 @@ package com.kamicloud.generator.annotations;
  * 在服务端生成数据时，强制使用字符串类型
  */
 public @interface StringEnum {
+    String name = "StringEnum";
 }

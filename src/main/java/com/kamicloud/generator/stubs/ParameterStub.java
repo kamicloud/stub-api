@@ -11,4 +11,16 @@ public class ParameterStub extends BaseWithAnnotationStub {
     public String getType() {
         return type;
     }
+
+    public boolean isModel() {
+        return type.startsWith("Models");
+    }
+
+    public boolean isEnum() {
+        return type.startsWith("Enums");
+    }
+
+    public boolean isArray() {
+        return type.endsWith("[]");
+    }
 }

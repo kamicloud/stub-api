@@ -5,14 +5,9 @@ Warning: This is an error message for the log file
 
 ---
 
-api: /api/V1/AdminUser/GetUsers
-User: ed
-Warning: A slightly different error message.
-
----
-
 api: /api/V1/User/GetUsers
-id: 0
+id: 0'
+gender: 0
 testUser: {"xxxxx":"xx","id":0,"name":"x","email":"x"}
 testUsers: {"val":"param1","user":{"xxxxx":"xx"}}
 
@@ -20,34 +15,37 @@ testUsers: {"val":"param1","user":{"xxxxx":"xx"}}
 
 api: /api/V1/User/GetUsers
 id: 0
-testUser: {"xxxxx":"xx","id":0,"name":"x","email":"x"}
+gender: MALE
+testUser: {"xxxxx":"xx","id": "xx","name":"x","email":"x"}
 testUsers: {"val":"param1","user":{"xxxxx":"xx"}}
+
+---
+
+api: /api/V1/User/GetUsers
+id: "xxx"
+gender: MALE
+testUser: {"xxxxx":"xx","id": "xx","name":"x","email":"x"}
+testUsers: {"val":"param1","user":{"xxxxx":"xx"}}
+
+---
+
+api: /api/V1/User/GetUsers
+id: MALE
+gender: MALE
+testUser: {"xxxxx":"xx","id": "xx","name":"x","email":"x"}
+testUsers: {"val":"param1","user":{"xxxxx":"xx"}}
+
+---
+
+api: /api/V1/User/GetUsers
+id: MALE
+gender: MALE
+testUser: {"xxxxx":"xx","id": "FEMALE","name":"x","email":"x"}
+testUsers: {"val":"param1","user":{"xxxxx":"xx"}}
+
 ---
 
 api: /api/V1/User/CreateUser
 email: cy6@qq.com
-
----
-
-
-api: /api/V1/User/CreateUser
-email: cy602939074@qq.com
-
----
-
-
-
-api: /api/V1/User/CreateUser
-email: cy602939jj074@qq.com
-
----
-
-api: /api/V1/User/CreateUser
-email: cy602939074@qq.com
-
----
-
-api: /api/V1/User/CreateUser
-email: cy602939074@qq.com
 
 ---

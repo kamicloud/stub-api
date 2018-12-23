@@ -20,15 +20,15 @@ trait ValueHelper
         $rules = [];
         $data = [];
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable] = $attribute;
+            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable, $isEnum] = $attribute;
 
             $value = $this->$field;
 
-            if (!$isModel && !$isArray && $type !== 'Date') {
+            if (!$isModel && !$isArray && !$isEnum && $type !== 'Date') {
                 $data[$field] = $value;
                 $rules[$field] = $type;
             } else {
-                $this->validateValue($value, $field, $isModel, $isArray, $type, $isOptional, "$location > $field");
+                $this->validateValue($value, $field, $isModel, $isArray, $isEnum, $type, $isOptional, "$location > $field");
             }
         }
 
@@ -42,7 +42,7 @@ trait ValueHelper
         }
     }
 
-    public function validateValue($value, $field, $isModel, $isArray, $type, $isOptional, $location)
+    public function validateValue($value, $field, $isModel, $isArray, $isEnum, $type, $isOptional, $location)
     {
 
         if (!$isOptional && is_null($value)) {
@@ -55,7 +55,7 @@ trait ValueHelper
             }
 
             foreach ($value as $index => $item) {
-                $this->validateValue($item, $field, $isModel, false, $type, $isOptional, "$location(array) > $index");
+                $this->validateValue($item, $field, $isModel, false, $isEnum, $type, $isOptional, "$location(array) > $index");
             }
             return ;
         }
@@ -67,6 +67,10 @@ trait ValueHelper
                 }
 
                 $value->validateAttributes($value->getAttributeMap(), $location);
+            } elseif ($isEnum) {
+                if ($type::verify($value) === false) {
+                    throw new InvalidParameterException("{$location} should match enum");
+                }
             } elseif ($type === 'Date') {
                 // 无需校验
             } else {
