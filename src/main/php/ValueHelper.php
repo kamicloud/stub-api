@@ -3,11 +3,53 @@
 namespace YetAnotherGenerator;
 
 use App\Generated\Exceptions\InvalidParameterException;
+use Illuminate\Support\Carbon;
 use Validator;
 use Throwable;
 
 trait ValueHelper
 {
+    public function fromJson($values, $attributeMap)
+    {
+        if (is_string($values)) {
+            $values = json_decode($values, true);
+        }
+
+        if (!$values) {
+            return null;
+        }
+
+        foreach ($attributeMap as $attribute) {
+            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable, $isEnum] = $attribute;
+
+            $value = $values[$field] ?? null;
+
+            if ($isModel) {
+                /** @var BaseModel $type */
+                if ($isArray) {
+                    $this->$field = $type::initFromModels($value);
+                } else {
+                    $this->$field = $type::initFromModel($value);
+                }
+            } elseif ($isEnum) {
+                /** @var BaseEnum $type */
+                if ($isArray) {
+                    // TODO:
+                } else {
+                    $this->$field = $type::transform($value);
+                }
+            } elseif ($type === 'Date') {
+                if ($isArray) {
+                    // TODO:
+                } else {
+                    $this->$field = ValueHelper::convertDate($value);
+                }
+            } else {
+                $this->$field = $this->parseScalar($value, $type);
+            }
+        }
+    }
+
     /**
      *
      *

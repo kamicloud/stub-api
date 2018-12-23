@@ -10,11 +10,6 @@ abstract class BaseModel implements JsonSerializable
 {
     use ValueHelper;
 
-    public function validate(array $attributeMap)
-    {
-        $this->validateAttributes($this->getAttributeMap());
-    }
-
     public static function initFromModel($values)
     {
         if (is_string($values)) {
@@ -27,35 +22,7 @@ abstract class BaseModel implements JsonSerializable
 
         $model = new static();
 
-        $attributeMap = $model->getAttributeMap();
-
-        foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable, $isEnum] = $attribute;
-
-            $value = $values[$field] ?? null;
-
-            if ($isModel) {
-                if ($isArray) {
-                    $model->$field = $type::initFromModels($value);
-                } else {
-                    $model->$field = $type::initFromModel($value);
-                }
-            } elseif ($isEnum) {
-                if ($isArray) {
-                    // TODO:
-                } else {
-                    $model->$field = $type::transform($value);
-                }
-            } elseif ($type === 'Date') {
-                if ($isArray) {
-                    // TODO:
-                } else {
-                    $model->$field = ValueHelper::convertDate($value);
-                }
-            } else {
-                $model->$field = $model->parseScalar($value, $type);
-            }
-        }
+        $model->fromJson($values, $model->getAttributeMap());
 
         return $model;
     }
@@ -93,6 +60,7 @@ abstract class BaseModel implements JsonSerializable
             $value = $values[$field] ?? null;
 
             if ($isModel) {
+                /** @var BaseModel $type */
                 if ($isArray) {
                     $model->$field = $type::initFromEloquents($value);
                 } else {
