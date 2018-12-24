@@ -15,7 +15,8 @@
 # ===================================================================
 
 generator:
-  laravel-path: /Users/Ttdnts/IdeaProjects/laravel
-  auto-test-path: /Users/Ttdnts/IdeaProjects/laravel
-  doc-path: /Users/Ttdnts/IdeaProjects/laravel
-  postman-path: /Users/Ttdnts/IdeaProjects/laravel
+  laravel-path: C:\Users\admin\IdeaProjects\abc360-headlight
+  auto-test-path: C:\Users\admin\IdeaProjects\abc360-headlight
+  doc-path: C:\Users\admin\IdeaProjects\abc360-headlight
+  postman-path: C:\Users\admin\IdeaProjects\abc360-headlight
+  test-host: http://localhost

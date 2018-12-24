@@ -20,7 +20,8 @@ class BaseEnum
         $map = static::_MAP;
 
         $map = array_flip($map);
-        $map = array_merge($map, array_combine($map, $map));
+
+        $map = $map + array_combine($map, $map);
 
         return $map[$value] ?? null;
     }

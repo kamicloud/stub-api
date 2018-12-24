@@ -6,8 +6,8 @@ public enum Errors implements ErrorInterface {
     /**
      * comment 1
      */
-    INVALID_PARAMETER(10000, ""),
-    SERVER_INTERNAL_ERROR(10001, ""),
+    SERVER_INTERNAL_ERROR(10000, ""),
+    INVALID_PARAMETER(10001, ""),
 
     // comment 2
     OBJECT_NOT_FOUND(10002, ""),

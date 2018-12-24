@@ -7,10 +7,6 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.Doclet;
-import com.sun.javadoc.MethodDoc;
-import com.sun.javadoc.RootDoc;
 
 public class Debug {
     public static void main(String[] args) {

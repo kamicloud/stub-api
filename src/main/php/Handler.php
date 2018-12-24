@@ -9,7 +9,7 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 class Handler extends ExceptionHandler
 {
     protected $dontReport = [
-        BaseException::class
+       BaseException::class
     ];
 
     public function render($request, Exception $exception)

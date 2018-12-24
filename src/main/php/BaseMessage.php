@@ -19,7 +19,7 @@ abstract class BaseMessage
 
         $data = $request->all();
 
-        $attributeMap = $this->responseRules();
+        $attributeMap = $this->requestRules();
 
         $this->fromJson($data, $attributeMap);
     }

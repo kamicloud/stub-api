@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+@SuppressWarnings("unchecked")
 public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransformerInterface {
     private final OkHttpClient client = (new OkHttpClient.Builder()).readTimeout(Duration.ofMinutes(1)).build();
     private HashMap<String, ArrayList<RequestStub>> apiMap = new HashMap<>();
@@ -85,6 +86,8 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                 if (requests != null && !classCombiner.exists()) {
                     requests.forEach(requestStub -> {
                         try {
+                            requestApi(requestStub);
+                            Response response = requestStub.getResponse();
                             ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("testCase" + i);
                             ArrayList<String> params = new ArrayList<>();
                             requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("'", "\\'") + "',"));
@@ -97,10 +100,8 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                                     ))
                             );
 
-                            requestApi(requestStub);
 
-
-                            String jsonResponse = Objects.requireNonNull(requestStub.getResponse().body()).string();
+                            String jsonResponse = Objects.requireNonNull(response.body()).string();
                             Gson gson = new GsonBuilder()
                                     .serializeNulls()
                                     .setLongSerializationPolicy(LongSerializationPolicy.STRING)
@@ -134,7 +135,10 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
     private void transformResponseMutable(LinkedTreeMap response, HashMap<String, ParameterStub> parameterStubs) {
         Double status = (Double) response.get("status");
-        response.replace("status", status.intValue());
+        if (response.containsKey("status")) {
+            response.replace("status", status.intValue());
+        }
+
         Object expect = response.get("data");
 
         if (expect instanceof LinkedTreeMap) {
@@ -166,8 +170,9 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         builder.addFormDataPart("__test_mode", "1");
         requestStub.getParameters().forEach(builder::addFormDataPart);
         RequestBody requestBody = builder.build();
+        String testHost = env.getProperty("test-host", "http://localhost");
         Request request = new Request.Builder()
-                .url("http://localhost" + requestStub.getApi())
+                .url(testHost + requestStub.getApi())
                 .post(requestBody)
                 .build();
 

@@ -180,7 +180,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         writeMethodParameters(action.getResponses(), setResponseMethod);
                         writeGetAttributeMapMethod("requestRules", action.getRequests(), messageClassCombiner);
-                        writeGetAttributeMapMethod("responseRules", action.getRequests(), messageClassCombiner);
+                        writeGetAttributeMapMethod("responseRules", action.getResponses(), messageClassCombiner);
 //                        writeParameterRules("requestRules", action.getRequests(), messageClassCombiner);
 //                        writeParameterRules("responseRules", action.getResponses(), messageClassCombiner);
 //                        writeValidateMethod("validateInput", action.getRequests(), messageClassCombiner);
