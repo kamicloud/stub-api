@@ -4,18 +4,17 @@ import java.util.HashMap;
 
 public class AnnotationStub {
     private String name;
-    private HashMap<String, String> values = new HashMap<>();
+    private HashMap<String, Object> values = new HashMap<>();
 
     public AnnotationStub(String name) {
         this.name = name;
-        addValue("xxx", "xxx");
     }
 
     public String getName() {
         return name;
     }
 
-    public void addValue(String key, String value) {
+    public void addValue(String key, Object value) {
         values.put(key, value);
     }
 

@@ -158,6 +158,7 @@ public class Template implements TemplateInterface {
          * 多行文本
          */
         public class AdminUser {
+            @API(methods = {MethodType.POST})
             class GetUsers {
                 @Request
                 String[] strings;
@@ -170,7 +171,8 @@ public class Template implements TemplateInterface {
          * 用户控制器
          */
         public class User {
-            @API(methods = {MethodType.POST})
+            @API(methods = {MethodType.POST, MethodType.DELETE})
+            @Middleware(name = "某一个小范围的middleware")
             class GetUsers {
                 /**
                  * 查询的ID

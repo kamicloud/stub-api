@@ -5,10 +5,10 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.comments.Comment;
-import com.github.javaparser.ast.expr.AnnotationExpr;
-import com.github.javaparser.ast.expr.Expression;
-import com.github.javaparser.ast.expr.IntegerLiteralExpr;
-import com.github.javaparser.ast.expr.StringLiteralExpr;
+import com.github.javaparser.ast.expr.*;
+import com.kamicloud.generator.annotations.API;
+import com.kamicloud.generator.annotations.Method;
+import com.kamicloud.generator.annotations.MethodType;
 import com.kamicloud.generator.annotations.Request;
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
@@ -23,6 +23,8 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -146,8 +148,6 @@ public class Generator {
                     ParameterStub parameterStub = new ParameterStub(variableStub.getNameAsString(), variableStub.getTypeAsString());
 
                     // 注解
-//                    NodeList<AnnotationExpr> annotationTemplates = parameterTemplate.getAnnotations();
-//                    parseAnnotations(annotationTemplates, parameterStub);
                     parseAnnotations(parameterTemplate.getAnnotations(), parameterStub);
 
                     // 注释
@@ -213,8 +213,7 @@ public class Generator {
                 modelStub.addParameter(parameterStub);
 
                 // 注解
-                NodeList<AnnotationExpr> annotationTemplates = parameterTemplate.getAnnotations();
-                parseAnnotations(annotationTemplates, parameterStub);
+                parseAnnotations(parameterTemplate.getAnnotations(), parameterStub);
                 // 注释
                 Optional<Comment> parameterCommentTemplate = parameterTemplate.getComment();
                 parameterCommentTemplate.ifPresent(comment -> parameterStub.setComment(comment.getContent()));
@@ -224,14 +223,34 @@ public class Generator {
 
     private void parseAnnotations(NodeList<AnnotationExpr> annotationTemplates, AnnotationsInterface baseStub) {
         annotationTemplates.forEach(annotationTemplate -> {
-            AnnotationStub annotationStub = new AnnotationStub(annotationTemplate.getNameAsString());
+            String annotationName = annotationTemplate.getNameAsString();
+            AnnotationStub annotationStub = new AnnotationStub(annotationName);
             baseStub.addAnnotation(annotationStub);
 
-//            if (annotationTemplate instanceof NormalAnnotationExpr) {
-//
-//            } else if (annotationTemplate instanceof MarkerAnnotationExpr) {
-//
-//            }
+            if (annotationTemplate instanceof NormalAnnotationExpr) {
+                NormalAnnotationExpr normalAnnotationExpr = (NormalAnnotationExpr) annotationTemplate;
+                NodeList<MemberValuePair> pairs = normalAnnotationExpr.getPairs();
+                pairs.forEach(pair -> {
+                    String pairName = pair.getNameAsString();
+                    Expression pairValue = pair.getValue();
+
+                    if (annotationName.equals(API.name) && pairName.equals(API.methods)) {
+                        HashMap<MethodType, MethodType> methodTypes = new HashMap<>();
+                        ArrayInitializerExpr array = pairValue.asArrayInitializerExpr();
+                        array.getValues().forEach(value -> {
+
+                            FieldAccessExpr fieldAccessExpr = (FieldAccessExpr) value;
+
+                            MethodType methodType = MethodType.transform(fieldAccessExpr.getNameAsString());
+
+                            methodTypes.put(methodType, methodType);
+                        });
+
+                        annotationStub.addValue(pair.getNameAsString(), methodTypes);
+                    }
+                });
+
+            }
         });
 
     }

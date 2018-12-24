@@ -1,15 +1,15 @@
 package com.kamicloud.generator.stubs;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ModelStub extends BaseWithAnnotationStub {
-    private HashMap<String, ParameterStub> parameters = new HashMap<>();
+    private LinkedHashMap<String, ParameterStub> parameters = new LinkedHashMap<>();
 
     public ModelStub(String name) {
         super(name);
     }
 
-    public HashMap<String, ParameterStub> getParameters() {
+    public LinkedHashMap<String, ParameterStub> getParameters() {
         return parameters;
     }
 

@@ -274,8 +274,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         outputStreamWriter.write("<?php\n");
 
         o.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
+            String method = "post";
             try {
-                outputStreamWriter.write("Route::post('" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "');\n");
+                outputStreamWriter.write("Route::" + method + "('" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "');\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
