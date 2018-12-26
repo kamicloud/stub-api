@@ -24,29 +24,36 @@ trait ValueHelper
 
             $value = $values[$field] ?? null;
 
-            if ($isModel) {
-                /** @var BaseModel $type */
-                if ($isArray) {
-                    $this->$field = $type::initFromModels($value);
-                } else {
-                    $this->$field = $type::initFromModel($value);
+            if ($isArray || $isModel) {
+                if (is_string($value)) {
+                    $value = json_decode($value, true);
                 }
-            } elseif ($isEnum) {
-                /** @var BaseEnum $type */
-                if ($isArray) {
-                    // TODO:
-                } else {
-                    $this->$field = $type::transform($value);
-                }
-            } elseif ($type === 'Date') {
-                if ($isArray) {
-                    // TODO:
-                } else {
-                    $this->$field = ValueHelper::convertDate($value);
+            }
+
+            if ($isArray) {
+                if (is_array($value)) {
+                    $this->$field = array_map(function ($value) use ($type, $isModel, $isEnum) {
+                        return $this->fromOne($value, $type, $isModel, $isEnum);
+                    }, $value);
                 }
             } else {
-                $this->$field = $this->parseScalar($value, $type);
+                $this->$field = $this->fromOne($value, $type, $isModel, $isEnum);
             }
+        }
+    }
+
+    public function fromOne($value, $type, $isModel, $isEnum)
+    {
+        if ($isModel) {
+            /** @var BaseModel $type */
+            return $type::initFromModel($value);
+        } elseif ($isEnum) {
+            /** @var BaseEnum $type */
+            return $type::transform($value);
+        } elseif ($type === 'Date') {
+            return ValueHelper::convertDate($value);
+        } else {
+            return $this->parseScalar($value, $type);
         }
     }
 

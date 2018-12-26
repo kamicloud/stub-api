@@ -90,7 +90,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             Response response = requestStub.getResponse();
                             ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("testCase" + i);
                             ArrayList<String> params = new ArrayList<>();
-                            requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("'", "\\'") + "',"));
+                            requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',"));
                             classMethodCombiner.setBody(params);
                             classMethodCombiner.wrapBody(
                                     "$response = $this->post('" + url + "', [",
@@ -111,9 +111,10 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
                             LinkedTreeMap gsonMap = (LinkedTreeMap) gson.fromJson(jsonResponse, Map.class);
 
-                            transformResponseMutable(gsonMap, actionStub.getResponses());
+//                            transformResponseMutable(gsonMap, actionStub.getResponses());
 
-                            classMethodCombiner.addBody("$expect = <<<JSON\n" + gson.toJson(gsonMap) + "\nJSON;");
+                            classMethodCombiner.addBody("$expect = <<<JSON\n" + gson.toJson(gsonMap).replace("\\", "\\\\") + "\nJSON;");
+                            classMethodCombiner.addBody("$expect = json_encode(json_decode($expect));");
                             classMethodCombiner.addBody("$this->assertJsonStringEqualsJsonString($expect, $actual);");
                             classCombiner.addMethod(classMethodCombiner);
 

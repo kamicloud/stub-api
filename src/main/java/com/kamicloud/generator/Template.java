@@ -68,7 +68,7 @@ public class Template implements TemplateInterface {
              */
             @DBField(name = "id")
             @Mutable
-            Enums.Gender id;
+            Integer id;
             /**
              * 这里只是留了一个备注
              */
@@ -209,9 +209,21 @@ public class Template implements TemplateInterface {
                  */
                 @Request
                 String email;
+                @Request
+                String[] emails;
+                @Request
+                Enums.Gender gender;
+                @Request
+                Enums.Gender[] genders;
+                @Request
+                Integer id;
+                @Request
+                Integer[] ids;
 
                 @Response
                 Models.User user;
+                @Response
+                Models.User[] users;
             }
         }
 
