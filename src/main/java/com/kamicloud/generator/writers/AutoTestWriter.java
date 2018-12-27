@@ -82,13 +82,13 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                         "Tests\\TestCase"
                 );
                 classCombiner.addTrait("Illuminate\\Foundation\\Testing\\DatabaseTransactions");
-//                classCombiner.addTrait("Tests\\CreatesApplication");
+
                 if (requests != null && !classCombiner.exists()) {
                     requests.forEach(requestStub -> {
                         try {
                             requestApi(requestStub);
                             Response response = requestStub.getResponse();
-                            ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("testCase" + i);
+                            ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, "testCase" + i);
                             ArrayList<String> params = new ArrayList<>();
                             requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',"));
                             classMethodCombiner.setBody(params);
@@ -116,8 +116,6 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             classMethodCombiner.addBody("$expect = <<<JSON\n" + gson.toJson(gsonMap).replace("\\", "\\\\") + "\nJSON;");
                             classMethodCombiner.addBody("$expect = json_encode(json_decode($expect));");
                             classMethodCombiner.addBody("$this->assertJsonStringEqualsJsonString($expect, $actual);");
-                            classCombiner.addMethod(classMethodCombiner);
-
 
                             i.getAndSet(i.get() + 1);
                         } catch (Exception e) {

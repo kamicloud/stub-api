@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class ClassCombiner implements CombinerInterface {
+public class ClassCombiner implements CombinerInterface, AddUseInterface {
     private static PHPNamespacePathTransformerInterface namespacePathTransformer;
     private String fileName;
     private String namespace;
@@ -33,8 +33,7 @@ public class ClassCombiner implements CombinerInterface {
         this.namespace = getNamespaceFromFullNamespace(namespace);
 
         if (extend != null) {
-            this.extend = getClassNameFromNamespace(extend);
-            this.addUse(extend);
+            this.extend = addUse(extend);
         }
 
         if (namespacePathTransformer == null) {
@@ -52,30 +51,29 @@ public class ClassCombiner implements CombinerInterface {
         return this;
     }
 
-    public ClassCombiner addAttribute(ClassAttributeCombiner attributeCombiner)
-    {
+    public ClassCombiner addAttribute(ClassAttributeCombiner attributeCombiner) {
         this.attributes.add(attributeCombiner);
         return this;
     }
 
-    public void addUse(String use) {
-        if (uses.contains(use)) {
-            return;
+    @Override
+    public String addUse(String use) {
+        if (!uses.contains(use)) {
+            uses.add(use);
         }
-        uses.add(use);
+        return getClassNameFromNamespace(use);
     }
 
     public void addTrait(String trait) {
         if (traits.contains(trait)) {
             return;
         }
-        addUse(trait);
-        traits.add(getClassNameFromNamespace(trait));
+
+        traits.add(addUse(trait));
     }
 
     public ClassCombiner addMethod(ClassMethodCombiner method) {
         this.methods.add(method);
-        method.setClassCombiner(this);
         return this;
     }
 

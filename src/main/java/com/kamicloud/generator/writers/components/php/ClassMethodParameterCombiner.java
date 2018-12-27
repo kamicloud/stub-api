@@ -2,25 +2,30 @@ package com.kamicloud.generator.writers.components.php;
 
 import com.kamicloud.generator.interfaces.CombinerInterface;
 
-public class ClassMethodParameterCombiner implements CombinerInterface {
+public class ClassMethodParameterCombiner implements CombinerInterface, AddUseInterface {
 
+    private ClassMethodCombiner classMethodCombiner;
     private String type;
     private String name;
     private String defaultValue;
 
-    public ClassMethodParameterCombiner(String name) {
-        this.name = name;
+    public ClassMethodParameterCombiner(ClassMethodCombiner classMethodCombiner, String name) {
+        this(classMethodCombiner, name, null, null);
     }
 
-    public ClassMethodParameterCombiner(String name, String type) {
-        this.type = type;
-        this.name = name;
+    public ClassMethodParameterCombiner(ClassMethodCombiner classMethodCombiner, String name, String type) {
+        this(classMethodCombiner, name, type, null);
     }
 
-    public ClassMethodParameterCombiner(String name, String type, String defaultValue) {
-        this.type = type;
+    public ClassMethodParameterCombiner(ClassMethodCombiner classMethodCombiner, String name, String type, String defaultValue) {
+        this.classMethodCombiner = classMethodCombiner;
+        if (type != null) {
+            this.type = addUse(type);
+        }
         this.name = name;
         this.defaultValue = defaultValue;
+
+        classMethodCombiner.addParameter(this);
     }
 
     @Override
@@ -36,5 +41,10 @@ public class ClassMethodParameterCombiner implements CombinerInterface {
         }
 
         return string;
+    }
+
+    @Override
+    public String addUse(String use) {
+        return this.classMethodCombiner.addUse(use);
     }
 }

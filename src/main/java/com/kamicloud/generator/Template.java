@@ -7,9 +7,18 @@ import com.kamicloud.generator.interfaces.TemplateInterface;
 import java.util.Date;
 
 @SuppressWarnings("unused")
-public class Template implements TemplateInterface {
+class Template implements TemplateInterface {
 
     public static class Enums {
+        /**
+         * 教师请假原因
+         * 54646
+         */
+        enum TeacherLeaveReason {
+            EVENT,
+            RELAX,
+            ACTIVITY
+        }
         /**
          * 用户状态
          */
@@ -62,7 +71,7 @@ public class Template implements TemplateInterface {
          * 第二行
          */
         @RESTFul
-        public class User extends UserProfile {
+        class User extends UserProfile {
             /**
              * 一个注释
              */
@@ -129,6 +138,13 @@ public class Template implements TemplateInterface {
             boolean isRecommended;
         }
 
+        class TeacherLeaveRecord {
+            @Mutable
+            Integer id;
+            String tname;
+            Enums.TeacherLeaveReason reason;
+        }
+
         /**
          * 一个分享场景的抽象
          */
@@ -152,7 +168,7 @@ public class Template implements TemplateInterface {
         }
     }
 
-    public class Controllers {
+    class Controllers {
         /**
          * 后台用户控制器，用来提供和用户相关的后台接口
          * 多行文本
@@ -232,6 +248,23 @@ public class Template implements TemplateInterface {
          */
         @Middleware(name = "某一个作用范围很广的middleware")
         class Teacher {
+            @API(methods = {MethodType.POST})
+            class AddTeacherLeave {
+                @Request
+                String name;
+                @Request
+                @Optional
+                String[] names;
+                @Request
+                Enums.TeacherLeaveReason reason;
+
+                @Response
+                Models.TeacherLeaveRecord record;
+                @Response
+                @Optional
+                Models.TeacherLeaveRecord records;
+            }
+
             /**
              * 约课搜索老师
              */

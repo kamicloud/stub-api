@@ -49,3 +49,19 @@ api: /api/V1/User/CreateUser
 email: cy6@qq.com
 
 ---
+api: /api/V1/Teacher/AddTeacherLeave
+name: xxx
+reason: ACTIVITY
+---
+api: /api/V1/Teacher/AddTeacherLeave
+name: xxx
+reason: EVENT
+---
+api: /api/V1/Teacher/AddTeacherLeave
+name: xxx
+reason: RELAX
+---
+api: /api/V1/Teacher/AddTeacherLeave
+name: xxx
+reason: 0
+---

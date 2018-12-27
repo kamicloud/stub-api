@@ -128,15 +128,13 @@ public class Generator {
             ControllerStub controllerStub = new ControllerStub(((ClassOrInterfaceDeclaration) controllerTemplate).getNameAsString());
             templateStub.addController(controllerStub);
             // 注释
-            Optional<Comment> controllerTemplateComment = controllerTemplate.getComment();
-            controllerTemplateComment.ifPresent(comment -> controllerStub.setComment(comment.getContent()));
+            parseComments(controllerTemplate.getComment(), controllerStub);
 
             ((ClassOrInterfaceDeclaration) controllerTemplate).getMembers().forEach(actionTemplate -> {
                 ActionStub actionStub = new ActionStub(((ClassOrInterfaceDeclaration) actionTemplate).getNameAsString());
                 controllerStub.addAction(actionStub);
                 // 注释
-                Optional<Comment> actionCommentTemplate = actionTemplate.getComment();
-                actionCommentTemplate.ifPresent(comment -> actionStub.setComment(comment.getContent()));
+                parseComments(actionTemplate.getComment(), actionStub);
                 // 注解
                 parseAnnotations(actionTemplate.getAnnotations(), actionStub);
 
@@ -151,8 +149,7 @@ public class Generator {
                     parseAnnotations(parameterTemplate.getAnnotations(), parameterStub);
 
                     // 注释
-                    Optional<Comment> parameterCommentTemplate = parameterTemplate.getComment();
-                    parameterCommentTemplate.ifPresent(comment -> parameterStub.setComment(comment.getContent()));
+                    parseComments(parameterTemplate.getComment(), parameterStub);
 
                     if (parameterStub.hasAnnotation(Request.name)) {
                         actionStub.addRequest(parameterStub);
@@ -172,8 +169,7 @@ public class Generator {
 
             parseAnnotations(enumTemplate.getAnnotations(), enumStub);
 
-            Optional<Comment> commentTemplate = enumTemplate.getComment();
-            commentTemplate.ifPresent(comment -> enumStub.setComment((comment).getContent()));
+            parseComments(enumTemplate.getComment(), enumStub);
 
             AtomicInteger i = new AtomicInteger();
             ((EnumDeclaration) enumTemplate).getEntries().forEach(entryTemplate -> {
@@ -196,8 +192,7 @@ public class Generator {
     private void parseModels(ClassOrInterfaceDeclaration modelsTemplate, TemplateStub output) {
         modelsTemplate.getMembers().forEach(modelTemplate -> {
             ModelStub modelStub = new ModelStub(((ClassOrInterfaceDeclaration) modelTemplate).getNameAsString());
-            Optional<Comment> commentTemplate = modelTemplate.getComment();
-            commentTemplate.ifPresent(comment -> modelStub.setComment((comment).getContent()));
+            parseComments(modelTemplate.getComment(), modelStub);
             // 继承关系
             NodeList extendedTypeTemplates = ((ClassOrInterfaceDeclaration) modelTemplate).getExtendedTypes();
             if (!extendedTypeTemplates.isEmpty()) {
@@ -215,10 +210,14 @@ public class Generator {
                 // 注解
                 parseAnnotations(parameterTemplate.getAnnotations(), parameterStub);
                 // 注释
-                Optional<Comment> parameterCommentTemplate = parameterTemplate.getComment();
-                parameterCommentTemplate.ifPresent(comment -> parameterStub.setComment(comment.getContent()));
+                parseComments(parameterTemplate.getComment(), parameterStub);
             });
         });
+    }
+
+    private void parseComments(Optional<Comment> parameterCommentTemplate, BaseWithAnnotationStub parameterStub) {
+        // 注释
+        parameterCommentTemplate.ifPresent(comment -> parameterStub.setComment(comment.getContent()));
     }
 
     private void parseAnnotations(NodeList<AnnotationExpr> annotationTemplates, AnnotationsInterface baseStub) {

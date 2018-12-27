@@ -6,24 +6,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
-public class ClassMethodCombiner implements CombinerInterface {
+@SuppressWarnings("unused")
+public class ClassMethodCombiner implements CombinerInterface, AddUseInterface {
     private String name;
     private String access;
     private boolean statical = false;
     private ArrayList<ClassMethodParameterCombiner> parameters = new ArrayList<>();
     private ArrayList<String> body = new ArrayList<>();
+    private ArrayList<String> comments = new ArrayList<>();
 
     private ClassCombiner classCombiner;
 
     private final String intend = "    ";
 
-    public ClassMethodCombiner(String name) {
-        this(name, "public");
+    public ClassMethodCombiner(ClassCombiner classCombiner, String name) {
+        this(classCombiner, name, "public");
     }
 
-    public ClassMethodCombiner(String name, String access) {
+    public ClassMethodCombiner(ClassCombiner classCombiner, String name, String access) {
         this.name = name;
         this.access = access;
+        this.classCombiner = classCombiner;
+
+        classCombiner.addMethod(this);
     }
 
     public void addParameter(ClassMethodParameterCombiner parameterCombiner) {
@@ -90,6 +95,11 @@ public class ClassMethodCombiner implements CombinerInterface {
     public String write() {
         StringBuilder content = new StringBuilder();
 
+        if (comments.size() > 0) {
+            content.append("    /**\n");
+            comments.forEach(comment -> content.append("     * ").append(comment).append("\n"));
+            content.append("     */\n");
+        }
         content.append(intend).append(access != null ? access : "public").append(" ");
         if (statical) {
             content.append("static ");
@@ -113,11 +123,16 @@ public class ClassMethodCombiner implements CombinerInterface {
         return content.toString();
     }
 
-    public void setClassCombiner(ClassCombiner classCombiner) {
-        this.classCombiner = classCombiner;
-    }
-
     public ClassCombiner getClassCombiner() {
         return classCombiner;
+    }
+
+    @Override
+    public String addUse(String use) {
+        return this.classCombiner.addUse(use);
+    }
+
+    public void addComment(String comment) {
+        this.comments.add(comment);
     }
 }

@@ -70,11 +70,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 writeParameterAttributes(parameters, modelClassCombiner);
                 writeParameterGetters(parameters, modelClassCombiner);
                 writeParameterSetters(parameters, modelClassCombiner);
-//                writeParameterRules("rules", parameters, modelClassCombiner);
                 writeGetAttributeMapMethod("getAttributeMap", parameters, modelClassCombiner);
-//                writeInitFromEloquentMethod(parameters, modelClassCombiner);
-//                writeInitFromModelMethod(parameters, modelClassCombiner);
-//                writeValidateMethod("validate", parameters, modelClassCombiner);
 
                 modelClassCombiner.toFile();
             } catch (Exception e) {
@@ -98,32 +94,26 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         "App\\Http\\Controllers\\Controller"
                 );
 
-
                 controllerStub.getActions().forEach((actionName, action) -> {
                     try {
-                        String requestClassName = "Request";
-                        String messageClassName = actionName + "Message";
+                        String requestClassName = "Illuminate\\Http\\Request";
+                        String messageClassName = "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + actionName + "Message";
 
                         ClassCombiner messageClassCombiner = new ClassCombiner(
-                                "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + messageClassName,
+                                messageClassName,
                                 "YetAnotherGenerator\\BaseMessage"
                         );
 
                         String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
 
-                        controllerClassCombiner.addUse("Illuminate\\Http\\Request");
-                        controllerClassCombiner.addUse("App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + messageClassName);
                         controllerClassCombiner.addUse("App\\Http\\Services\\" + version + "\\" + controllerStub.getName() + "Service");
                         controllerClassCombiner.addUse("DB");
 
-
-                        ClassMethodCombiner actionClassMethodCombiner = new ClassMethodCombiner(lowerCamelActionName);
-                        actionClassMethodCombiner.addParameter(new ClassMethodParameterCombiner("request", requestClassName));
-
-                        controllerClassCombiner.addMethod(actionClassMethodCombiner);
+                        ClassMethodCombiner actionClassMethodCombiner = new ClassMethodCombiner(controllerClassCombiner, lowerCamelActionName);
+                        new ClassMethodParameterCombiner(actionClassMethodCombiner, "request", requestClassName);
 
                         actionClassMethodCombiner.setBody(
-                                "$message = new " + action.getName() + "Message($request);",
+                                "$message = new " + actionClassMethodCombiner.addUse(messageClassName) + "($request);",
                                 "$message->validateInput();",
                                 controllerStub.getName() + "Service::" + lowerCamelActionName + "($message);",
                                 "$message->validateOutput();",
@@ -136,58 +126,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             );
                         }
 
-//                        ClassMethodCombiner constructClassMethodCombiner = new ClassMethodCombiner("__construct");
-//                        constructClassMethodCombiner.addParameter(new ClassMethodParameterCombiner("request", requestClassName));
-//                        constructClassMethodCombiner.setBody(
-//                            "$this->request = $request;\n",
-//                            "$data = $request->all();\n"
-//                        );
-//
-//                        action.getRequests().forEach((parameterName, parameterStub) -> {
-//                            String dataInArray = "$data['" + parameterStub.getName() + "']";
-//                            constructClassMethodCombiner.addBody(
-//                                "$this->" + parameterStub.getName() + " = " + dataInArray + " ?? null;"
-//                            );
-//
-//                            writeModelSerialize(parameterStub, constructClassMethodCombiner, messageClassCombiner);
-//                        });
-//
-//                        messageClassCombiner.addMethod(constructClassMethodCombiner);
-
-                        ClassMethodCombiner setResponseMethod = new ClassMethodCombiner("setResponse");
-//                        ClassMethodCombiner getResponseClassMethodCombiner = new ClassMethodCombiner("getResponse");
-
                         messageClassCombiner.addTrait("YetAnotherGenerator\\ValueHelper");
                         // message
-//                        messageClassCombiner.addUse("Illuminate\\Http\\Request");
-//                        messageClassCombiner.addAttribute(new ClassAttributeCombiner("request", "protected"));
                         writeParameterGetters(action.getRequests(), messageClassCombiner);
                         writeParameterAttributes(action.getRequests(), messageClassCombiner);
-
                         writeParameterAttributes(action.getResponses(), messageClassCombiner);
-//                        action.getResponses().forEach((parameterName, parameterStub) ->
-//                                getResponseClassMethodCombiner.addBody("'"  + parameterStub.getName() + "' => $this->" + parameterStub.getName() + ",")
-//                        );
-//                        getResponseClassMethodCombiner.wrapBody(new ArrayList<>(Arrays.asList(
-//                                "'status' => 0,",
-//                                "'message' => 'success',",
-//                                "'data' => ["
-//                        )), "],");
-//                        getResponseClassMethodCombiner.wrapBody(
-//                                "return [",
-//                                "];"
-//                        );
-
-                        writeMethodParameters(action.getResponses(), setResponseMethod);
                         writeGetAttributeMapMethod("requestRules", action.getRequests(), messageClassCombiner);
                         writeGetAttributeMapMethod("responseRules", action.getResponses(), messageClassCombiner);
-//                        writeParameterRules("requestRules", action.getRequests(), messageClassCombiner);
-//                        writeParameterRules("responseRules", action.getResponses(), messageClassCombiner);
-//                        writeValidateMethod("validateInput", action.getRequests(), messageClassCombiner);
-//                        writeValidateMethod("validateOutput", action.getResponses(), messageClassCombiner);
-
-                        messageClassCombiner.addMethod(setResponseMethod);
-//                        messageClassCombiner.addMethod(getResponseClassMethodCombiner);
+                        ClassMethodCombiner setResponseMethod = new ClassMethodCombiner(messageClassCombiner, "setResponse");
+                        writeMethodParameters(action.getResponses(), setResponseMethod);
 
                         messageClassCombiner.toFile();
                     } catch (Exception e) {
@@ -240,7 +187,6 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeErrors(TemplateStub o) throws Exception {
-
         ClassCombiner errorCodeClassCombiner = new ClassCombiner("App\\Generated\\Exceptions\\ErrorCode");
         o.getErrors().forEach(error -> {
             try {
@@ -254,11 +200,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         "YetAnotherGenerator\\BaseException"
                 );
 
-                ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner("__construct");
-                constructMethodCombiner.addParameter(new ClassMethodParameterCombiner("message", null, "null"));
+                ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner(exceptionClassCombiner, "__construct");
+                new ClassMethodParameterCombiner(constructMethodCombiner, "message", null, "null");
                 constructMethodCombiner.addBody("parent::__construct($message, ErrorCode::" + error.getName() + ");");
-
-                exceptionClassCombiner.addMethod(constructMethodCombiner);
 
                 exceptionClassCombiner.toFile();
             } catch (Exception e) {
@@ -297,11 +241,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeParameterAttributes(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        parameters.forEach((parameterName, parameterStub) -> writeParameterAttribute(parameterStub, classCombiner));
-    }
-
-    private void writeParameterAttribute(ParameterStub parameterStub, ClassCombiner classCombiner) {
-        classCombiner.addAttribute(new ClassAttributeCombiner(parameterStub.getName(), "protected"));
+        parameters.forEach((parameterName, parameterStub) -> new ClassAttributeCombiner(classCombiner, parameterStub.getName(), "protected"));
     }
 
     private void writeParameterGetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
@@ -315,9 +255,12 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         } else {
             parameterName = "get" + parameterName;
         }
-        ClassMethodCombiner cn = new ClassMethodCombiner(parameterName);
-        cn.setBody("return $this->" + parameterStub.getName() + ";");
-        classCombiner.addMethod(cn);
+        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, parameterName);
+        classMethodCombiner.setBody("return $this->" + parameterStub.getName() + ";");
+        String comment = parameterStub.getComment();
+        if (comment != null) {
+            classMethodCombiner.addComment(parameterStub.getComment());
+        }
     }
 
     private void writeParameterSetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
@@ -326,10 +269,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
     private void writeParameterSetter(ParameterStub parameterStub, ClassCombiner classCombiner) {
         String parameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, parameterStub.getName());
-        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("set" + parameterName);
+        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, "set" + parameterName);
         classMethodCombiner.addBody("$this->" + parameterStub.getName() + " = $" + parameterStub.getName() + ";");
-        classMethodCombiner.addParameter(new ClassMethodParameterCombiner(parameterStub.getName()));
-        classCombiner.addMethod(classMethodCombiner);
+        new ClassMethodParameterCombiner(classMethodCombiner, parameterStub.getName());
     }
 
     private void writeMethodParameters(HashMap<String, ParameterStub> parameters, ClassMethodCombiner classMethodCombiner) {
@@ -337,9 +279,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeMethodParameter(ParameterStub parameterStub, ClassMethodCombiner classMethodCombiner) {
-        ClassMethodParameterCombiner classMethodParameterCombiner = new ClassMethodParameterCombiner(parameterStub.getName());
+        new ClassMethodParameterCombiner(classMethodCombiner, parameterStub.getName());
 
-        classMethodCombiner.addParameter(classMethodParameterCombiner);
         classMethodCombiner.addBody("$this->" + parameterStub.getName() + " = $" + parameterStub.getName() + ";");
     }
 
@@ -349,8 +290,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
      * @param classCombiner 目标类
      */
     private void writeGetAttributeMapMethod(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(methodName);
-
+        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, methodName);
 
         parameters.forEach((parameterName, parameterStub) -> {
             String typeName = parameterStub.getType();
@@ -395,7 +335,6 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
         });
         classMethodCombiner.wrapBody("return [", "];");
-        classCombiner.addMethod(classMethodCombiner);
     }
 
     private String getModelNameFromType(String type) {
@@ -409,213 +348,5 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             typeName = typeName + "Enum";
         }
         return typeName;
-    }
-
-
-
-
-
-
-
-
-
-
-    private void writeModelSerialize(
-        ParameterStub parameterStub,
-        ClassMethodCombiner classMethodCombiner,
-        ClassCombiner classCombiner
-    ) {
-        String parameterName = parameterStub.getName();
-        String parameterType = parameterStub.getType();
-        String parameterInModel = "$this->" + parameterName;
-        boolean isArray = parameterStub.isArray();
-        boolean isModel = parameterStub.isModel();
-        boolean isEnum = parameterStub.isEnum();
-        if (isModel || isEnum) {
-            String parameterTypeName = getModelNameFromType(parameterType);
-            String methodName;
-
-            if (isModel) {
-                methodName = "initFromModel";
-            } else {
-                methodName = "transform";
-            }
-            methodName += (isArray ? "s" : "");
-            classCombiner.addUse("App\\Generated\\" + version + "\\" + (isModel ? "Models" : "Enums") + "\\" + parameterTypeName);
-
-            classMethodCombiner.addBody(
-                    parameterInModel + " = " +
-                    parameterTypeName + "::" + methodName +
-                    "(" + parameterInModel +
-                    ");"
-            );
-        }
-    }
-
-    private void writeInitFromEloquentMethod(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("initFromEloquent");
-        classMethodCombiner.setStatical();
-
-        classCombiner.addUse("Illuminate\\Database\\Eloquent\\Model");
-
-        ClassMethodParameterCombiner classMethodParameterCombiner = new ClassMethodParameterCombiner("orm", "?Model");
-        classMethodCombiner.addParameter(classMethodParameterCombiner);
-
-        classMethodCombiner.setBody(
-                "if ($orm === null) {",
-                "    return null;",
-                "}",
-                "",
-                "$model = new self();",
-                "",
-                "$values = $orm->attributesToArray() + $orm->getRelations();",
-                ""
-        );
-
-        parameters.forEach((parameterName, parameterStub) -> {
-            String typeName = getModelNameFromType(parameterStub.getType());
-            String lowerParameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName);
-            boolean isArray = false;
-            boolean isModel = false;
-            if (parameterStub.getType().endsWith("[]")) {
-                isArray = true;
-            }
-            if (parameterStub.getType().startsWith("Models")) {
-                isModel = true;
-            }
-            classMethodCombiner.addBody("$" + parameterName + " = $values['" + lowerParameterName + "'] ?? null;");
-            if (isModel) {
-                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeName);
-                classMethodCombiner.addBody("$model->" + parameterName + " = " + typeName + "::initFromEloquent" + (isArray ? "s" : "") + "($" + parameterName + ");");
-            } else {
-                classMethodCombiner.addBody("$model->" + parameterName + " = $" + parameterName + ";");
-            }
-            classMethodCombiner.addBody("");
-        });
-
-        classMethodCombiner.addBody("return $model;");
-        classCombiner.addMethod(classMethodCombiner);
-    }
-
-    private void writeInitFromModelMethod(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner("initFromModel");
-        classMethodCombiner.setStatical();
-
-        classCombiner.addUse("Illuminate\\Database\\Eloquent\\Model");
-
-        ClassMethodParameterCombiner classMethodParameterCombiner = new ClassMethodParameterCombiner("values");
-        classMethodCombiner.addParameter(classMethodParameterCombiner);
-
-        classMethodCombiner.setBody(
-                "if (!$values) {",
-                "    return null;",
-                "}",
-                "if (is_string($values)) {",
-                "    $values = json_decode($values, true);",
-                "}",
-                "",
-                "$model = new self();",
-                ""
-        );
-
-        parameters.forEach((parameterName, parameterStub) -> {
-            String typeName = getModelNameFromType(parameterStub.getType());
-            String lowerParameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName);
-            boolean isArray = false;
-            boolean isModel = false;
-            if (parameterStub.getType().endsWith("[]")) {
-                isArray = true;
-            }
-            if (parameterStub.getType().startsWith("Models")) {
-                isModel = true;
-            }
-            classMethodCombiner.addBody("$" + parameterName + " = $values['" + lowerParameterName + "'] ?? null;");
-            if (isModel) {
-                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeName);
-                classMethodCombiner.addBody("$model->" + parameterName + " = " + typeName + "::initFromModel" + (isArray ? "s" : "") + "($" + parameterName + ");");
-            } else {
-                classMethodCombiner.addBody("$model->" + parameterName + " = $" + parameterName + ";");
-            }
-            classMethodCombiner.addBody("");
-        });
-
-        classMethodCombiner.addBody("return $model;");
-        classCombiner.addMethod(classMethodCombiner);
-    }
-
-    private void writeValidateMethod(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(methodName);
-
-        classCombiner.addUse("Illuminate\\Database\\Eloquent\\Model");
-
-
-        classMethodCombiner.setBody(
-        );
-
-//        if (is_null($this->id)) {
-//            throw new InvalidParameterException();
-//        }
-//
-//        if (!is_null($this->testUser)) {
-//            $validator = Validator::make($this->testUser->jsonSerialize(), $this->testUser->rules());
-//            dd($validator->errors());
-//        }
-        classCombiner.addUse("App\\Generated\\Exceptions\\InvalidParameterException");
-        parameters.forEach((parameterName, parameterStub) -> {
-            String typeName = getModelNameFromType(parameterStub.getType());
-            String lowerParameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName);
-            String propRef = "$this->" + parameterName;
-            boolean isArray = false;
-            boolean isModel = false;
-            if (parameterStub.getType().endsWith("[]")) {
-                isArray = true;
-            }
-            if (parameterStub.getType().startsWith("Models")) {
-                isModel = true;
-                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeName);
-            }
-            if (!parameterStub.hasAnnotation(Optional.name)) {
-                classMethodCombiner.addBody(
-                        "if (is_null(" + propRef + ")) {",
-                        "    throw new InvalidParameterException('" + parameterName + " can not be null');",
-                        "}"
-                );
-            }
-            if (isModel) {
-                classMethodCombiner.addBody(
-                        "if (!is_object(" + propRef + ") || !" + propRef + " instanceof " + typeName + " || !" + propRef + "->validate()) {",
-                        "    throw new InvalidParameterException('" + parameterName + " can not be null');",
-                        "}"
-                );
-            }
-        });
-
-        classCombiner.addMethod(classMethodCombiner);
-    }
-
-    private void writeParameterRules(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(methodName);
-        parameters.forEach((parameterName, parameterStub) -> {
-            ArrayList<String> ruleList = new ArrayList<>();
-            String typeName = parameterStub.getType();
-            // 参数校验
-            ruleList.add("bail");
-            if (!parameterStub.hasAnnotation(Optional.name)) {
-                ruleList.add("required");
-            }
-            if (typeName.endsWith("[]")) {
-                typeName = typeName.replace("[]", "");
-                typeName = typeName.replace(".", "[].");
-            }
-            if (typeName.startsWith("Models.")) {
-                typeName = typeName.replace('.', ':');
-            }
-
-            ruleList.add(typeName);
-            classMethodCombiner.addBody("'" + parameterName + "' => '" + String.join("|", ruleList) + "',");
-        });
-
-        classMethodCombiner.wrapBody("return [", "];");
-        classCombiner.addMethod(classMethodCombiner);
     }
 }

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
     private String name;
     private ArrayList<AnnotationStub> annotations = new ArrayList<>();
+    private ArrayList<String> comments = new ArrayList<>();
     private String comment;
     private String extendsFrom;
 
@@ -27,14 +28,13 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
     public void setComment(String comment) {
         String[] comments = comment.split("\n");
 
-        ArrayList<String> trimmedStrings = new ArrayList<>();
         for (int i = 0; i < comments.length; i++) {
             comments[i] = comments[i].trim();
             if (!comments[i].isEmpty()) {
-                trimmedStrings.add(comments[i]);
+                this.comments.add(comments[i]);
             }
         }
-        this.comment = String.join("\n", trimmedStrings);
+        this.comment = String.join("\n", this.comments);
     }
 
     public String getComment() {
