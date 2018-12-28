@@ -1,21 +1,19 @@
 package com.kamicloud.generator;
 
+import com.github.javaparser.javadoc.Javadoc;
 import com.kamicloud.generator.annotations.API;
 import com.kamicloud.generator.annotations.MethodType;
+import com.sun.javadoc.*;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
+import java.lang.reflect.*;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 
+
 public class Debug {
     public static void main(String[] args) {
-        Template template = new Template();
-        try {
-            Class<?> templateClass = template.getClass();
-
+        Arrays.asList(TemplateList.templates).forEach(templateClass -> {
             Arrays.asList(templateClass.getDeclaredClasses()).forEach(element -> {
                 String name = element.getName();
                 String canonicalName = element.getCanonicalName();
@@ -26,7 +24,7 @@ public class Debug {
                             Arrays.asList(actionTemplate.getDeclaredFields()).forEach(parameterStub -> {
 
                                 Class<?> type = parameterStub.getType();
-                                Boolean is = type.isMemberClass();
+                                Boolean isMemberClass = type.isMemberClass();
                                 Type types = parameterStub.getGenericType();
                                 String fullTypeName = type.getTypeName();
                                 String typeName = type.getSimpleName();
@@ -39,21 +37,6 @@ public class Debug {
                     });
                 }
             });
-//            Class<?>[] controllers = b[0].getDeclaredClasses();
-//            Class<?>[] userActions = controllers[1].getDeclaredClasses();
-//
-//            Field[] fields = userActions[1].getDeclaredFields();
-//            Annotation[] annotations = userActions[1].getDeclaredAnnotations();
-//            Annotation[] annotations = userActions[1].getAnn();
-//
-//
-//            Annotation an = userActions[1].getAnnotation(API.class);
-//            MethodType[] mt = ((API) an).methods();
-//
-//            Proxy annotation = (Proxy) annotations[0];
-//            String x = "x";
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        });
     }
 }

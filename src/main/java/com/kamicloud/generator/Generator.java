@@ -184,7 +184,9 @@ public class Generator {
                     Expression argument = entryTemplate.getArgument(0);
                     value = argument.asIntegerLiteralExpr().getValue();
                 }
-                enumStub.addItem(key, value, type);
+                EnumStub.EnumStubItem item = new EnumStub.EnumStubItem(value, type);
+                parseComments(entryTemplate.getComment(), item);
+                enumStub.addItem(key, item);
             });
         });
     }

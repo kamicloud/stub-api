@@ -6,6 +6,9 @@ import com.kamicloud.generator.interfaces.TemplateInterface;
 
 import java.util.Date;
 
+/**
+ * skdjflsd
+ */
 @SuppressWarnings("unused")
 class Template implements TemplateInterface {
 
@@ -15,8 +18,16 @@ class Template implements TemplateInterface {
          * 54646
          */
         enum TeacherLeaveReason {
+            // 事件
             EVENT,
+                        /**
+                         * 休息
+                         */
             RELAX,
+            /**
+             * 活动
+             */
+            // 活动
             ACTIVITY
         }
         /**
