@@ -9,11 +9,14 @@ use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 class Handler extends ExceptionHandler
 {
     protected $dontReport = [
-       BaseException::class
+        BaseException::class
     ];
 
     public function render($request, Exception $exception)
     {
+        if (!starts_with($request->getRequestUri(), '/api')) {
+            return parent::render($request, $exception);
+        }
         if ($exception instanceof BaseException) {
             return response()->json($exception->toResponse($request));
         }
