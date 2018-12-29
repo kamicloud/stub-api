@@ -2,6 +2,7 @@ package com.kamicloud.generator;
 
 import com.kamicloud.generator.annotations.ErrorInterface;
 
+@SuppressWarnings("unused")
 public enum Errors implements ErrorInterface {
     /**
      * comment 1
@@ -22,12 +23,12 @@ public enum Errors implements ErrorInterface {
     }
 
     @Override
-    public int value() {
+    public int getValue() {
         return value;
     }
 
     @Override
-    public String message() {
+    public String getMessage() {
         return message;
     }
 }
