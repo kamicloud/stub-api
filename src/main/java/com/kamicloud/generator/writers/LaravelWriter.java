@@ -317,6 +317,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 ruleList.add("bail");
                 if (!parameterStub.hasAnnotation(Optional.name)) {
                     ruleList.add("required");
+                } else {
+                    ruleList.add("nullable");
                 }
 
                 ruleList.add(typeModelName);

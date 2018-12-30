@@ -72,6 +72,8 @@ public class PostmanWriter extends BaseWriter {
                 postmanItemRequestStub.setUrl(postmanItemRequestUrlStub);
 
                 postmanItemRequestUrlStub.addHost("localhost");
+                postmanItemRequestUrlStub.addPath("api");
+                postmanItemRequestUrlStub.addPath("V1");
                 postmanItemRequestUrlStub.addPath(controller.getName());
                 postmanItemRequestUrlStub.addPath(action.getName());
 
