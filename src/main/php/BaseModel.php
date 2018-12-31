@@ -57,7 +57,7 @@ abstract class BaseModel implements JsonSerializable
         foreach ($attributeMap as $attribute) {
             [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable] = $attribute;
 
-            $value = $values[$field] ?? null;
+            $value = $values[$dbField] ?? null;
 
             if ($isModel) {
                 /** @var BaseModel $type */
