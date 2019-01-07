@@ -85,14 +85,14 @@ trait ValueHelper
             $messages = $validator->messages()->messages();
             $messages = array_flatten($messages);
 
-            $exception = config('generator.exception.parameter');
+            $exception = config('generator.exceptions.parameter', InvalidParameterException::class);
             throw new $exception($location . "\n-----\n" . join("\n--\n", $messages));
         }
     }
 
     public function validateValue($value, $field, $isModel, $isArray, $isEnum, $type, $isOptional, $location)
     {
-        $exception = config('generator.exception.parameter');
+        $exception = config('generator.exceptions.parameter', InvalidParameterException::class);
 
         if (!$isOptional && is_null($value)) {
             throw new $exception("{$location} can not be null");
@@ -149,7 +149,7 @@ trait ValueHelper
 
     public static function convertDate($value, $format = 'Y-m-d H:i:s')
     {
-        $exception = config('generator.exception.parameter');
+        $exception = config('generator.exceptions.parameter', InvalidParameterException::class);
         if (is_null($value)) {
             return null;
         }
