@@ -51,7 +51,7 @@ public class Generator {
             output.setActionUrl();
             if (process.equals("code")) {
                 output.addObserver(new PostmanWriter(env));
-//                output.addObserver(new TestCaseWriter(env));
+                output.addObserver(new TestCaseWriter(env));
                 output.addObserver(new DocWriter(env));
                 output.addObserver(new LaravelWriter(env));
             } else {

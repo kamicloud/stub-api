@@ -3,7 +3,7 @@
 namespace YetAnotherGenerator;
 
 use Closure;
-use DB;
+use Illuminate\Support\Facades\DB;
 
 class GeneratorMiddleware
 {

@@ -2,9 +2,8 @@
 
 namespace YetAnotherGenerator;
 
-use App\Generated\Exceptions\InvalidParameterException;
 use Illuminate\Support\Carbon;
-use Validator;
+use Illuminate\Support\Facades\Validator;
 use Throwable;
 
 trait ValueHelper
@@ -62,7 +61,6 @@ trait ValueHelper
      *
      * @param array $attributeMap
      * @param string $location
-     * @throws InvalidParameterException
      */
     public function validateAttributes(array $attributeMap, $location = 'root')
     {
@@ -87,20 +85,22 @@ trait ValueHelper
             $messages = $validator->messages()->messages();
             $messages = array_flatten($messages);
 
-            throw new InvalidParameterException($location . "\n-----\n" . join("\n--\n", $messages));
+            $exception = config('generator.exception.parameter');
+            throw new $exception($location . "\n-----\n" . join("\n--\n", $messages));
         }
     }
 
     public function validateValue($value, $field, $isModel, $isArray, $isEnum, $type, $isOptional, $location)
     {
+        $exception = config('generator.exception.parameter');
 
         if (!$isOptional && is_null($value)) {
-            throw new InvalidParameterException("{$location} can not be null");
+            throw new $exception("{$location} can not be null");
         }
 
         if ($isArray) {
             if (!is_array($value)) {
-                throw new InvalidParameterException("{$location} should be array");
+                throw new $exception("{$location} should be array");
             }
 
             foreach ($value as $index => $item) {
@@ -113,18 +113,15 @@ trait ValueHelper
             if ($isModel) {
                 /** @var BaseModel $type */
                 if (!is_object($value) || !($value instanceof BaseModel) || get_class($value) !== $type) {
-                    throw new InvalidParameterException("{$location} must be instance of {$field}");
+                    throw new $exception("{$location} must be instance of {$field}");
                 }
 
                 $value->validateAttributes($value->getAttributeMap(), $location);
             } elseif ($isEnum) {
                 /** @var BaseEnum $type */
                 if ($type::verify($value) === false) {
-                    throw new InvalidParameterException("{$location} should match enum");
+                    throw new $exception("{$location} should match enum");
                 }
-            } elseif ($type === 'Date') {
-                // 无需校验
-            } else {
             }
 
         }
@@ -152,6 +149,7 @@ trait ValueHelper
 
     public static function convertDate($value, $format = 'Y-m-d H:i:s')
     {
+        $exception = config('generator.exception.parameter');
         if (is_null($value)) {
             return null;
         }
@@ -163,7 +161,7 @@ trait ValueHelper
                 return Carbon::createFromFormat($value, $format);
             }
         } catch (Throwable $e) {
-            throw new InvalidParameterException('cannot convert from date');
+            throw new $exception('cannot convert from date');
         }
     }
 

@@ -15,6 +15,7 @@ class BaseException extends Exception implements Responsable
     {
         $this->status = $status;
         $this->message = $message;
+        parent::__construct($message, 0, $this);
     }
 
     public function getStatus()

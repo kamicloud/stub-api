@@ -42,17 +42,11 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         try {
             FileUtil.deleteAllFilesOfDir(testDir);
 
-            FileInputStream fileInputStream = new FileInputStream(new File(dir.getAbsolutePath() + "/TestCases.yml"));
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
             ClassCombiner.setNamespacePathTransformer(this);
 
-            parseTestCases(bufferedReader);
+            File root = new File(env.getProperty("generator.testcases-path", ""));
 
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
+            getTestCases(root);
 
             getTestResponse(output);
 
@@ -61,6 +55,26 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
             e.printStackTrace();
         }
 
+    }
+
+    private void getTestCases(File root) throws Exception {
+        if (root.isDirectory()) {
+            Arrays.asList(root.listFiles()).forEach(file -> {
+                try {
+                    getTestCases(file);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        } else {
+            FileInputStream fileInputStream = new FileInputStream(root);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            parseTestCases(bufferedReader);
+            bufferedReader.close();
+            inputStreamReader.close();
+            fileInputStream.close();
+        }
     }
 
     private void getTestResponse(OutputStub output) {
