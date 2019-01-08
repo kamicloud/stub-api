@@ -1,6 +1,5 @@
 package com.kamicloud.generator;
 
-@SuppressWarnings("unused")
 public class TemplateList {
     public static Class<?>[] templates = new Class[] {
             TemplateV1.class,

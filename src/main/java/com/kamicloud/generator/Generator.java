@@ -1,8 +1,6 @@
 package com.kamicloud.generator;
 
-import com.kamicloud.generator.annotations.API;
 import com.kamicloud.generator.annotations.ErrorInterface;
-import com.kamicloud.generator.annotations.MethodType;
 import com.kamicloud.generator.annotations.Request;
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
@@ -20,7 +18,6 @@ import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.*;
 
 
@@ -88,41 +85,6 @@ public class Generator extends Doclet {
         SpringApplication app = new SpringApplication(Generator.class);
         DefaultProfileUtil.addDefaultProfile(app);
         app.run(args);
-    }
-
-    public static boolean start(RootDoc root) {
-        ClassDoc[] classes = root.classes();
-        for (int i = 0; i < classes.length; ++i) {
-            ClassDoc cd = classes[i];
-
-            String rootName = cd.simpleTypeName();
-            classDocHashMap.put(cd.qualifiedTypeName(), cd);
-            classes[i].findClass("com.kamicloud.generator.TemplateV1");
-            System.out.println(cd.name() + "   " + cd.commentText());
-            ClassDoc[] innerClasses = cd.innerClasses();
-            for (int j = 0; j < innerClasses.length; j++) {
-                Arrays.asList(innerClasses[j].innerClasses()).forEach(classDoc -> {
-                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
-                    classDocHashMap.put(classDoc.qualifiedTypeName(), classDoc);
-
-                    Arrays.asList(classDoc.fields()).forEach(fieldDoc -> {
-                        classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
-                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
-                    });
-                });
-            }
-        }
-        return true;
-    }
-
-    public static void syncComments() {
-        classHashMap.forEach((name, commentInterface) -> {
-            ProgramElementDoc programElementDoc = classDocHashMap.get(name);
-
-            if (programElementDoc != null) {
-                commentInterface.setComment(programElementDoc.commentText());
-            }
-        });
     }
 
     public OutputStub parse() {
@@ -316,11 +278,43 @@ public class Generator extends Doclet {
         return parameterStub;
     }
 
+    public static void syncComments() {
+        classHashMap.forEach((name, commentInterface) -> {
+            ProgramElementDoc programElementDoc = classDocHashMap.get(name);
+
+            if (programElementDoc != null) {
+                commentInterface.setComment(programElementDoc.commentText());
+            }
+        });
+    }
+
     private void parseComment(String name, CommentInterface commentStub) {
         classHashMap.put(name, commentStub);
     }
 
     private String fieldBuilder(Field field) {
         return field.getDeclaringClass().getCanonicalName() + "." + field.getName();
+    }
+
+    @SuppressWarnings("unused")
+    public static boolean start(RootDoc root) {
+        ClassDoc[] classes = root.classes();
+        for (ClassDoc cd : classes) {
+            classDocHashMap.put(cd.qualifiedTypeName(), cd);
+            System.out.println(cd.name() + "   " + cd.commentText());
+            ClassDoc[] innerClasses = cd.innerClasses();
+            for (ClassDoc innerClass : innerClasses) {
+                Arrays.asList(innerClass.innerClasses()).forEach(classDoc -> {
+                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
+                    classDocHashMap.put(classDoc.qualifiedTypeName(), classDoc);
+
+                    Arrays.asList(classDoc.fields()).forEach(fieldDoc -> {
+                        classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
+                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
+                    });
+                });
+            }
+        }
+        return true;
     }
 }
