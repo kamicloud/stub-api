@@ -11,7 +11,7 @@ import java.util.Date;
  * skdjflsd
  */
 @SuppressWarnings("unused")
-class Template implements TemplateInterface {
+class TemplateV1 implements TemplateInterface {
 
 
     public static class Enums {
@@ -53,7 +53,6 @@ class Template implements TemplateInterface {
             DISABLED(2),
             IN_CLASS(4),
             ;
-
             int value;
 
             UserStatus(int value) {
@@ -88,10 +87,22 @@ class Template implements TemplateInterface {
             XXX,
         }
 
-        enum Gender {
-            UNKNOWN,
-            MALE,
-            FEMALE,
+        @StringEnum
+        enum Gender implements FixedEnumValueInterface {
+            UNKNOWN(2),
+            MALE(4),
+            FEMALE(6);
+
+            int value;
+
+            Gender(int value) {
+                this.value = value;
+            }
+
+            @Override
+            public int getValue() {
+                return value;
+            }
         }
     }
 

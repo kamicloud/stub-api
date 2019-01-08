@@ -1,19 +1,15 @@
 package com.kamicloud.generator;
 
-import com.github.javaparser.JavaParser;
-import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.NodeList;
-import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.comments.Comment;
-import com.github.javaparser.ast.expr.*;
 import com.kamicloud.generator.annotations.API;
-import com.kamicloud.generator.annotations.Method;
+import com.kamicloud.generator.annotations.ErrorInterface;
 import com.kamicloud.generator.annotations.MethodType;
 import com.kamicloud.generator.annotations.Request;
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
+import com.kamicloud.generator.interfaces.FixedEnumValueInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
+import com.sun.javadoc.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
@@ -21,20 +17,21 @@ import org.springframework.boot.SpringApplication;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
-
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
+import java.util.*;
 
 
 @SpringBootApplication
 @EnableConfigurationProperties({ApplicationProperties.class})
-public class Generator {
+@SuppressWarnings("unchecked")
+public class Generator extends Doclet {
     private final Environment env;
 
+    private static HashMap<String, ProgramElementDoc> classDocHashMap = new HashMap<>();
+    private static HashMap<String, CommentInterface> classHashMap = new HashMap<>();
 
     public Generator(Environment env) {
         this.env = env;
@@ -44,6 +41,7 @@ public class Generator {
     @SuppressWarnings("unused")
     public void initApplication() {
         OutputStub output = this.parse();
+        syncComments();
 
         String process = env.getProperty("process", "code");
 
@@ -65,223 +63,249 @@ public class Generator {
     }
 
     public static void main(String[] args) {
+        File templateDir = new File("src/main/java/com/kamicloud/generator");
+        File[] templateFiles = templateDir.listFiles();
+
+        if (templateFiles == null) {
+            return;
+        }
+        Arrays.asList(templateFiles).forEach(templateFile -> {
+            if (!templateFile.getName().contains("TemplateV1")) {
+                return;
+            }
+            com.sun.tools.javadoc.Main.execute(new String[] {
+                    "-verbose",
+                    "-package",
+                    "-subpackages", "com.kamicloud.generator",
+                    "-doclet", "com.kamicloud.generator.Generator",
+//                    "-doclet", "com.sun.javadoc.Doclet",
+                    "-encoding", "utf-8",
+                    "-classpath", "C:\\Users\\admin\\IdeaProjects\\APIGenerator\\out\\production\\classes",
+                    templateFile.getAbsolutePath()
+            });
+        });
+
         SpringApplication app = new SpringApplication(Generator.class);
         DefaultProfileUtil.addDefaultProfile(app);
         app.run(args);
     }
 
+    public static boolean start(RootDoc root) {
+        ClassDoc[] classes = root.classes();
+        for (int i = 0; i < classes.length; ++i) {
+            ClassDoc cd = classes[i];
+
+            String rootName = cd.simpleTypeName();
+            classDocHashMap.put(cd.qualifiedTypeName(), cd);
+            classes[i].findClass("com.kamicloud.generator.TemplateV1");
+            System.out.println(cd.name() + "   " + cd.commentText());
+            ClassDoc[] innerClasses = cd.innerClasses();
+            for (int j = 0; j < innerClasses.length; j++) {
+                Arrays.asList(innerClasses[j].innerClasses()).forEach(classDoc -> {
+                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
+                    classDocHashMap.put(classDoc.qualifiedTypeName(), classDoc);
+
+                    Arrays.asList(classDoc.fields()).forEach(fieldDoc -> {
+                        classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
+                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
+                    });
+                });
+            }
+        }
+        return true;
+    }
+
+    public static void syncComments() {
+        classHashMap.forEach((name, commentInterface) -> {
+            ProgramElementDoc programElementDoc = classDocHashMap.get(name);
+
+            if (programElementDoc != null) {
+                commentInterface.setComment(programElementDoc.commentText());
+            }
+        });
+    }
+
     public OutputStub parse() {
         OutputStub output = new OutputStub();
-        parseTemplate(output);
+
+        Arrays.asList(TemplateList.templates).forEach(template -> parseTemplate(template, output));
 
         return output;
     }
 
-    private void parseTemplate(OutputStub output) {
-        try {
-            File dir = new File("");
-            TemplateStub templateStub = new TemplateStub("V1");
+    private void parseTemplate(Class template, OutputStub outputStub) {
+        String version = template.getSimpleName();
+        version = version.replace("Template", "");
+        TemplateStub templateStub = new TemplateStub(version);
 
-            ClassOrInterfaceDeclaration template = getClassOrInterfaceByNameFromFile(dir.getAbsolutePath() + "/src/main/java/com/kamicloud/generator/Template.java", "Template");
-            template.getMembers().forEach(groupTemplate -> {
-                if (groupTemplate instanceof ClassOrInterfaceDeclaration) {
-                    ClassOrInterfaceDeclaration group = (ClassOrInterfaceDeclaration) groupTemplate;
-                    switch (group.getNameAsString()) {
-                        case "Models":
-                            parseModels(group, templateStub);
-                            break;
-                        case "Enums":
-                            parseEnums(group, templateStub);
-                            break;
-                        case "Controllers":
-                            parseControllers(group, templateStub);
-                            break;
-                    }
-                }
-            });
-            EnumDeclaration errors = getEnumDeclarationByNameFromFile(dir.getAbsolutePath() + "/src/main/java/com/kamicloud/generator/Errors.java", "Errors");
-            parseErrors(errors, templateStub);
-
-            output.addTemplate(templateStub);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void parseErrors(EnumDeclaration errorsTemplate, TemplateStub templateStub) {
-        NodeList<EnumConstantDeclaration> nodeList = errorsTemplate.getEntries();
-
-        nodeList.forEach(enumConstantDeclaration -> {
-            ErrorStub errorStub = new ErrorStub(
-                enumConstantDeclaration.getNameAsString(),
-                ((IntegerLiteralExpr) enumConstantDeclaration.getArgument(0)).getValue(),
-                ((StringLiteralExpr) enumConstantDeclaration.getArgument(1)).getValue()
-            );
-            parseAnnotations(enumConstantDeclaration.getAnnotations(), errorStub);
-            templateStub.addError(errorStub);
+        Arrays.asList(template.getDeclaredClasses()).forEach(part -> {
+            if (part.getSimpleName().equals("Enums")) {
+                parseEnums(part.getDeclaredClasses(), templateStub);
+            } else if (part.getSimpleName().equals("Controllers")) {
+                parseControllers(part.getDeclaredClasses(), templateStub);
+            } else if (part.getSimpleName().equals("Models")) {
+                parseModels(part.getDeclaredClasses(), templateStub);
+            }
         });
+        parseErrors(TemplateList.errorsTemplate, templateStub);
 
+        outputStub.addTemplate(templateStub);
     }
 
-    private void parseControllers(ClassOrInterfaceDeclaration controllersTemplate, TemplateStub templateStub) {
-        controllersTemplate.getMembers().forEach(controllerTemplate -> {
-            ControllerStub controllerStub = new ControllerStub(((ClassOrInterfaceDeclaration) controllerTemplate).getNameAsString());
+    private void parseErrors(Class errorsTemplate, TemplateStub templateStub) {
+        Arrays.asList(errorsTemplate.getFields()).forEach(error -> {
+            try {
+                Enum value = Enum.valueOf(errorsTemplate, error.getName());
+                if (ErrorInterface.class.isAssignableFrom(errorsTemplate)) {
+                    Method getValue = errorsTemplate.getMethod("getValue");
+                    String fillValue = getValue.invoke(value).toString();
+
+
+                    ErrorStub errorStub = new ErrorStub(
+                            error.getName(),
+                            fillValue,
+                            ""
+                    );
+                    parseAnnotations(error.getAnnotations(), errorStub);
+                    templateStub.addError(errorStub);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void parseControllers(Class<?>[] controllers, TemplateStub templateStub) {
+        Arrays.asList(controllers).forEach(controller -> {
+            ControllerStub controllerStub = new ControllerStub(controller.getSimpleName());
             templateStub.addController(controllerStub);
-            // 注释
-            parseComments(controllerTemplate.getComment(), controllerStub);
-
-            ((ClassOrInterfaceDeclaration) controllerTemplate).getMembers().forEach(actionTemplate -> {
-                ActionStub actionStub = new ActionStub(((ClassOrInterfaceDeclaration) actionTemplate).getNameAsString());
+            Arrays.asList(controller.getDeclaredClasses()).forEach(action -> {
+                ActionStub actionStub = new ActionStub(action.getSimpleName());
                 controllerStub.addAction(actionStub);
-                // 注释
-                parseComments(actionTemplate.getComment(), actionStub);
                 // 注解
-                parseAnnotations(actionTemplate.getAnnotations(), actionStub);
-
+                parseAnnotations(action.getAnnotations(), actionStub);
 
                 // 遍历每一个参数，注解+类型+变量
-                ((ClassOrInterfaceDeclaration) actionTemplate).getMembers().forEach(parameterTemplate -> {
-                    // 类型+变量
-                    VariableDeclarator variableStub = ((FieldDeclaration) parameterTemplate).getVariable(0);
-                    ParameterStub parameterStub = new ParameterStub(variableStub.getNameAsString(), variableStub.getTypeAsString());
-
-                    // 注解
-                    parseAnnotations(parameterTemplate.getAnnotations(), parameterStub);
-
-                    // 注释
-                    parseComments(parameterTemplate.getComment(), parameterStub);
-
-                    if (parameterStub.hasAnnotation(Request.name)) {
-                        actionStub.addRequest(parameterStub);
-                    } else {
-                        actionStub.addResponse(parameterStub);
+                Arrays.asList(action.getDeclaredFields()).forEach(parameter -> {
+                    ParameterStub parameterStub = parseParameter(parameter);
+                    if (parameterStub != null) {
+                        if (parameterStub.hasAnnotation(Request.name)) {
+                            actionStub.addRequest(parameterStub);
+                        } else {
+                            actionStub.addResponse(parameterStub);
+                        }
                     }
                 });
             });
         });
     }
 
-    private void parseEnums(ClassOrInterfaceDeclaration enumsTemplate, TemplateStub output) {
-        enumsTemplate.getMembers().forEach(enumTemplate -> {
-            EnumStub enumStub = new EnumStub(((EnumDeclaration) enumTemplate).getNameAsString());
+    private void parseEnums(Class<?>[] enumsTemplate, TemplateStub output) {
+        Arrays.asList(enumsTemplate).forEach(enumTemplate -> {
+            EnumStub enumStub = new EnumStub(enumTemplate.getSimpleName());
             output.addEnum(enumStub);
 
-
+            parseComment(enumTemplate.getCanonicalName(), enumStub);
             parseAnnotations(enumTemplate.getAnnotations(), enumStub);
+            try {
+                Class clazz = Class.forName(enumTemplate.getName());
 
-            parseComments(enumTemplate.getComment(), enumStub);
-
-            AtomicInteger i = new AtomicInteger();
-            ((EnumDeclaration) enumTemplate).getEntries().forEach(entryTemplate -> {
-                String key = entryTemplate.getNameAsString();
-                String value;
-                EnumStub.EnumStubItemType type = EnumStub.EnumStubItemType.INTEGER;
-                if (((EnumDeclaration) enumTemplate).getImplementedTypes().isEmpty()) {
-                    // 不是自定义值的
-//                    type = EnumStub.EnumStubItemType.STRING;
-                    value = String.valueOf(i.getAndIncrement());
-                } else {
-                    Expression argument = entryTemplate.getArgument(0);
-                    value = argument.asIntegerLiteralExpr().getValue();
-                }
-                EnumStub.EnumStubItem item = new EnumStub.EnumStubItem(value, type);
-                parseComments(entryTemplate.getComment(), item);
-                enumStub.addItem(key, item);
-            });
-        });
-    }
-
-    private void parseModels(ClassOrInterfaceDeclaration modelsTemplate, TemplateStub output) {
-        modelsTemplate.getMembers().forEach(modelTemplate -> {
-            ModelStub modelStub = new ModelStub(((ClassOrInterfaceDeclaration) modelTemplate).getNameAsString());
-            parseComments(modelTemplate.getComment(), modelStub);
-            // 继承关系
-            NodeList extendedTypeTemplates = ((ClassOrInterfaceDeclaration) modelTemplate).getExtendedTypes();
-            if (!extendedTypeTemplates.isEmpty()) {
-                modelStub.setExtendsFrom(extendedTypeTemplates.get(0).toString());
-            }
-
-            output.addModel(modelStub);
-            // 遍历每一个参数，注解+类型+变量
-            ((ClassOrInterfaceDeclaration) modelTemplate).getMembers().forEach(parameterTemplate -> {
-                // 类型+变量
-                VariableDeclarator variableStub = ((FieldDeclaration) parameterTemplate).getVariable(0);
-                ParameterStub parameterStub = new ParameterStub(variableStub.getNameAsString(), variableStub.getTypeAsString());
-                modelStub.addParameter(parameterStub);
-
-                // 注解
-                parseAnnotations(parameterTemplate.getAnnotations(), parameterStub);
-                // 注释
-                parseComments(parameterTemplate.getComment(), parameterStub);
-            });
-        });
-    }
-
-    private void parseComments(Optional<Comment> parameterCommentTemplate, BaseWithAnnotationStub parameterStub) {
-        // 注释
-        parameterCommentTemplate.ifPresent(comment -> parameterStub.setComment(comment.getContent()));
-    }
-
-    private void parseAnnotations(NodeList<AnnotationExpr> annotationTemplates, AnnotationsInterface baseStub) {
-        annotationTemplates.forEach(annotationTemplate -> {
-            String annotationName = annotationTemplate.getNameAsString();
-            AnnotationStub annotationStub = new AnnotationStub(annotationName);
-            baseStub.addAnnotation(annotationStub);
-
-            if (annotationTemplate instanceof NormalAnnotationExpr) {
-                NormalAnnotationExpr normalAnnotationExpr = (NormalAnnotationExpr) annotationTemplate;
-                NodeList<MemberValuePair> pairs = normalAnnotationExpr.getPairs();
-                pairs.forEach(pair -> {
-                    String pairName = pair.getNameAsString();
-                    Expression pairValue = pair.getValue();
-
-                    if (annotationName.equals(API.name) && pairName.equals(API.methods)) {
-                        HashMap<MethodType, MethodType> methodTypes = new HashMap<>();
-                        ArrayInitializerExpr array = pairValue.asArrayInitializerExpr();
-                        array.getValues().forEach(value -> {
-
-                            FieldAccessExpr fieldAccessExpr = (FieldAccessExpr) value;
-
-                            MethodType methodType = MethodType.transform(fieldAccessExpr.getNameAsString());
-
-                            methodTypes.put(methodType, methodType);
-                        });
-
-                        annotationStub.addValue(pair.getNameAsString(), methodTypes);
+                Arrays.asList(enumTemplate.getFields()).forEach(entryTemplate -> {
+                    try {
+                        String key = entryTemplate.getName();
+                        Enum value = Enum.valueOf(clazz, entryTemplate.getName());
+                        Integer ordinal = value.ordinal();
+                        EnumStub.EnumStubItemType type = EnumStub.EnumStubItemType.INTEGER;
+                        String fillValue = ordinal.toString();
+                        if (FixedEnumValueInterface.class.isAssignableFrom(enumTemplate)) {
+                            Method getValue = enumTemplate.getMethod("getValue");
+                            fillValue = getValue.invoke(value).toString();
+                        }
+                        EnumStub.EnumStubItem item = new EnumStub.EnumStubItem(fillValue, type);
+                        enumStub.addItem(key, item);
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 });
-
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
         });
-
     }
 
-    /**
-     *
-     * @param filePath 文件路径
-     * @param className 类名
-     * @return ClassOrInterfaceDeclaration
-     * @throws Exception 异常
-     */
-    private ClassOrInterfaceDeclaration getClassOrInterfaceByNameFromFile(String filePath, String className) throws Exception {
-        Reader reader = new FileReader(filePath);
-        CompilationUnit compilationUnit = JavaParser.parse(reader);
-        Optional<ClassOrInterfaceDeclaration> classOrInterfaceDeclaration = compilationUnit.getClassByName(className);
+    private void parseAnnotations(Annotation[] annotations, AnnotationsInterface baseStub) {
+        Arrays.asList(annotations).forEach(annotation -> {
+            Class annotationClass = annotation.annotationType();
+            String annotationName = annotationClass.getSimpleName();
 
-        if (!classOrInterfaceDeclaration.isPresent()) {
-            throw new Exception(className + " not found in " + filePath);
-        }
-        return classOrInterfaceDeclaration.get();
+            AnnotationStub annotationStub = new AnnotationStub(annotationName);
+
+            baseStub.addAnnotation(annotationStub);
+//            HashMap<MethodType, MethodType> methodTypes = new HashMap<>();
+//            if (annotationClass.equals(API.class)) {
+//                API api = (API) annotation;
+//                Arrays.asList(api.methods()).forEach(methodType -> {
+//                    methodTypes.put(methodType, methodType);
+//                });
+//            }
+//            Method[] methods = annotationClass.getDeclaredMethods();
+
+            List<Method> annotationMethods = Arrays.asList(annotationClass.getDeclaredMethods());
+
+            if (!annotationMethods.isEmpty()) {
+                annotationMethods.forEach(method -> {
+                    try {
+                        Object value = method.invoke(annotation);
+                        annotationStub.addValue(method.getName(), value);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+            }
+        });
     }
 
-    private EnumDeclaration getEnumDeclarationByNameFromFile(String filePath, String enumName) throws Exception {
-        Reader reader = new FileReader(filePath);
-        CompilationUnit compilationUnit = JavaParser.parse(reader);
-        Optional<EnumDeclaration> enumDeclaration = compilationUnit.getEnumByName(enumName);
+    private void parseModels(Class[] models, TemplateStub templateStub) {
+        Arrays.asList(models).forEach(model -> {
+            ModelStub modelStub = new ModelStub(model.getSimpleName());
+//            // 继承关系
+//            NodeList extendedTypeTemplates = ((ClassOrInterfaceDeclaration) modelTemplate).getExtendedTypes();
+//            if (!extendedTypeTemplates.isEmpty()) {
+//                modelStub.setExtendsFrom(extendedTypeTemplates.get(0).toString());
+//            }
 
-        if (!enumDeclaration.isPresent()) {
-            throw new Exception(enumName + " not found in " + filePath);
+            templateStub.addModel(modelStub);
+            // 遍历每一个参数，注解+类型+变量
+            Arrays.asList(model.getDeclaredFields()).forEach(parameter -> {
+                ParameterStub parameterStub = parseParameter(parameter);
+                if (parameterStub != null) {
+                    modelStub.addParameter(parameterStub);
+                }
+            });
+        });
+    }
+
+    private ParameterStub parseParameter(Field parameter) {
+        if (parameter.getName().startsWith("this")) {
+            return null;
         }
-        return enumDeclaration.get();
+        // 类型+变量
+        Class parameterType = parameter.getType();
+        String typeName = parameterType.getSimpleName();
+        if (parameterType.getName().contains("$Models$")) {
+            typeName = "Models." + typeName;
+        } else if (parameterType.getName().contains("$Enums$")) {
+            typeName = "Enums." + typeName;
+        }
+        ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeName);
+
+        // 注解
+        parseAnnotations(parameter.getAnnotations(), parameterStub);
+
+        return parameterStub;
+    }
+
+    private void parseComment(String name, CommentInterface commentStub) {
+        classHashMap.put(name, commentStub);
     }
 }

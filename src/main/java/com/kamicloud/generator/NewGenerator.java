@@ -1,9 +1,7 @@
 package com.kamicloud.generator;
 
-import com.kamicloud.generator.interfaces.FixedEnumValueInterface;
 import com.sun.javadoc.*;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -68,7 +66,7 @@ public class NewGenerator extends Doclet {
 
     public static void main(String[] args) {
 
-        new Template();
+        new TemplateV1();
         com.sun.tools.javadoc.Main.execute(new String[] {
                 "-verbose",
                 "-package",
@@ -76,8 +74,8 @@ public class NewGenerator extends Doclet {
 //                "-doclet", "com.sun.javadoc.Doclet",
                 "-encoding", "utf-8",
                 "-classpath", "C:\\Users\\admin\\IdeaProjects\\APIGenerator\\out\\production\\classes",
-//                Template.class.getClassLoader()
-                "C:\\Users\\admin\\IdeaProjects\\APIGenerator\\src\\main\\java\\com\\kamicloud\\generator\\Template.java"
+//                TemplateV1.class.getClassLoader()
+                "C:\\Users\\admin\\IdeaProjects\\APIGenerator\\src\\main\\java\\com\\kamicloud\\generator\\TemplateV1.java"
         });
         parse();
     }
@@ -118,26 +116,26 @@ public class NewGenerator extends Doclet {
         });
     }
 
-    public static boolean start(RootDoc root) {
-        ClassDoc[] classes = root.classes();
-        for (int i = 0; i < classes.length; ++i) {
-            ClassDoc cd = classes[i];
-
-            String rootName = cd.simpleTypeName();
-            classDocHashMap.put(cd.qualifiedTypeName(), cd);
-            classes[i].findClass("com.kamicloud.generator.Template");
-            System.out.println(cd.name() + "   " + cd.commentText());
-            ClassDoc[] innerClasses = cd.innerClasses();
-            for (int j = 0; j < innerClasses.length; j++) {
-                Arrays.asList(innerClasses[j].innerClasses()).forEach(classDoc -> {
-                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
-
-                    Arrays.asList(classDoc.fields()).forEach(fieldDoc -> {
-                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
-                    });
-                });
-            }
-        }
-        return true;
-    }
+//    public static boolean start(RootDoc root) {
+//        ClassDoc[] classes = root.classes();
+//        for (int i = 0; i < classes.length; ++i) {
+//            ClassDoc cd = classes[i];
+//
+//            String rootName = cd.simpleTypeName();
+//            classDocHashMap.put(cd.qualifiedTypeName(), cd);
+//            classes[i].findClass("com.kamicloud.generator.TemplateV1");
+//            System.out.println(cd.name() + "   " + cd.commentText());
+//            ClassDoc[] innerClasses = cd.innerClasses();
+//            for (int j = 0; j < innerClasses.length; j++) {
+//                Arrays.asList(innerClasses[j].innerClasses()).forEach(classDoc -> {
+//                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
+//
+//                    Arrays.asList(classDoc.fields()).forEach(fieldDoc -> {
+//                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
+//                    });
+//                });
+//            }
+//        }
+//        return true;
+//    }
 }
