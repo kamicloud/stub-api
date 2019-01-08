@@ -80,7 +80,7 @@ public class Generator extends Doclet {
                     "-doclet", "com.kamicloud.generator.Generator",
 //                    "-doclet", "com.sun.javadoc.Doclet",
                     "-encoding", "utf-8",
-                    "-classpath", "C:\\Users\\admin\\IdeaProjects\\APIGenerator\\out\\production\\classes",
+//                    "-classpath", "C:\\Users\\admin\\IdeaProjects\\APIGenerator\\out\\production\\classes",
                     templateFile.getAbsolutePath()
             });
         });
@@ -179,11 +179,16 @@ public class Generator extends Doclet {
         Arrays.asList(controllers).forEach(controller -> {
             ControllerStub controllerStub = new ControllerStub(controller.getSimpleName());
             templateStub.addController(controllerStub);
+
+            parseComment(controller.getCanonicalName(), controllerStub);
+
             Arrays.asList(controller.getDeclaredClasses()).forEach(action -> {
                 ActionStub actionStub = new ActionStub(action.getSimpleName());
                 controllerStub.addAction(actionStub);
                 // 注解
                 parseAnnotations(action.getAnnotations(), actionStub);
+
+                parseComment(action.getCanonicalName(), actionStub);
 
                 // 遍历每一个参数，注解+类型+变量
                 Arrays.asList(action.getDeclaredFields()).forEach(parameter -> {
@@ -223,6 +228,8 @@ public class Generator extends Doclet {
                         }
                         EnumStub.EnumStubItem item = new EnumStub.EnumStubItem(fillValue, type);
                         enumStub.addItem(key, item);
+
+                        parseComment(fieldBuilder(entryTemplate), item);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -275,12 +282,15 @@ public class Generator extends Doclet {
 //            }
 
             templateStub.addModel(modelStub);
+
+            parseComment(model.getCanonicalName(), modelStub);
             // 遍历每一个参数，注解+类型+变量
             Arrays.asList(model.getDeclaredFields()).forEach(parameter -> {
                 ParameterStub parameterStub = parseParameter(parameter);
                 if (parameterStub != null) {
                     modelStub.addParameter(parameterStub);
                 }
+
             });
         });
     }
@@ -301,11 +311,16 @@ public class Generator extends Doclet {
 
         // 注解
         parseAnnotations(parameter.getAnnotations(), parameterStub);
+        parseComment(fieldBuilder(parameter), parameterStub);
 
         return parameterStub;
     }
 
     private void parseComment(String name, CommentInterface commentStub) {
         classHashMap.put(name, commentStub);
+    }
+
+    private String fieldBuilder(Field field) {
+        return field.getDeclaringClass().getCanonicalName() + "." + field.getName();
     }
 }
