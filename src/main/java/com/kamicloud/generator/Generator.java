@@ -60,7 +60,8 @@ public class Generator extends Doclet {
     }
 
     public static void main(String[] args) {
-        File templateDir = new File("src/main/java/com/kamicloud/generator");
+        File templateDir = new File("C:\\Users\\admin\\IdeaProjects\\APIGenerator/src/main/java/com/kamicloud/generator");
+        System.out.println("xx" + templateDir.getAbsolutePath());
         File[] templateFiles = templateDir.listFiles();
 
         if (templateFiles == null) {
@@ -70,16 +71,16 @@ public class Generator extends Doclet {
             if (!templateFile.getName().contains("TemplateV")) {
                 return;
             }
-            com.sun.tools.javadoc.Main.execute(new String[] {
-                    "-verbose",
-                    "-package",
+            com.sun.tools.javadoc.Main.execute(new String[]{
+                "-verbose",
+                "-package",
 //                    "-subpackages", "com.kamicloud.generator",
-                    "-doclet", "com.kamicloud.generator.Generator",
+                "-doclet", "com.kamicloud.generator.Generator",
 //                    "-doclet", "com.sun.javadoc.Doclet",
-                    "-encoding", "utf-8",
+                "-encoding", "utf-8",
 //                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
 //                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
-                    templateFile.getAbsolutePath()
+                templateFile.getAbsolutePath()
             });
         });
 
@@ -125,9 +126,9 @@ public class Generator extends Doclet {
 
 
                     ErrorStub errorStub = new ErrorStub(
-                            error.getName(),
-                            fillValue,
-                            ""
+                        error.getName(),
+                        fillValue,
+                        ""
                     );
                     parseAnnotations(error.getAnnotations(), errorStub);
                     templateStub.addError(errorStub);

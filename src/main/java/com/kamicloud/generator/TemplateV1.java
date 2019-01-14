@@ -4,7 +4,6 @@ import com.kamicloud.generator.annotations.*;
 import com.kamicloud.generator.interfaces.FixedEnumValueInterface;
 import com.kamicloud.generator.interfaces.TemplateInterface;
 
-import java.lang.annotation.Documented;
 import java.util.Date;
 
 /**
@@ -17,7 +16,8 @@ class TemplateV1 implements TemplateInterface {
     public static class Enums {
         /**
          * 教师请假原因
-         * 54646
+         *
+         * 详细的看代码吧
          */
 //        enum TeacherLeaveReason {
 //            /**
@@ -35,13 +35,16 @@ class TemplateV1 implements TemplateInterface {
 //        }
 
 
-        @Memo(memo = {""}, ignores = {Endpoint.ANDROID})
+        @Memo({
+            "教师请假原因",
+            "详细的看代码吧"
+        })
         enum TeacherLeaveReason {
-            @Memo(memo = "事件")
+            @Memo("事件")
             EVENT,
-            @Memo(memo = "休息")
+            @Memo("休息")
             RELAX,
-            @Memo(memo = "活动")
+            @Memo("活动")
             ACTIVITY
         }
 

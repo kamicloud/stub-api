@@ -81,7 +81,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
     /**
      * HTTP层模板生成
-     *
+     * <p>
      * 1、不使用
      *
      * @param o 模板解析文件
@@ -90,8 +90,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         o.getControllers().forEach(controllerStub -> {
             try {
                 ClassCombiner controllerClassCombiner = new ClassCombiner(
-                        "App\\Generated\\Controllers\\" + version + "\\" + controllerStub.getName() + "Controller",
-                        "App\\Http\\Controllers\\Controller"
+                    "App\\Generated\\Controllers\\" + version + "\\" + controllerStub.getName() + "Controller",
+                    "App\\Http\\Controllers\\Controller"
                 );
 
                 controllerStub.getActions().forEach((actionName, action) -> {
@@ -100,8 +100,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         String messageClassName = "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + actionName + "Message";
 
                         ClassCombiner messageClassCombiner = new ClassCombiner(
-                                messageClassName,
-                                "YetAnotherGenerator\\BaseMessage"
+                            messageClassName,
+                            "YetAnotherGenerator\\BaseMessage"
                         );
 
                         String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
@@ -113,16 +113,16 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         new ClassMethodParameterCombiner(actionClassMethodCombiner, "request", requestClassName);
 
                         actionClassMethodCombiner.setBody(
-                                "$message = new " + actionClassMethodCombiner.addUse(messageClassName) + "($request);",
-                                "$message->validateInput();",
-                                controllerStub.getName() + "Service::" + lowerCamelActionName + "($message);",
-                                "$message->validateOutput();",
-                                "return $message->getResponse();"
+                            "$message = new " + actionClassMethodCombiner.addUse(messageClassName) + "($request);",
+                            "$message->validateInput();",
+                            controllerStub.getName() + "Service::" + lowerCamelActionName + "($message);",
+                            "$message->validateOutput();",
+                            "return $message->getResponse();"
                         );
                         if (action.getAnnotations().contains(new AnnotationStub(Transactional.name))) {
                             actionClassMethodCombiner.wrapBody(
-                                    "return DB::transaction(function () use ($request) {",
-                                    "});"
+                                "return DB::transaction(function () use ($request) {",
+                                "});"
                             );
                         }
 
@@ -152,18 +152,18 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         o.getEnums().forEach(enumStub -> {
             try {
                 ClassCombiner enumClassCombiner = new ClassCombiner(
-                        "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName() + "Enum",
-                        "YetAnotherGenerator\\BaseEnum"
+                    "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName() + "Enum",
+                    "YetAnotherGenerator\\BaseEnum"
                 );
 
                 ClassConstantCombiner mapConstant = new ClassConstantCombiner(
-                        "_MAP",
-                        EnumStub.EnumStubItemType.EXPRESSION,
-                        "protected"
+                    "_MAP",
+                    EnumStub.EnumStubItemType.EXPRESSION,
+                    "protected"
                 );
                 mapConstant.addLine("[");
                 enumStub.getItems().forEach((key, value) -> {
-                    String valueName =  value.getName();
+                    String valueName = value.getName();
                     EnumStub.EnumStubItemType valueType = value.getType();
 
                     if (enumStub.hasAnnotation(StringEnum.name)) {
@@ -196,8 +196,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 errorCodeClassCombiner.addConstant(constant);
                 String exceptionName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName());
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
-                        "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
-                        "YetAnotherGenerator\\BaseException"
+                    "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
+                    "YetAnotherGenerator\\BaseException"
                 );
 
                 ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner(exceptionClassCombiner, "__construct");
@@ -285,8 +285,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     /**
-     *
-     * @param parameters 参数
+     * @param parameters    参数
      * @param classCombiner 目标类
      */
     private void writeGetAttributeMapMethod(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
@@ -325,14 +324,14 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 typeModelName = "'" + String.join("|", ruleList) + "'";
             }
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
-                    "'" + parameterName + "'",
-                    "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
-                    Boolean.toString(isModel),
-                    Boolean.toString(isArray),
-                    typeModelName,
-                    Boolean.toString(parameterStub.hasAnnotation(Optional.name)),
-                    Boolean.toString(parameterStub.hasAnnotation(Mutable.name)),
-                    Boolean.toString(isEnum)
+                "'" + parameterName + "'",
+                "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
+                Boolean.toString(isModel),
+                Boolean.toString(isArray),
+                typeModelName,
+                Boolean.toString(parameterStub.hasAnnotation(Optional.name)),
+                Boolean.toString(parameterStub.hasAnnotation(Mutable.name)),
+                Boolean.toString(isEnum)
             ));
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
         });
@@ -341,12 +340,12 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
     private String getModelNameFromType(String type) {
         String typeName = type
-                .replace("[]", "")
-                .replace("Models.", "")
-                .replace("Enums.", "");
+            .replace("[]", "")
+            .replace("Models.", "")
+            .replace("Enums.", "");
         if (type.startsWith("Models.")) {
             typeName = typeName + "Model";
-        } else if (type.startsWith("Enums."))  {
+        } else if (type.startsWith("Enums.")) {
             typeName = typeName + "Enum";
         }
         return typeName;

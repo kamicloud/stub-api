@@ -1,17 +1,9 @@
 package com.kamicloud.generator.writers;
 
 import com.kamicloud.generator.stubs.OutputStub;
-import com.kamicloud.generator.stubs.testcase.RequestStub;
-import okhttp3.*;
-import org.dom4j.io.SAXReader;
 import org.springframework.core.env.Environment;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Observable;
 
 public class TestCaseWriter extends BaseWriter {

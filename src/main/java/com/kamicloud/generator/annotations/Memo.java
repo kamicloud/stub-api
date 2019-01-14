@@ -9,7 +9,7 @@ public @interface Memo {
     /**
      * 注释内容，会被传递到代码和文档中
      */
-    String[] memo() default "";
+    String[] value() default "";
 
     /**
      * TODO:别名，预留的映射
