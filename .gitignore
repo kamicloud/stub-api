@@ -1,7 +1,9 @@
 .gradle
 .idea
 .settings
-out
+classes/
+out/
+build
 /bin/
 /vendor/
 *.log

@@ -67,17 +67,18 @@ public class Generator extends Doclet {
             return;
         }
         Arrays.asList(templateFiles).forEach(templateFile -> {
-            if (!templateFile.getName().contains("TemplateV1")) {
+            if (!templateFile.getName().contains("TemplateV")) {
                 return;
             }
             com.sun.tools.javadoc.Main.execute(new String[] {
                     "-verbose",
                     "-package",
-                    "-subpackages", "com.kamicloud.generator",
+//                    "-subpackages", "com.kamicloud.generator",
                     "-doclet", "com.kamicloud.generator.Generator",
 //                    "-doclet", "com.sun.javadoc.Doclet",
                     "-encoding", "utf-8",
-//                    "-classpath", "C:\\Users\\admin\\IdeaProjects\\APIGenerator\\out\\production\\classes",
+//                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
+//                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
                     templateFile.getAbsolutePath()
             });
         });

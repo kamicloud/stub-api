@@ -1,6 +1,3 @@
-
-
-
 buildscript {
     repositories {
         mavenLocal()
@@ -11,7 +8,7 @@ buildscript {
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
         classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
-        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.1"
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
     }
 }
 
@@ -20,16 +17,30 @@ plugins {
     id "io.spring.dependency-management" version "1.0.5.RELEASE"
 }
 
-group 'com.kamicloud'
-version '1.0-SNAPSHOT'
+apply plugin: 'java'
 
-sourceCompatibility = 1.8
+sourceCompatibility=1.8
 targetCompatibility=1.8
 
 apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
+
+group = 'com.kamicloud.generator'
+version = '1.0-SNAPSHOT'
+
+description = ''
+
+springBoot {
+    mainClassName = 'com.kamicloud.generator.Generator'
+    buildInfo()
+}
+
+configurations {
+    compile.exclude module: 'commons'
+//    providedRuntime
+}
 
 repositories {
     mavenLocal()
@@ -38,14 +49,8 @@ repositories {
     maven { url "https://plugins.gradle.org/m2/" }
 }
 
-configurations {
-    providedRuntime
-}
+def jdkHome = System.getenv("JAVA_HOME")
 
-springBoot {
-    mainClassName = 'com.kamicloud.generator.Generator'
-    buildInfo()
-}
 
 dependencies {
     // java抽象语法树
@@ -62,7 +67,6 @@ dependencies {
 
     compile 'org.thymeleaf:thymeleaf:3.0.11.RELEASE'
     compile "org.springframework.boot:spring-boot-starter-cache"
-    compile "org.springframework.boot:spring-boot-starter-config"
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
 
     compile "org.springframework.boot:spring-boot-loader-tools"
@@ -76,4 +80,35 @@ dependencies {
     annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
+    compile files("$jdkHome/lib/tools.jar")
 }
+
+wrapper {
+    gradleVersion = '4.10.2'
+}
+
+jar {
+    baseName = 'gradle-demo'
+    version = '0.0.1'
+    from {
+        //添加依懒到打包文件
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        configurations.runtime.collect{zipTree(it)}
+    }
+
+    manifest {
+        attributes "Manifest-Version": 1.0,
+                'Main-Class': 'com.kamicloud.generator.Generator'
+    }
+}
+
+task clearJar(type: Delete) {
+    delete 'build/libs/lib'
+}
+
+task copyJar(type: Copy) {
+    from configurations.runtime
+    into('build/libs/lib')
+}
+
+task release(type: Copy, dependsOn: [build, clearJar, copyJar])
