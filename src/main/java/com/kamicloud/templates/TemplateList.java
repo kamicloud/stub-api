@@ -1,4 +1,4 @@
-package com.kamicloud.generator;
+package com.kamicloud.templates;
 
 public class TemplateList {
     public static Class<?>[] templates = new Class[] {

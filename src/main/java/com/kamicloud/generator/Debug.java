@@ -13,7 +13,7 @@ package com.kamicloud.generator;
 
 public class Debug {
 //    public static void main(String[] args) {
-//        Arrays.asList(TemplateList.templates).forEach(templateClass -> {
+//        Arrays.asList(com.kamicloud.templates.TemplateList.templates).forEach(templateClass -> {
 //            Arrays.asList(templateClass.getDeclaredClasses()).forEach(element -> {
 //                String name = element.getName();
 //                String canonicalName = element.getCanonicalName();

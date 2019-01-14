@@ -7,6 +7,7 @@ import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.interfaces.FixedEnumValueInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
+import com.kamicloud.templates.TemplateList;
 import com.sun.javadoc.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -60,7 +61,7 @@ public class Generator extends Doclet {
     }
 
     public static void main(String[] args) {
-        File templateDir = new File("C:\\Users\\admin\\IdeaProjects\\APIGenerator/src/main/java/com/kamicloud/generator");
+        File templateDir = new File("./src/main/java/com/kamicloud/templates");
         System.out.println("xx" + templateDir.getAbsolutePath());
         File[] templateFiles = templateDir.listFiles();
 
@@ -188,6 +189,7 @@ public class Generator extends Doclet {
                         String fillValue = ordinal.toString();
                         if (FixedEnumValueInterface.class.isAssignableFrom(enumTemplate)) {
                             Method getValue = enumTemplate.getMethod("getValue");
+                            getValue.setAccessible(true);
                             fillValue = getValue.invoke(value).toString();
                         }
                         EnumStub.EnumStubItem item = new EnumStub.EnumStubItem(fillValue, type);
