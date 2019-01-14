@@ -39,6 +39,7 @@ public class Generator extends Doclet {
     @SuppressWarnings("unused")
     public void initApplication() {
         OutputStub output = this.parse();
+        getComments();
         syncComments();
 
         String process = env.getProperty("process", "code");
@@ -61,30 +62,6 @@ public class Generator extends Doclet {
     }
 
     public static void main(String[] args) {
-        File templateDir = new File("./src/main/java/com/kamicloud/templates");
-        System.out.println("xx" + templateDir.getAbsolutePath());
-        File[] templateFiles = templateDir.listFiles();
-
-        if (templateFiles == null) {
-            return;
-        }
-        Arrays.asList(templateFiles).forEach(templateFile -> {
-            if (!templateFile.getName().contains("TemplateV")) {
-                return;
-            }
-            com.sun.tools.javadoc.Main.execute(new String[]{
-                "-verbose",
-                "-package",
-//                    "-subpackages", "com.kamicloud.generator",
-                "-doclet", "com.kamicloud.generator.Generator",
-//                    "-doclet", "com.sun.javadoc.Doclet",
-                "-encoding", "utf-8",
-//                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
-//                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
-                templateFile.getAbsolutePath()
-            });
-        });
-
         SpringApplication app = new SpringApplication(Generator.class);
         DefaultProfileUtil.addDefaultProfile(app);
         app.run(args);
@@ -280,6 +257,33 @@ public class Generator extends Doclet {
         parseComment(fieldBuilder(parameter), parameterStub);
 
         return parameterStub;
+    }
+
+    public void getComments() {
+        String codePath = env.getProperty("generator.template-path");
+        File templateDir = new File(codePath + "/com/kamicloud/templates");
+        File[] templateFiles = templateDir.listFiles();
+
+        if (templateFiles == null) {
+            return;
+        }
+        Arrays.asList(templateFiles).forEach(templateFile -> {
+            if (!templateFile.getName().contains("TemplateV")) {
+                return;
+            }
+            com.sun.tools.javadoc.Main.execute(new String[]{
+                "-verbose",
+                "-package",
+//                    "-subpackages", "com.kamicloud.generator",
+                "-doclet", "com.kamicloud.generator.Generator",
+//                    "-doclet", "com.sun.javadoc.Doclet",
+                "-encoding", "utf-8",
+//                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
+//                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
+                templateFile.getAbsolutePath()
+            });
+        });
+
     }
 
     public static void syncComments() {
