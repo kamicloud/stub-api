@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+./gradlew -p vendor/kamicloud/yet-another-generator release
