@@ -1,4 +1,4 @@
-package com.kamicloud.templates;
+package templates;
 
 import com.kamicloud.generator.annotations.ErrorInterface;
 

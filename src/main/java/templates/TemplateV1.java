@@ -1,4 +1,4 @@
-package com.kamicloud.templates;
+package templates;
 
 import com.kamicloud.generator.annotations.*;
 import com.kamicloud.generator.interfaces.FixedEnumValueInterface;

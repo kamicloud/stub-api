@@ -7,7 +7,7 @@ import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.interfaces.FixedEnumValueInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
-import com.kamicloud.templates.TemplateList;
+import templates.TemplateList;
 import com.sun.javadoc.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -261,7 +261,7 @@ public class Generator extends Doclet {
 
     public void getComments() {
         String codePath = env.getProperty("generator.template-path");
-        File templateDir = new File(codePath + "/com/kamicloud/templates");
+        File templateDir = new File(codePath + "/templates");
         File[] templateFiles = templateDir.listFiles();
 
         if (templateFiles == null) {
