@@ -290,7 +290,7 @@ public class Generator extends Doclet {
         classHashMap.forEach((name, commentInterface) -> {
             ProgramElementDoc programElementDoc = classDocHashMap.get(name);
 
-            if (programElementDoc != null) {
+            if (programElementDoc != null && !programElementDoc.commentText().isEmpty()) {
                 commentInterface.setComment(programElementDoc.commentText());
             }
         });
