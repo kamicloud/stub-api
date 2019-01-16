@@ -1,4 +1,4 @@
-package com.kamicloud.generator.interfaces;
+package com.kamicloud.generator.annotations;
 
 public interface FixedEnumValueInterface {
     int getValue();

@@ -120,4 +120,12 @@ task clearClasses(type: Delete) {
     delete '../../../storage/generator/classes'
 }
 
-task release(type: Copy, dependsOn: [build, clearJar, copyJar, clearClasses, copyClasses])
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+
+task release(type: Copy, dependsOn: [build, sourcesJar, clearJar, copyJar, clearClasses, copyClasses])
+
+compileJava.dependsOn processResources

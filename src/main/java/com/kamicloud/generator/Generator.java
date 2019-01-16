@@ -4,7 +4,7 @@ import com.kamicloud.generator.annotations.ErrorInterface;
 import com.kamicloud.generator.annotations.Request;
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
-import com.kamicloud.generator.interfaces.FixedEnumValueInterface;
+import com.kamicloud.generator.annotations.FixedEnumValueInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
 import templates.TemplateList;
@@ -273,7 +273,7 @@ public class Generator extends Doclet {
             return;
         }
         Arrays.asList(templateFiles).forEach(templateFile -> {
-            if (!templateFile.getName().contains("TemplateV")) {
+            if (!templateFile.getName().contains("Template")) {
                 return;
             }
             com.sun.tools.javadoc.Main.execute(new String[]{
