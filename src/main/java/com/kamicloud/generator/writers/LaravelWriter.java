@@ -1,10 +1,8 @@
 package com.kamicloud.generator.writers;
 
 import com.google.common.base.CaseFormat;
-import com.kamicloud.generator.annotations.Mutable;
+import com.kamicloud.generator.annotations.*;
 import com.kamicloud.generator.annotations.Optional;
-import com.kamicloud.generator.annotations.StringEnum;
-import com.kamicloud.generator.annotations.Transactional;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.utils.FileUtil;
@@ -119,7 +117,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             "$message->validateOutput();",
                             "return $message->getResponse();"
                         );
-                        if (action.getAnnotations().contains(new AnnotationStub(Transactional.name))) {
+                        if (action.getAnnotations().containsKey(Transactional.name)) {
                             actionClassMethodCombiner.wrapBody(
                                 "return DB::transaction(function () use ($request) {",
                                 "});"
@@ -220,7 +218,12 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         o.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
             String method = "post";
             try {
-                outputStreamWriter.write("Route::" + method + "('" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "');\n");
+                String middlewarePart = "";
+                if (action.hasAnnotation(Middleware.name)) {
+                    AnnotationStub x = action.getAnnotations().get(Middleware.name);
+                    middlewarePart = "->middleware(['" + String.join("', '", (String[]) x.getValues().get("value")) + "'])";
+                }
+                outputStreamWriter.write("Route::" + method + "('" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "')" + middlewarePart + ";\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -295,20 +298,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             String typeName = parameterStub.getType();
             String typeModelName = getModelNameFromType(typeName);
             ArrayList<String> ruleList = new ArrayList<>();
-            boolean isArray = false;
-            boolean isModel = false;
-            boolean isEnum = false;
-            if (typeName.endsWith("[]")) {
-                isArray = true;
-            }
-            if (typeName.startsWith("Models")) {
-                isModel = true;
-                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeModelName);
-                typeModelName = typeModelName + "::class";
-            } else if (typeName.startsWith("Enums")) {
-                isEnum = true;
-                classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName);
-                typeModelName = typeModelName + "::class";
+            boolean isArray = parameterStub.isArray();
+            boolean isModel = parameterStub.isModel();
+            boolean isEnum = parameterStub.isEnum();
+            if (isModel) {
+                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeModelName + "Model");
+                typeModelName = typeModelName + "Model::class";
+            } else if (isEnum) {
+                classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName + "Enum");
+                typeModelName = typeModelName + "Enum::class";
             } else if (typeModelName.equals("Date")) {
                 typeModelName = "'" + typeName + "'";
             } else {

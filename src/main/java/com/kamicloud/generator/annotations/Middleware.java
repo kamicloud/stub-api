@@ -5,5 +5,6 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Middleware {
-    String name() default "";
+    String name = "Middleware";
+    String[] value() default "";
 }

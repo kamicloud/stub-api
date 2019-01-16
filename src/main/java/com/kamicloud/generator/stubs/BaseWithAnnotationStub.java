@@ -1,10 +1,11 @@
 package com.kamicloud.generator.stubs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
     private String name;
-    private ArrayList<AnnotationStub> annotations = new ArrayList<>();
+    private HashMap<String, AnnotationStub> annotations = new HashMap<>();
     private ArrayList<String> comments = new ArrayList<>();
     private String comment;
     private String extendsFrom;
@@ -17,12 +18,12 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
         return name;
     }
 
-    public ArrayList<AnnotationStub> getAnnotations() {
+    public HashMap<String, AnnotationStub> getAnnotations() {
         return annotations;
     }
 
     public void addAnnotation(AnnotationStub annotationStub) {
-        annotations.add(annotationStub);
+        annotations.put(annotationStub.getName(), annotationStub);
     }
 
     public void setComment(String comment) {
@@ -50,6 +51,6 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
     }
 
     public Boolean hasAnnotation(String name) {
-        return annotations.contains(new AnnotationStub(name));
+        return annotations.containsKey(name);
     }
 }

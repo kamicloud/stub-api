@@ -6,5 +6,6 @@ out/
 build
 /bin/
 /vendor/
+.classpath
 *.log
 composer.lock

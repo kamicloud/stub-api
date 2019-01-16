@@ -244,13 +244,18 @@ public class Generator extends Doclet {
         }
         // 类型+变量
         Class parameterType = parameter.getType();
-        String typeName = parameterType.getSimpleName();
-        if (parameterType.getName().contains("$Models$")) {
-            typeName = "Models." + typeName;
-        } else if (parameterType.getName().contains("$Enums$")) {
-            typeName = "Enums." + typeName;
+        String typeName = parameterType.getName();
+        String typeSimpleName = parameterType.getSimpleName();
+        ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);
+        if (typeName.contains("$Models$")) {
+            parameterStub.setModel(true);
+        } else if (typeName.contains("$Enums$")) {
+            parameterStub.setEnum(true);
         }
-        ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeName);
+        // int[] 在typeName里是I[
+        if (typeSimpleName.endsWith("[]")) {
+            parameterStub.setArray(true);
+        }
 
         // 注解
         parseAnnotations(parameter.getAnnotations(), parameterStub);
@@ -272,14 +277,10 @@ public class Generator extends Doclet {
                 return;
             }
             com.sun.tools.javadoc.Main.execute(new String[]{
-                "-verbose",
+//                "-verbose",
                 "-package",
-//                    "-subpackages", "com.kamicloud.generator",
                 "-doclet", "com.kamicloud.generator.Generator",
-//                    "-doclet", "com.sun.javadoc.Doclet",
                 "-encoding", "utf-8",
-//                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
-//                    "-classpath", "/Users/Ttdnts/IdeaProjects/generator/build/classes",
                 templateFile.getAbsolutePath()
             });
         });
@@ -309,16 +310,16 @@ public class Generator extends Doclet {
         ClassDoc[] classes = root.classes();
         for (ClassDoc cd : classes) {
             classDocHashMap.put(cd.qualifiedTypeName(), cd);
-            System.out.println(cd.name() + "   " + cd.commentText());
+//            System.out.println(cd.name() + "   " + cd.commentText());
             ClassDoc[] innerClasses = cd.innerClasses();
             for (ClassDoc innerClass : innerClasses) {
                 Arrays.asList(innerClass.innerClasses()).forEach(classDoc -> {
-                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
+//                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
                     classDocHashMap.put(classDoc.qualifiedTypeName(), classDoc);
 
                     Arrays.asList(classDoc.fields()).forEach(fieldDoc -> {
                         classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
-                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
+//                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
                     });
                 });
             }

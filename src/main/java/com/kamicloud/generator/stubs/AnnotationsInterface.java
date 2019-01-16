@@ -1,9 +1,9 @@
 package com.kamicloud.generator.stubs;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface AnnotationsInterface {
     void addAnnotation(AnnotationStub annotationStub);
 
-    ArrayList getAnnotations();
+    HashMap<String, AnnotationStub> getAnnotations();
 }

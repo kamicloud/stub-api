@@ -1,10 +1,9 @@
 <?php
 
-namespace YetAnotherGenerator;
+namespace YetAnotherGenerator\Exceptions;
 
 use Exception;
 use Illuminate\Contracts\Support\Responsable;
-use Throwable;
 
 class BaseException extends Exception implements Responsable
 {

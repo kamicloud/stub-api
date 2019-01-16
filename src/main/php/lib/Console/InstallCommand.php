@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace YetAnotherGenerator\Console;
 
 use Illuminate\Console\Command;
 use PhpParser\Builder\Method;

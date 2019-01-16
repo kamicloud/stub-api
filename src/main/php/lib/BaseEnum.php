@@ -4,6 +4,8 @@ namespace YetAnotherGenerator;
 
 class BaseEnum
 {
+    const _MAP = [];
+
     public static function verify($value)
     {
         $values = static::_MAP;

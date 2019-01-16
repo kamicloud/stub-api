@@ -2,6 +2,7 @@ package com.kamicloud.generator.writers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kamicloud.generator.annotations.Request;
 import com.kamicloud.generator.stubs.AnnotationStub;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
@@ -71,7 +72,7 @@ public class PostmanWriter extends BaseWriter {
                 PostmanItemRequestUrlStub postmanItemRequestUrlStub = new PostmanItemRequestUrlStub();
                 postmanItemRequestStub.setUrl(postmanItemRequestUrlStub);
 
-                postmanItemRequestUrlStub.addHost("localhost");
+                postmanItemRequestUrlStub.addHost("{{host}}");
                 postmanItemRequestUrlStub.addPath("api");
                 postmanItemRequestUrlStub.addPath("V1");
                 postmanItemRequestUrlStub.addPath(controller.getName());
@@ -80,7 +81,7 @@ public class PostmanWriter extends BaseWriter {
 
 
                 action.getRequests().forEach((parameterName, parameter) -> {
-                    if (parameter.getAnnotations().contains(new AnnotationStub("Request"))) {
+                    if (parameter.getAnnotations().containsKey(Request.name)) {
                         PostmanParameterStub postmanParameterStub = new PostmanParameterStub(parameter.getName());
                         String comment = parameter.getComment();
                         if (comment != null) {
