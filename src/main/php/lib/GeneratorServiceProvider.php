@@ -20,7 +20,7 @@ class GeneratorServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__ . '/config/generator.php' => config_path('generator.php'),
+                __DIR__ . '/../config/generator.php' => config_path('generator.php'),
             ], 'generator-config');
         }
     }
@@ -28,7 +28,7 @@ class GeneratorServiceProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/config/generator.php', 'generator'
+            __DIR__ . '/../config/generator.php', 'generator'
         );
     }
 }
