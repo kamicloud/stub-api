@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator;
+namespace YetAnotherGenerator\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\JsonResponse;

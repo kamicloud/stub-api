@@ -1,13 +1,7 @@
 package com.kamicloud.generator.writers;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.LongSerializationPolicy;
-import com.google.gson.internal.LinkedTreeMap;
-import definitions.Mutable;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.OutputStub;
-import com.kamicloud.generator.stubs.ParameterStub;
 import com.kamicloud.generator.stubs.testcase.RequestStub;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.php.ClassCombiner;
@@ -27,8 +21,6 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     private File outputDir;
     private File testDir;
 
-    private OutputStub outputStub;
-
     public AutoTestWriter(Environment env) {
         super(env);
         outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
@@ -38,7 +30,6 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     @Override
     public void update(Observable o, Object arg) {
         OutputStub output = (OutputStub) o;
-        outputStub = output;
         try {
             FileUtil.deleteAllFilesOfDir(testDir);
 
@@ -114,18 +105,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                                     ))
                             );
 
-
                             String jsonResponse = Objects.requireNonNull(response.body()).string();
-//                            Gson gson = new GsonBuilder()
-//                                    .serializeNulls()
-//                                    .setLongSerializationPolicy(LongSerializationPolicy.STRING)
-//                                    .setPrettyPrinting()
-//                                    .create();
-//                            System.out.println(jsonResponse);
-//
-//                            LinkedTreeMap gsonMap = (LinkedTreeMap) gson.fromJson(jsonResponse, Map.class);
-
-//                            transformResponseMutable(gsonMap, actionStub.getResponses());
 
                             classMethodCombiner.addBody("$expect = <<<JSON\n" + jsonResponse + "\nJSON;");
                             classMethodCombiner.addBody("$expect = json_encode(json_decode($expect));");
@@ -144,35 +124,6 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                 e.printStackTrace();
             }
         })));
-    }
-
-    private void transformResponseMutable(LinkedTreeMap response, HashMap<String, ParameterStub> parameterStubs) {
-        Double status = (Double) response.get("status");
-        if (response.containsKey("status")) {
-            response.replace("status", status.intValue());
-        }
-
-        Object expect = response.get("data");
-
-        if (expect instanceof LinkedTreeMap) {
-            LinkedTreeMap expectLinkedTreeMap = (LinkedTreeMap) expect;
-            transformParameterMutable(expectLinkedTreeMap, parameterStubs);
-        }
-    }
-
-    private void transformParameterMutable(LinkedTreeMap expect, HashMap<String, ParameterStub> parameterStubs) {
-        parameterStubs.forEach((parameterName, parameterStub) -> {
-            String parameterType = parameterStub.getType();
-            if (parameterStub.hasAnnotation(Mutable.name)) {
-                expect.replace(parameterName, "*");
-            } else if (parameterType.startsWith("Models.")) {
-                LinkedTreeMap m = (LinkedTreeMap) expect.get(parameterName);
-                if (m != null) {
-                    transformParameterMutable(m, outputStub.getTemplates().get("V1").getModelByName(parameterStub.getType()).getParameters());
-                }
-            }
-        });
-
     }
 
     private void requestApi(RequestStub requestStub) throws IOException {

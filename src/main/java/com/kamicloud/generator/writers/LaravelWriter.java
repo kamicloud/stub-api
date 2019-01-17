@@ -309,9 +309,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 typeModelName = typeModelName + "Enum::class";
             } else if (typeModelName.equals("Date")) {
                 typeModelName = "'" + typeName + "'";
-            } else if (typeModelName.equals("float")) {
-                typeModelName = "'numeric'";
             } else {
+                if (typeModelName.equals("float")) {
+                    typeModelName = "'numeric'";
+                }
                 // 参数校验
                 ruleList.add("bail");
                 if (!parameterStub.hasAnnotation(Optional.name)) {
