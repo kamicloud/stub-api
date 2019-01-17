@@ -1,6 +1,6 @@
 package templates;
 
-import com.kamicloud.generator.annotations.*;
+import definitions.*;
 
 import java.util.Date;
 
