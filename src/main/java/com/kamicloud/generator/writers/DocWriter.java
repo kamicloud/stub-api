@@ -1,6 +1,6 @@
 package com.kamicloud.generator.writers;
 
-import com.kamicloud.generator.annotations.Optional;
+import definitions.Optional;
 import com.kamicloud.generator.stubs.EnumStub;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
@@ -10,7 +10,6 @@ import org.springframework.core.env.Environment;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Observable;

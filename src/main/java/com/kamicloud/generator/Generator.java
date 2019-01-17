@@ -1,10 +1,10 @@
 package com.kamicloud.generator;
 
-import com.kamicloud.generator.annotations.ErrorInterface;
-import com.kamicloud.generator.annotations.Request;
+import definitions.ErrorInterface;
+import definitions.Request;
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
-import com.kamicloud.generator.annotations.FixedEnumValueInterface;
+import definitions.FixedEnumValueInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
 import templates.TemplateList;

@@ -1,6 +1,6 @@
 package templates;
 
-import com.kamicloud.generator.annotations.ErrorInterface;
+import definitions.ErrorInterface;
 
 @SuppressWarnings("unused")
 public enum Errors implements ErrorInterface {

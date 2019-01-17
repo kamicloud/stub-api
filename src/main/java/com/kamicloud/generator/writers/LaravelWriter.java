@@ -1,12 +1,12 @@
 package com.kamicloud.generator.writers;
 
 import com.google.common.base.CaseFormat;
-import com.kamicloud.generator.annotations.*;
-import com.kamicloud.generator.annotations.Optional;
+import definitions.*;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.php.*;
+import definitions.Optional;
 import org.springframework.core.env.Environment;
 
 import java.io.File;

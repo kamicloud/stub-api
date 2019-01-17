@@ -1,4 +1,4 @@
-package com.kamicloud.generator.annotations;
+package definitions;
 
 public enum MethodType {
     GET, POST, PUT, PATCH, DELETE, UPDATE;

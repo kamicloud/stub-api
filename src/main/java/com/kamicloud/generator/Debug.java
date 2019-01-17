@@ -1,8 +1,8 @@
 package com.kamicloud.generator;
 
 //import com.github.javaparser.javadoc.Javadoc;
-//import com.kamicloud.generator.annotations.API;
-//import com.kamicloud.generator.annotations.MethodType;
+//import definitions.API;
+//import definitions.MethodType;
 //import com.sun.javadoc.*;
 //
 //import java.lang.annotation.Annotation;

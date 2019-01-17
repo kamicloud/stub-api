@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.LongSerializationPolicy;
 import com.google.gson.internal.LinkedTreeMap;
-import com.kamicloud.generator.annotations.Mutable;
+import definitions.Mutable;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.ParameterStub;
