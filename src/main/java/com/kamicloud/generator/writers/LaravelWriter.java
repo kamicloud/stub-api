@@ -157,7 +157,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 ClassConstantCombiner mapConstant = new ClassConstantCombiner(
                     "_MAP",
                     EnumStub.EnumStubItemType.EXPRESSION,
-                    "protected"
+                    "public"
                 );
                 mapConstant.addLine("[");
                 enumStub.getItems().forEach((key, value) -> {
@@ -195,7 +195,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 String exceptionName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName());
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
                     "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
-                    "YetAnotherGenerator\\BaseException"
+                    "YetAnotherGenerator\\Exceptions\\BaseException"
                 );
 
                 ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner(exceptionClassCombiner, "__construct");
