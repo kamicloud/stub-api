@@ -116,18 +116,18 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
 
                             String jsonResponse = Objects.requireNonNull(response.body()).string();
-                            Gson gson = new GsonBuilder()
-                                    .serializeNulls()
-                                    .setLongSerializationPolicy(LongSerializationPolicy.STRING)
-                                    .setPrettyPrinting()
-                                    .create();
-                            System.out.println(jsonResponse);
-
-                            LinkedTreeMap gsonMap = (LinkedTreeMap) gson.fromJson(jsonResponse, Map.class);
+//                            Gson gson = new GsonBuilder()
+//                                    .serializeNulls()
+//                                    .setLongSerializationPolicy(LongSerializationPolicy.STRING)
+//                                    .setPrettyPrinting()
+//                                    .create();
+//                            System.out.println(jsonResponse);
+//
+//                            LinkedTreeMap gsonMap = (LinkedTreeMap) gson.fromJson(jsonResponse, Map.class);
 
 //                            transformResponseMutable(gsonMap, actionStub.getResponses());
 
-                            classMethodCombiner.addBody("$expect = <<<JSON\n" + gson.toJson(gsonMap).replace("\\", "\\\\") + "\nJSON;");
+                            classMethodCombiner.addBody("$expect = <<<JSON\n" + jsonResponse + "\nJSON;");
                             classMethodCombiner.addBody("$expect = json_encode(json_decode($expect));");
                             classMethodCombiner.addBody("$this->assertJsonStringEqualsJsonString($expect, $actual);");
 

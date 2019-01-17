@@ -3,6 +3,7 @@
 namespace YetAnotherGenerator;
 
 use Closure;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class GeneratorMiddleware
@@ -26,6 +27,13 @@ class GeneratorMiddleware
                 DB::beginTransaction();
 
                 $response = $next($request);
+
+                /** @var JsonResponse $response */
+                $content = $response->getContent();
+
+                $content = json_encode(json_decode($content), JSON_PRETTY_PRINT);
+
+                $response->setContent($content);
 
                 DB::rollBack();
 
