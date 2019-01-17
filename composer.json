@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "YetAnotherGenerator\\lib\\": "src/main/php/"
+            "YetAnotherGenerator\\": "src/main/php/lib/"
         }
     },
     "require": {
