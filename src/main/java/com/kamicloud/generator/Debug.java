@@ -1,8 +1,8 @@
 package com.kamicloud.generator;
 
 //import com.github.javaparser.javadoc.Javadoc;
-//import definitions.API;
-//import definitions.MethodType;
+//import definitions.annotations.API;
+//import definitions.annotations.MethodType;
 //import com.sun.javadoc.*;
 //
 //import java.lang.annotation.Annotation;
@@ -25,7 +25,7 @@ public class Debug {
 //
 //                                Class<?> type = parameterStub.getType();
 //                                Boolean isMemberClass = type.isMemberClass();
-//                                Type types = parameterStub.getGenericType();
+//                                Type definitions.types = parameterStub.getGenericType();
 //                                String fullTypeName = type.getTypeName();
 //                                String typeName = type.getSimpleName();
 //                                String nn = type.getName();

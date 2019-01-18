@@ -1,10 +1,10 @@
 package com.kamicloud.generator;
 
-import definitions.ErrorInterface;
-import definitions.Request;
+import definitions.annotations.ErrorInterface;
+import definitions.annotations.Request;
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
-import definitions.FixedEnumValueInterface;
+import definitions.annotations.FixedEnumValueInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
 import templates.TemplateList;
@@ -265,7 +265,7 @@ public class Generator extends Doclet {
     }
 
     public void getComments() {
-        String codePath = env.getProperty("generator.template-path");
+        String codePath = env.getProperty("generator.template-path", "./src/main/java/templates");
         File templateDir = new File(codePath + "/templates");
         File[] templateFiles = templateDir.listFiles();
 

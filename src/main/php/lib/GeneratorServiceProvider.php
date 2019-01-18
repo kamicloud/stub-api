@@ -3,6 +3,7 @@
 namespace YetAnotherGenerator;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Route;
 
 class GeneratorServiceProvider extends ServiceProvider
 {
@@ -12,6 +13,18 @@ class GeneratorServiceProvider extends ServiceProvider
     }
 
     /**
+     * Register the package routes.
+     *
+     * @return void
+     */
+//    private function registerRoutes()
+//    {
+//        Route::group($this->routeConfiguration(), function () {
+//            $this->loadRoutesFrom(__DIR__.'/Http/routes.php');
+//        });
+//    }
+
+    /**
      * Register the package's publishable resources.
      *
      * @return void
@@ -19,6 +32,12 @@ class GeneratorServiceProvider extends ServiceProvider
     private function registerPublishing()
     {
         if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../../resources/config/application-prod.yml' => resource_path('generator/config/application.yml'),
+                __DIR__ . '/../../java/definitions' => resource_path('generator/definitions'),
+                __DIR__ . '/../../java/templates' => resource_path('generator/templates'),
+            ], 'generator-resource');
+
             $this->publishes([
                 __DIR__ . '/../config/generator.php' => config_path('generator.php'),
             ], 'generator-config');
@@ -30,5 +49,10 @@ class GeneratorServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/../config/generator.php', 'generator'
         );
+
+        $this->commands([
+            Console\InstallCommand::class,
+            Console\SyncServicesCommand::class,
+        ]);
     }
 }

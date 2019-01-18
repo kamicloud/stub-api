@@ -2,7 +2,7 @@ package com.kamicloud.generator.writers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import definitions.Request;
+import definitions.annotations.Request;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.stubs.postman.*;

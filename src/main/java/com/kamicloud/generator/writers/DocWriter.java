@@ -1,6 +1,6 @@
 package com.kamicloud.generator.writers;
 
-import definitions.Optional;
+import definitions.annotations.Optional;
 import com.kamicloud.generator.stubs.EnumStub;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
@@ -15,22 +15,23 @@ import java.util.Objects;
 import java.util.Observable;
 
 public class DocWriter extends BaseWriter {
+    private String docPath;
     private File outputDir;
 
     public DocWriter(Environment env) {
         super(env);
-        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.doc-path")) + "/resources/docs/1.0");
+        docPath = Objects.requireNonNull(env.getProperty("generator.doc-path"));
     }
 
     @Override
     public void update(Observable o, Object arg) {
         OutputStub output = (OutputStub) o;
         output.getTemplates().forEach((version, templateStub) -> {
-            boolean res;
+            outputDir = new File(docPath + "/resources/docs/" + version);
             if (outputDir.exists()) {
                 FileUtil.deleteAllFilesOfDir(outputDir);
             }
-            res = (new File(outputDir.getAbsolutePath() + "/generated/apis")).mkdirs();
+            (new File(outputDir.getAbsolutePath() + "/generated/apis")).mkdirs();
 
             writeIndex(templateStub);
             writeModels(templateStub);

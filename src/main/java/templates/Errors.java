@@ -1,6 +1,6 @@
 package templates;
 
-import definitions.ErrorInterface;
+import definitions.annotations.ErrorInterface;
 
 @SuppressWarnings("unused")
 public enum Errors implements ErrorInterface {

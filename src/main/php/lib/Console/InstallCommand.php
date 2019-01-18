@@ -2,178 +2,74 @@
 
 namespace YetAnotherGenerator\Console;
 
+use Illuminate\Support\Str;
 use Illuminate\Console\Command;
-use PhpParser\Builder\Method;
-use PhpParser\Builder\Use_;
-use PhpParser\Node;
-use PhpParser\Node\Stmt\Class_;
-use PhpParser\Node\Stmt\ClassMethod;
-use PhpParser\Node\Stmt\Namespace_;
-use PhpParser\ParserFactory;
-use PhpParser\PrettyPrinter;
-use Exception;
+use Illuminate\Console\DetectsApplicationNamespace;
 
 class InstallCommand extends Command
 {
-    protected $signature = 'sync:services';
+    use DetectsApplicationNamespace;
 
-    protected $description = 'Command description';
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'generator:install';
 
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Install all of the Generator resources';
+
+    /**
+     * Execute the console command.
+     *
+     * @return void
+     */
     public function handle()
     {
-        $controllersPath = app_path('Generated/Controllers');
+//        $this->comment('Publishing Generator Service Provider...');
+//        $this->callSilent('vendor:publish', ['--tag' => 'generator-provider']);
 
-        foreach (scandir($controllersPath) as $version) {
-            if (in_array($version, ['.', '..'])) {
-                continue;
-            }
-            foreach (scandir("$controllersPath/$version") as $controllerName) {
-                if (in_array($controllerName, ['.', '..'])) {
-                    continue;
-                }
-                $controllerPath = "$controllersPath/$version/$controllerName";
+        $this->comment('Publishing Generator Template...');
+        $this->callSilent('vendor:publish', ['--tag' => 'generator-resource']);
 
-                // 解析需测试文件
-                $namespaces = $this->parseFile($controllerPath);
-                array_walk($namespaces, function ($namespace) use ($version) {
-                    [$namespace, $classes] = $namespace;
+        $this->comment('Publishing Generator Configuration...');
+        $this->callSilent('vendor:publish', ['--tag' => 'generator-config']);
 
+//        $this->registerGeneratorServiceProvider();
 
-
-                    // 解析文件中的类
-                    foreach ($classes as $class) {
-                        $className = $class->name->name;
-                        $serviceClassName = str_replace('Controller', 'Service', $className);
-                        $servicesPath = app_path("Http/Services/$version/$serviceClassName.php");
-
-                        $classMethodNames = array_filter(array_map(function ($bodyPart) {
-                            if ($bodyPart instanceof ClassMethod && $bodyPart->isPublic()) {
-                                $methodName = $bodyPart->name->name;
-                                $upperCamelMethodName = strtoupper($methodName[0]) . substr($methodName, 1);
-                                return [
-                                    'lower_camel_method_name' => $methodName,
-                                    'upper_camel_method_name' => $upperCamelMethodName,
-                                ];
-                            }
-                            return null;
-                        }, $class->stmts));
-
-                        if (file_exists($servicesPath)) {
-                            // 已存在
-                            [$testNamespace, $testClassMethodNames, $testClass] = $this->getExistsTest($servicesPath);
-//                            dd($classMethodNames, array_column($classMethodNames, 'lower_camel_method_name'));
-                            $todoMethodNames = array_diff_key(
-                                array_combine(array_column($classMethodNames, 'lower_camel_method_name'), $classMethodNames),
-                                array_flip($testClassMethodNames)
-                            );
-                        } else {
-                            // 创建空的测试类
-                            $testNamespace = $this->prepareTestFile('App\Http\Services');
-                            $todoMethodNames = $classMethodNames;
-                            $testClass = new Class_($serviceClassName);
-//                            $testClass->extends = new Node\Name('TestCase');
-                        }
-
-                        $testNamespace->stmts = array_filter($testNamespace->stmts, function ($stmt) {
-                            return !($stmt instanceof Class_);
-                        });
-
-                        $testClass->stmts = array_merge($testClass->stmts, array_map(function ($methodName) use ($version, $serviceClassName, $testNamespace) {
-                            [
-                                'lower_camel_method_name' => $methodName,
-                                'upper_camel_method_name' => $upperCamelMethodName,
-                            ] = $methodName;
-                            $method = new Method($methodName);
-                            $method->makePublic();
-                            $param = new Node\Param(new Node\Expr\Variable('message'), null, "{$upperCamelMethodName}Message");
-                            $method->addParam($param);
-
-                            $testNamespace->stmts[] = (new Node\Stmt\Use_(["App\Generated\Messages\{$version}\{$upperCamelMethodName}Message"], Node\Stmt\Use_::TYPE_NORMAL));
-
-                            return $method->getNode();
-                        }, $todoMethodNames));
-
-                        $testNamespace->stmts[] = $testClass;
-
-                        $prettyPrinter = new PrettyPrinter\Standard;
-                        dd($prettyPrinter->prettyPrintFile([$testNamespace]));
-                        file_put_contents($servicesPath, $prettyPrinter->prettyPrintFile([$testNamespace]));
-                    }
-                });
-            }
-        }
+        $this->info('Generator scaffolding installed successfully.');
     }
 
     /**
-     * 解析已有的测试
+     * Register the Generator service provider in the application configuration file.
      *
-     * @param $testFilePath
-     * @return array
-     * @throws Exception
+     * @return void
      */
-    protected function getExistsTest($testFilePath)
+    protected function registerGeneratorServiceProvider()
     {
-        $testClasses = $this->parseFile($testFilePath);
-        if (count($testClasses) !== 1) {
-            throw new Exception('测试文件需有且仅有一个PHP片段');
+        $namespace = str_replace_last('\\', '', $this->getAppNamespace());
+
+        $appConfig = file_get_contents(config_path('app.php'));
+
+        if (Str::contains($appConfig, $namespace.'\\Providers\\GeneratorServiceProvider::class')) {
+            return;
         }
-        [$testNamespace, $testClasses] = $testClasses[0];
-        if (count($testClasses) !== 1) {
-            throw new Exception('测试文件需有且仅有一个类');
-        }
-        $testClass = $testClasses[0];
 
-        $testClassMethodNames = array_filter(array_map(function ($bodyPart) {
-            if ($bodyPart instanceof ClassMethod && $bodyPart->isPublic()) {
-                return $bodyPart->name->name;
-            }
-            return null;
-        }, $testClass->stmts));
+        file_put_contents(config_path('app.php'), str_replace(
+            "{$namespace}\\Providers\EventServiceProvider::class,".PHP_EOL,
+            "{$namespace}\\Providers\EventServiceProvider::class,".PHP_EOL."        {$namespace}\Providers\GeneratorServiceProvider::class,".PHP_EOL,
+            $appConfig
+        ));
 
-        return [$testNamespace, $testClassMethodNames, $testClass];
-    }
-
-    protected function prepareTestFile($namespace)
-    {
-        $namespace = new \PhpParser\Builder\Namespace_($namespace);
-//        $namespace->addStmt(new Use_('Tests\TestCase', Node\Stmt\Use_::TYPE_NORMAL));
-
-        return $namespace->getNode();
-    }
-
-    protected function parseFile($path)
-    {
-        $code = file_get_contents($path);
-        $parser = (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
-        $ast = $parser->parse($code);
-        if (!count($ast)) {
-            throw new Exception('未发现php代码');
-        }
-        $namespaces = $this->parsePHPSegments($ast);
-
-        return $namespaces;
-    }
-
-    protected function parsePHPSegments($segments)
-    {
-        $segments = array_filter($segments, function ($segment) {
-            return $segment instanceof Namespace_;
-        });
-
-        $segments = array_map(function (Namespace_ $segment) {
-            return [$segment, $this->parseNamespace($segment)];
-        }, $segments);
-
-        return $segments;
-    }
-
-    protected function parseNamespace(Namespace_ $namespace)
-    {
-        $classes = array_values(array_filter($namespace->stmts, function ($class) {
-            return $class instanceof Class_;
-        }));
-
-        return $classes;
+        file_put_contents(app_path('Providers/GeneratorServiceProvider.php'), str_replace(
+            "namespace App\Providers;",
+            "namespace {$namespace}\Providers;",
+            file_get_contents(app_path('Providers/GeneratorServiceProvider.php'))
+        ));
     }
 }
-

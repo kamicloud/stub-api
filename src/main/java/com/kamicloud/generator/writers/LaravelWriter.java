@@ -1,12 +1,12 @@
 package com.kamicloud.generator.writers;
 
 import com.google.common.base.CaseFormat;
-import definitions.*;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.php.*;
-import definitions.Optional;
+import definitions.annotations.*;
+import definitions.annotations.Optional;
 import org.springframework.core.env.Environment;
 
 import java.io.File;
@@ -23,11 +23,12 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private File generatedDir;
     private File routePath;
 
-    public LaravelWriter(Environment env) throws Exception {
+    public LaravelWriter(Environment env) {
         super(env);
-        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.laravel-path")));
+        String laravelPath = Objects.requireNonNull(env.getProperty("generator.laravel-path"));
+        outputDir = new File(laravelPath);
         if (!outputDir.exists()) {
-            throw new Exception("未找到laravel目录");
+            outputDir.mkdirs();
         }
         generatedDir = new File(outputDir.getAbsolutePath() + "/app/Generated");
         routePath = new File(outputDir.getAbsolutePath() + "/routes/generated_routes.php");
@@ -211,6 +212,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeRoute(TemplateStub o) throws IOException {
+        if (!routePath.getParentFile().exists()) {
+            routePath.getParentFile().mkdirs();
+        }
         FileOutputStream fileOutputStream = new FileOutputStream(routePath);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
         outputStreamWriter.write("<?php\n");

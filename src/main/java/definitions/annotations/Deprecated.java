@@ -1,4 +1,4 @@
-package definitions;
+package definitions.annotations;
 
 public @interface Deprecated {
 }

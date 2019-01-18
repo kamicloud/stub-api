@@ -1,4 +1,4 @@
-package definitions;
+package definitions.annotations;
 
 public enum MethodType {
     GET, POST, PUT, PATCH, DELETE, UPDATE;

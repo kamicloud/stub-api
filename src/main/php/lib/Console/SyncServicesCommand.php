@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace YetAnotherGenerator\Console;
 
 use Illuminate\Console\Command;
 use PhpParser\Builder\Method;
@@ -13,7 +13,7 @@ use PhpParser\ParserFactory;
 use PhpParser\PrettyPrinter;
 use Exception;
 
-class SyncServices extends Command
+class SyncServicesCommand extends Command
 {
     protected $signature = 'sync:services';
 

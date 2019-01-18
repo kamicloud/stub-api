@@ -1,0 +1,8 @@
+generator:
+  template-path: ./src/main/java
+  laravel-path: C:\Users\admin\IdeaProjects\abc360-headlight
+  auto-test-path: C:\Users\admin\IdeaProjects\abc360-headlight
+  doc-path: C:\Users\admin\IdeaProjects\abc360-headlight
+  postman-path: C:\Users\admin\IdeaProjects\abc360-headlight
+  testcases-path: C:\Users\admin\IdeaProjects\abc360-headlight\storage\testcases
+  test-host: http://localhost

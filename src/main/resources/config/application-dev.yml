@@ -1,33 +1,14 @@
 # ===================================================================
-# Spring Boot configuration for the "dev" profile.
+# 开发工具时时默认的配置
 #
-# This configuration overrides the application.yml file.
-#
-# More information on profiles: https://www.jhipster.tech/profiles/
-# More information on configuration properties: https://www.jhipster.tech/common-application-properties/
+# 所有相对路径以本项目根目录为准
 # ===================================================================
-
-# ===================================================================
-# Standard Spring Boot properties.
-# Full reference is available at:
-# http://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
-# ===================================================================
-
-logging:
-  level:
-     ROOT: DEBUG
-     io.github.jhipster: DEBUG
-     com.zhh.blog: DEBUG
 
 generator:
   template-path: ./src/main/java
-  laravel-path: ./output/laravel
-  auto-test-path: ./output/tests
-  doc-path: ./output/docs
-  postman-path: ./output
-  testcases-path: ./output/testcases
+  laravel-path: ./src/output/laravel
+  auto-test-path: ./src/output/tests
+  doc-path: ./src/output/larecipe
+  postman-path: ./src/output
+  testcases-path: ./src/output/testcases
   test-host: http://localhost
-
-#spring:
-#    profiles:
-#        active: dev
