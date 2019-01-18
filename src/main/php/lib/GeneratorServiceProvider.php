@@ -9,7 +9,7 @@ class GeneratorServiceProvider extends ServiceProvider
 {
     public function boot()
     {
-        //
+        $this->registerPublishing();
     }
 
     /**

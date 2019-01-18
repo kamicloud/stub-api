@@ -315,7 +315,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 typeModelName = "'" + typeName + "'";
             } else {
                 if (typeModelName.equals("float")) {
-                    typeModelName = "'numeric'";
+                    typeModelName = "numeric";
                 }
                 // 参数校验
                 ruleList.add("bail");
