@@ -4,7 +4,9 @@ namespace YetAnotherGenerator;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
+
 use Throwable;
+use YetAnotherGenerator\Exceptions\InvalidParameterException;
 
 trait ValueHelper
 {

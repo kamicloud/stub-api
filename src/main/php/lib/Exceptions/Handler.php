@@ -27,7 +27,7 @@ class Handler extends ExceptionHandler
         if (config('app.debug', false) !== true && !$request->input('__test_mode', false)) {
             return parent::render($request, $exception);
         } else {
-            $exceptionClass = config('exceptions.server-internal-exception', ServerInternalErrorException::class);
+            $exceptionClass = config('generator.exceptions.server-internal-exception', ServerInternalErrorException::class);
             return self::render($request, new $exceptionClass('Something went wrong.'));
         }
     }

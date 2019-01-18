@@ -1,0 +1,20 @@
+
+
+dependencies {
+    compile "org.springframework.boot:spring-boot-devtools"
+    compile "com.h2database:h2"
+}
+
+def profiles = 'dev'
+
+
+processResources {
+    filesMatching('**/application.yml') {
+        filter {
+            it.replace('#project.version#', version)
+        }
+        filter {
+            it.replace('#spring.profiles.active#', profiles)
+        }
+    }
+}

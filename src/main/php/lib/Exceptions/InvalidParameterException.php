@@ -2,7 +2,7 @@
 
 namespace YetAnotherGenerator\Exceptions;
 
-class InvalidParameterException extends Base
+class InvalidParameterException extends BaseException
 {
     public function __construct($message = null)
     {
