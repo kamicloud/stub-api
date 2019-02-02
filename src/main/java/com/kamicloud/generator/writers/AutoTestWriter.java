@@ -1,5 +1,6 @@
 package com.kamicloud.generator.writers;
 
+import com.google.gson.Gson;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.testcase.RequestStub;
@@ -8,6 +9,7 @@ import com.kamicloud.generator.writers.components.php.ClassCombiner;
 import com.kamicloud.generator.writers.components.php.ClassMethodCombiner;
 import okhttp3.*;
 import org.springframework.core.env.Environment;
+import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.time.Duration;
@@ -71,20 +73,20 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     private void getTestResponse(OutputStub output) {
         output.getTemplates().forEach((version, templateStub) -> templateStub.getControllers().forEach(controllerStub -> controllerStub.getActions().forEach((actionName, actionStub) -> {
             String url = String.join(
-                    "/",
-                    "",
-                    "api",
-                    version,
-                    controllerStub.getName(),
-                    actionName
+                "/",
+                "",
+                "api",
+                version,
+                controllerStub.getName(),
+                actionName
             );
 
             AtomicReference<Integer> i = new AtomicReference<>(0);
             ArrayList<RequestStub> requests = apiMap.get(url);
             try {
                 ClassCombiner classCombiner = new ClassCombiner(
-                        "Tests\\Generated\\" + version + "\\" + controllerStub.getName() + "\\" + actionStub.getName() + "Test",
-                        "Tests\\TestCase"
+                    "Tests\\Generated\\" + version + "\\" + controllerStub.getName() + "\\" + actionStub.getName() + "Test",
+                    "Tests\\TestCase"
                 );
                 classCombiner.addTrait("Illuminate\\Foundation\\Testing\\DatabaseTransactions");
 
@@ -98,11 +100,11 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',"));
                             classMethodCombiner.setBody(params);
                             classMethodCombiner.wrapBody(
-                                    "$response = $this->post('" + url + "', [",
-                                    new ArrayList<>(Arrays.asList(
-                                            "]);",
-                                            "$actual = $response->getContent();"
-                                    ))
+                                "$response = $this->post('" + url + "', [",
+                                new ArrayList<>(Arrays.asList(
+                                    "]);",
+                                    "$actual = $response->getContent();"
+                                ))
                             );
 
                             String jsonResponse = Objects.requireNonNull(response.body()).string();
@@ -128,17 +130,17 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
     private void requestApi(RequestStub requestStub) throws IOException {
         MultipartBody.Builder builder = new MultipartBody
-                .Builder()
-                .setType(MultipartBody.FORM);
+            .Builder()
+            .setType(MultipartBody.FORM);
 
         builder.addFormDataPart("__test_mode", "1");
         requestStub.getParameters().forEach(builder::addFormDataPart);
         RequestBody requestBody = builder.build();
         String testHost = env.getProperty("test-host", "http://localhost");
         Request request = new Request.Builder()
-                .url(testHost + requestStub.getApi())
-                .post(requestBody)
-                .build();
+            .url(testHost + requestStub.getApi())
+            .post(requestBody)
+            .build();
 
         Response response = client.newCall(request).execute();
 
@@ -149,6 +151,15 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         String line;
         String api = null;
         RequestStub requestStub = null;
+        // Yaml yaml = new Yaml();
+        // FileInputStream in = new FileInputStream(new File(".\\src\\output\\testcases\\V1\\AdminUser\\GetUsers.yml"));
+        // Gson gson = new Gson();
+//        LinkedHashMap x = yaml.load(bufferedReader);
+//        x.forEach((a,b ) -> {
+//            String m = gson.toJson(b);
+//            String k = "";
+//        });
+//        String kk = gson.toJson(x.get("params"));
         while ((line = bufferedReader.readLine()) != null) {
             ArrayList<String> splits = new ArrayList<>(Arrays.asList(line.split(":")));
             String key = splits.get(0);
