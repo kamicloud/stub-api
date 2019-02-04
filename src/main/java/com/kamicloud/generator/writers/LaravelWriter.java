@@ -296,21 +296,25 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
      * @param classCombiner 目标类
      */
     private void writeGetAttributeMapMethod(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+        classCombiner.addUse("YetAnotherGenerator\\Utils\\Constants");
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, methodName);
 
         parameters.forEach((parameterName, parameterStub) -> {
             String typeName = parameterStub.getType();
             String typeModelName = getModelNameFromType(typeName);
             ArrayList<String> ruleList = new ArrayList<>();
+            ArrayList<String> types = new ArrayList<>();
             boolean isArray = parameterStub.isArray();
             boolean isModel = parameterStub.isModel();
             boolean isEnum = parameterStub.isEnum();
             if (isModel) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeModelName + "Model");
                 typeModelName = typeModelName + "Model::class";
+                types.add("Constants::IS_MODEL");
             } else if (isEnum) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName + "Enum");
                 typeModelName = typeModelName + "Enum::class";
+                types.add("Constants::IS_ENUM");
             } else if (typeModelName.equals("Date")) {
                 typeModelName = "'" + typeName + "'";
             } else {
@@ -320,6 +324,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 // 参数校验
                 ruleList.add("bail");
                 if (!parameterStub.hasAnnotation(Optional.name)) {
+                    types.add("Constants::IS_OPTIONAL");
                     ruleList.add("required");
                 } else {
                     ruleList.add("nullable");
@@ -328,15 +333,17 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 ruleList.add(typeModelName);
                 typeModelName = "'" + String.join("|", ruleList) + "'";
             }
+            if (parameterStub.hasAnnotation(Mutable.name)) {
+                types.add("Constants::IS_MUTABLE");
+            }
+            if (isArray) {
+                types.add("Constants::IS_ARRAY");
+            }
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
                 "'" + parameterName + "'",
                 "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
-                Boolean.toString(isModel),
-                Boolean.toString(isArray),
                 typeModelName,
-                Boolean.toString(parameterStub.hasAnnotation(Optional.name)),
-                Boolean.toString(parameterStub.hasAnnotation(Mutable.name)),
-                Boolean.toString(isEnum)
+                types.isEmpty() ? "null" : String.join(" | ", types)
             ));
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
         });

@@ -5,6 +5,7 @@ namespace YetAnotherGenerator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
+use YetAnotherGenerator\Utils\Constants;
 
 abstract class BaseModel implements JsonSerializable
 {
@@ -55,16 +56,19 @@ abstract class BaseModel implements JsonSerializable
         $attributeMap = $model->getAttributeMap();
 
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable] = $attribute;
+            [$field, $dbField, $rule, $type] = $attribute;
+
+            $isModel = $type & Constants::IS_MODEL;
+            $isArray = $type & Constants::IS_ARRAY;
 
             $value = $values[$dbField] ?? null;
 
             if ($isModel) {
-                /** @var BaseModel $type */
+                /** @var BaseModel $rule */
                 if ($isArray) {
-                    $model->$field = $type::initFromEloquents($value);
+                    $model->$field = $rule::initFromEloquents($value);
                 } else {
-                    $model->$field = $type::initFromEloquent($value);
+                    $model->$field = $rule::initFromEloquent($value);
                 }
             } else {
                 $model->$field = $value;
@@ -92,7 +96,9 @@ abstract class BaseModel implements JsonSerializable
         $isTesting = config('app.env') === 'testing';
 
         return array_reduce($this->getAttributeMap(), function ($c, $attribute) use ($isTesting) {
-            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable] = $attribute;
+            [$field, $dbField, $rule, $type] = $attribute;
+
+            $isMutable = $type & Constants::IS_MUTABLE;
 
             // 测试模式会把非null的数据根据可测注解修改为通用数据
             $c[$field] = $isTesting && $isMutable && !is_null($this->{$field}) ? '*' : $this->{$field};

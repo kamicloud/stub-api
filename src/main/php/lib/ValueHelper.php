@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 
 use Throwable;
 use YetAnotherGenerator\Exceptions\InvalidParameterException;
+use YetAnotherGenerator\Utils\Constants;
 
 trait ValueHelper
 {
@@ -21,7 +22,13 @@ trait ValueHelper
         }
 
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable, $isEnum] = $attribute;
+            [$field, $dbField, $rule, $type] = $attribute;
+
+            $isModel = $type & Constants::IS_MODEL;
+            $isArray = $type & Constants::IS_ARRAY;
+            $isOptional = $type & Constants::IS_OPTIONAL;
+            $isMutable = $type & Constants::IS_MUTABLE;
+            $isEnum = $type & Constants::IS_ENUM;
 
             $value = $values[$field] ?? null;
 
@@ -33,12 +40,12 @@ trait ValueHelper
 
             if ($isArray) {
                 if (is_array($value)) {
-                    $this->$field = array_map(function ($value) use ($type, $isModel, $isEnum) {
-                        return $this->fromOne($value, $type, $isModel, $isEnum);
+                    $this->$field = array_map(function ($value) use ($rule, $isModel, $isEnum) {
+                        return $this->fromOne($value, $rule, $isModel, $isEnum);
                     }, $value);
                 }
             } else {
-                $this->$field = $this->fromOne($value, $type, $isModel, $isEnum);
+                $this->$field = $this->fromOne($value, $rule, $isModel, $isEnum);
             }
         }
     }
@@ -69,15 +76,20 @@ trait ValueHelper
         $rules = [];
         $data = [];
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $isModel, $isArray, $type, $isOptional, $isMutable, $isEnum] = $attribute;
+            [$field, $dbField, $rule, $type] = $attribute;
+            $isModel = $type & Constants::IS_MODEL;
+            $isArray = $type & Constants::IS_ARRAY;
+            $isOptional = $type & Constants::IS_OPTIONAL;
+            $isMutable = $type & Constants::IS_MUTABLE;
+            $isEnum = $type & Constants::IS_ENUM;
 
             $value = $this->$field;
 
             if (!$isModel && !$isArray && !$isEnum && $type !== 'Date') {
                 $data[$field] = $value;
-                $rules[$field] = $type;
+                $rules[$field] = $rule;
             } else {
-                $this->validateValue($value, $field, $isModel, $isArray, $isEnum, $type, $isOptional, "$location > $field");
+                $this->validateValue($value, $field, $rule, $type, "$location > $field");
             }
         }
 
@@ -92,9 +104,14 @@ trait ValueHelper
         }
     }
 
-    public function validateValue($value, $field, $isModel, $isArray, $isEnum, $type, $isOptional, $location)
+    public function validateValue($value, $field, $rule, $type, $location)
     {
         $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
+
+        $isModel = $type & Constants::IS_MODEL;
+        $isArray = $type & Constants::IS_ARRAY;
+        $isOptional = $type & Constants::IS_OPTIONAL;
+        $isEnum = $type & Constants::IS_ENUM;
 
         if (!$isOptional && is_null($value)) {
             throw new $exception("{$location} can not be null");
@@ -106,22 +123,22 @@ trait ValueHelper
             }
 
             foreach ($value as $index => $item) {
-                $this->validateValue($item, $field, $isModel, false, $isEnum, $type, $isOptional, "$location(array) > $index");
+                $this->validateValue($item, $field, $rule, $isModel | $isOptional | $isEnum, "$location(array) > $index");
             }
             return ;
         }
 
         if (!is_null($value)) {
             if ($isModel) {
-                /** @var BaseModel $type */
-                if (!is_object($value) || !($value instanceof BaseModel) || get_class($value) !== $type) {
+                /** @var BaseModel $rule */
+                if (!is_object($value) || !($value instanceof BaseModel) || get_class($value) !== $rule) {
                     throw new $exception("{$location} must be instance of {$field}");
                 }
 
                 $value->validateAttributes($value->getAttributeMap(), $location);
             } elseif ($isEnum) {
-                /** @var BaseEnum $type */
-                if ($type::verify($value) === false) {
+                /** @var BaseEnum $rule */
+                if ($rule::verify($value) === false) {
                     throw new $exception("{$location} should match enum");
                 }
             }
