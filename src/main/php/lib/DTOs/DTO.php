@@ -1,13 +1,14 @@
 <?php
 
-namespace YetAnotherGenerator;
+namespace YetAnotherGenerator\DTOs;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
 use YetAnotherGenerator\Utils\Constants;
+use YetAnotherGenerator\Concerns\ValueHelper;
 
-abstract class BaseModel implements JsonSerializable
+abstract class DTO implements JsonSerializable
 {
     use ValueHelper;
 
@@ -64,7 +65,7 @@ abstract class BaseModel implements JsonSerializable
             $value = $values[$dbField] ?? null;
 
             if ($isModel) {
-                /** @var BaseModel $rule */
+                /** @var DTO $rule */
                 if ($isArray) {
                     $model->$field = $rule::initFromEloquents($value);
                 } else {

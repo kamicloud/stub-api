@@ -1,10 +1,11 @@
 <?php
 
-namespace YetAnotherGenerator;
+namespace YetAnotherGenerator\Http\Messages;
 
 use Illuminate\Http\Request;
+use YetAnotherGenerator\Concerns\ValueHelper;
 
-abstract class BaseMessage
+abstract class Message
 {
     use ValueHelper;
 

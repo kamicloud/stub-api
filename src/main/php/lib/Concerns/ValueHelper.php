@@ -1,11 +1,13 @@
 <?php
 
-namespace YetAnotherGenerator;
+namespace YetAnotherGenerator\Concerns;
 
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 use Throwable;
+use YetAnotherGenerator\BOs\Enum;
+use YetAnotherGenerator\DTOs\DTO;
 use YetAnotherGenerator\Exceptions\InvalidParameterException;
 use YetAnotherGenerator\Utils\Constants;
 
@@ -26,8 +28,6 @@ trait ValueHelper
 
             $isModel = $type & Constants::IS_MODEL;
             $isArray = $type & Constants::IS_ARRAY;
-            $isOptional = $type & Constants::IS_OPTIONAL;
-            $isMutable = $type & Constants::IS_MUTABLE;
             $isEnum = $type & Constants::IS_ENUM;
 
             $value = $values[$field] ?? null;
@@ -53,10 +53,10 @@ trait ValueHelper
     public function fromOne($value, $type, $isModel, $isEnum)
     {
         if ($isModel) {
-            /** @var BaseModel $type */
+            /** @var DTO $type */
             return $type::initFromModel($value);
         } elseif ($isEnum) {
-            /** @var BaseEnum $type */
+            /** @var Enum $type */
             return $type::transform($value);
         } elseif ($type === 'Date') {
             return ValueHelper::convertDate($value);
@@ -77,10 +77,9 @@ trait ValueHelper
         $data = [];
         foreach ($attributeMap as $attribute) {
             [$field, $dbField, $rule, $type] = $attribute;
+
             $isModel = $type & Constants::IS_MODEL;
             $isArray = $type & Constants::IS_ARRAY;
-            $isOptional = $type & Constants::IS_OPTIONAL;
-            $isMutable = $type & Constants::IS_MUTABLE;
             $isEnum = $type & Constants::IS_ENUM;
 
             $value = $this->$field;
@@ -130,14 +129,14 @@ trait ValueHelper
 
         if (!is_null($value)) {
             if ($isModel) {
-                /** @var BaseModel $rule */
-                if (!is_object($value) || !($value instanceof BaseModel) || get_class($value) !== $rule) {
+                /** @var DTO $rule */
+                if (!is_object($value) || !($value instanceof DTO) || get_class($value) !== $rule) {
                     throw new $exception("{$location} must be instance of {$field}");
                 }
 
                 $value->validateAttributes($value->getAttributeMap(), $location);
             } elseif ($isEnum) {
-                /** @var BaseEnum $rule */
+                /** @var Enum $rule */
                 if ($rule::verify($value) === false) {
                     throw new $exception("{$location} should match enum");
                 }
@@ -184,7 +183,7 @@ trait ValueHelper
         }
     }
 
-    public static function convertDates($values, $format = 'Y-m-d H:i:s')
+    public static function convertDates($values)
     {
         if (is_string($values)) {
             $values = json_decode($values, true);

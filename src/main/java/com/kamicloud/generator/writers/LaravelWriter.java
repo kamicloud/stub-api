@@ -59,10 +59,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             try {
                 ClassCombiner modelClassCombiner = new ClassCombiner(
                     "App\\Generated\\" + version + "\\Models\\" + modelName + "Model",
-                    "YetAnotherGenerator\\BaseModel"
+                    "YetAnotherGenerator\\DTOs\\DTO"
                 );
 
-                modelClassCombiner.addTrait("YetAnotherGenerator\\ValueHelper");
+                modelClassCombiner.addTrait("YetAnotherGenerator\\Concerns\\ValueHelper");
 
                 HashMap<String, ParameterStub> parameters = modelStub.getParameters();
 
@@ -100,7 +100,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         ClassCombiner messageClassCombiner = new ClassCombiner(
                             messageClassName,
-                            "YetAnotherGenerator\\BaseMessage"
+                            "YetAnotherGenerator\\Http\\Messages\\Message"
                         );
 
                         String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
@@ -125,7 +125,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             );
                         }
 
-                        messageClassCombiner.addTrait("YetAnotherGenerator\\ValueHelper");
+                        messageClassCombiner.addTrait("YetAnotherGenerator\\Concerns\\ValueHelper");
                         // message
                         writeParameterGetters(action.getRequests(), messageClassCombiner);
                         writeParameterAttributes(action.getRequests(), messageClassCombiner);
@@ -151,8 +151,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         o.getEnums().forEach(enumStub -> {
             try {
                 ClassCombiner enumClassCombiner = new ClassCombiner(
-                    "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName() + "Enum",
-                    "YetAnotherGenerator\\BaseEnum"
+                    "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName(),
+                    "YetAnotherGenerator\\BOs\\Enum"
                 );
 
                 ClassConstantCombiner mapConstant = new ClassConstantCombiner(
@@ -312,8 +312,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 typeModelName = typeModelName + "Model::class";
                 types.add("Constants::IS_MODEL");
             } else if (isEnum) {
-                classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName + "Enum");
-                typeModelName = typeModelName + "Enum::class";
+                classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName);
+                typeModelName = typeModelName + "::class";
                 types.add("Constants::IS_ENUM");
             } else if (typeModelName.equals("Date")) {
                 typeModelName = "'" + typeName + "'";

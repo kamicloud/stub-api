@@ -1,8 +1,8 @@
 <?php
 
-namespace YetAnotherGenerator;
+namespace YetAnotherGenerator\BOs;
 
-class BaseEnum
+abstract class Enum
 {
     const _MAP = [];
 
