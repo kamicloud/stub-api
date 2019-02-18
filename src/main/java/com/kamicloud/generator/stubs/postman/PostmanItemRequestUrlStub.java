@@ -26,7 +26,7 @@ public class PostmanItemRequestUrlStub {
         this.host.add(host);
     }
 
-    public ArrayList getPath() {
+    public ArrayList<String> getPath() {
         return path;
     }
 

@@ -20,4 +20,8 @@ public class ClassAttributeCombiner implements CombinerInterface {
     public String write() {
         return "    " + access + " $" + name + ";\n";
     }
+
+    public ClassCombiner getClassCombiner() {
+        return classCombiner;
+    }
 }

@@ -15,7 +15,7 @@ public class TemplateStub extends BaseWithAnnotationStub {
         super(name);
     }
 
-    public ArrayList getConstants() {
+    public ArrayList<String> getConstants() {
         return constants;
     }
 

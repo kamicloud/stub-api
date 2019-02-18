@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.testcase.RequestStub;
+import com.kamicloud.generator.stubs.testcase.TestCaseStub;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.php.ClassCombiner;
 import com.kamicloud.generator.writers.components.php.ClassMethodCombiner;
@@ -151,10 +152,12 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         String line;
         String api = null;
         RequestStub requestStub = null;
-        // Yaml yaml = new Yaml();
-        // FileInputStream in = new FileInputStream(new File(".\\src\\output\\testcases\\V1\\AdminUser\\GetUsers.yml"));
-        // Gson gson = new Gson();
+
+//        Yaml yaml = new Yaml();
+//        FileInputStream in = new FileInputStream(new File(".\\src\\output\\testcases\\V1\\AdminUser\\GetUsers.yml"));
+//        Gson gson = new Gson();
 //        LinkedHashMap x = yaml.load(bufferedReader);
+//        LinkedList<TestCaseStub> test = TestCaseStub.getTestCasesFromFile("");
 //        x.forEach((a,b ) -> {
 //            String m = gson.toJson(b);
 //            String k = "";

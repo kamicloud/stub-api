@@ -127,9 +127,8 @@ public class ClassCombiner implements CombinerInterface, AddUseInterface {
 
     public void toFile() throws IOException {
         File file = new File(fileName);
-        Boolean res;
         if (!file.getParentFile().exists()) {
-            res = file.getParentFile().mkdirs();
+            file.getParentFile().mkdirs();
         }
         FileOutputStream fileOutputStream = new FileOutputStream(fileName);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
@@ -176,8 +175,8 @@ public class ClassCombiner implements CombinerInterface, AddUseInterface {
     }
 
     public void parse() throws Exception {
-        FileInputStream fileInputStream = new FileInputStream(fileName);
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+        // FileInputStream fileInputStream = new FileInputStream(fileName);
+        // InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
 
 //        inputStreamReader
     }

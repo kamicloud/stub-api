@@ -13,7 +13,7 @@ public class PostmanItemStub {
         this.name = name;
     }
 
-    public ArrayList getItem() {
+    public ArrayList<PostmanItemStub> getItem() {
         return item;
     }
 
@@ -26,5 +26,17 @@ public class PostmanItemStub {
 
     public void setRequest(PostmanItemRequestStub request) {
         this.request = request;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public PostmanItemRequestStub getRequest() {
+        return request;
     }
 }

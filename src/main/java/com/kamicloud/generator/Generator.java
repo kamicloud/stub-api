@@ -75,7 +75,7 @@ public class Generator extends Doclet {
         return output;
     }
 
-    private void parseTemplate(Class template, OutputStub outputStub) {
+    private void parseTemplate(Class<?> template, OutputStub outputStub) {
         String version = template.getSimpleName();
         version = version.replace("Template", "");
         TemplateStub templateStub = new TemplateStub(version);
@@ -94,10 +94,10 @@ public class Generator extends Doclet {
         outputStub.addTemplate(templateStub);
     }
 
-    private void parseErrors(Class errorsTemplate, TemplateStub templateStub) {
+    private void parseErrors(Class<? extends Enum> errorsTemplate, TemplateStub templateStub) {
         Arrays.asList(errorsTemplate.getFields()).forEach(error -> {
             try {
-                Enum value = Enum.valueOf(errorsTemplate, error.getName());
+                Enum<?> value = Enum.valueOf(errorsTemplate, error.getName());
                 if (ErrorInterface.class.isAssignableFrom(errorsTemplate)) {
                     Method getValue = errorsTemplate.getMethod("getValue");
                     String fillValue = getValue.invoke(value).toString();
@@ -160,7 +160,7 @@ public class Generator extends Doclet {
                 Arrays.asList(enumTemplate.getFields()).forEach(entryTemplate -> {
                     try {
                         String key = entryTemplate.getName();
-                        Enum value = Enum.valueOf(clazz, entryTemplate.getName());
+                        Enum<?> value = Enum.valueOf(clazz, entryTemplate.getName());
                         Integer ordinal = value.ordinal();
                         EnumStub.EnumStubItemType type = EnumStub.EnumStubItemType.INTEGER;
                         String fillValue = ordinal.toString();
@@ -185,7 +185,7 @@ public class Generator extends Doclet {
 
     private void parseAnnotations(Annotation[] annotations, AnnotationsInterface baseStub) {
         Arrays.asList(annotations).forEach(annotation -> {
-            Class annotationClass = annotation.annotationType();
+            Class<?> annotationClass = annotation.annotationType();
             String annotationName = annotationClass.getSimpleName();
 
             AnnotationStub annotationStub = new AnnotationStub(annotationName);
@@ -215,7 +215,7 @@ public class Generator extends Doclet {
         });
     }
 
-    private void parseModels(Class[] models, TemplateStub templateStub) {
+    private void parseModels(Class<?>[] models, TemplateStub templateStub) {
         Arrays.asList(models).forEach(model -> {
             ModelStub modelStub = new ModelStub(model.getSimpleName());
 //            // 继承关系
@@ -243,7 +243,7 @@ public class Generator extends Doclet {
             return null;
         }
         // 类型+变量
-        Class parameterType = parameter.getType();
+        Class<?> parameterType = parameter.getType();
         String typeName = parameterType.getName();
         String typeSimpleName = parameterType.getSimpleName();
         ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);

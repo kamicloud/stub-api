@@ -72,10 +72,6 @@ public class DocWriter extends BaseWriter {
 
     }
 
-    private void writeOverview() {
-
-    }
-
     private void writeAPIs(TemplateStub output) {
         output.getControllers().forEach(controller -> {
             try {

@@ -14,7 +14,7 @@ public class PostmanStub {
         return info;
     }
 
-    public ArrayList getItem() {
+    public ArrayList<PostmanItemStub> getItem() {
         return item;
     }
 

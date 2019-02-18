@@ -12,7 +12,7 @@ public @interface Memo {
     String[] value() default "";
 
     /**
-     * TODO:别名，预留的映射
+     * 别名，预留的映射
      */
     String[] aliases() default "";
 

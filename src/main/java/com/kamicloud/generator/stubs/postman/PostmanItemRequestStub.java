@@ -36,4 +36,12 @@ public class PostmanItemRequestStub {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public ArrayList<String> getHeader() {
+        return header;
+    }
+
+    public void setHeader(ArrayList<String> header) {
+        this.header = header;
+    }
 }

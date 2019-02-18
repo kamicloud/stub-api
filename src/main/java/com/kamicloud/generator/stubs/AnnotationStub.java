@@ -18,7 +18,7 @@ public class AnnotationStub {
         values.put(key, value);
     }
 
-    public HashMap getValues() {
+    public HashMap<String, Object> getValues() {
         return values;
     }
 
