@@ -12,3 +12,5 @@ generator:
   postman-path: ./src/output
   testcases-path: ./src/output/testcases
   test-host: http://localhost
+  java-client-path: ./src/output/java-client
+  java-client-classpath:
