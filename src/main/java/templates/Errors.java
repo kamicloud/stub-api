@@ -5,10 +5,15 @@ import definitions.annotations.ErrorInterface;
 @SuppressWarnings("unused")
 public enum Errors implements ErrorInterface {
     /**
-     * comment 1
+     * 服务器内部错误
      */
-    SERVER_INTERNAL_ERROR(10000),
-    INVALID_PARAMETER(10001),
+    SERVER_INTERNAL_ERROR(-1),
+    /**
+     * 参数不合法
+     */
+    INVALID_PARAMETER(-2),
+
+    CUSTOM_ERROR_MESSAGE(-3),
 
     // comment 2
     OBJECT_NOT_FOUND(10002),

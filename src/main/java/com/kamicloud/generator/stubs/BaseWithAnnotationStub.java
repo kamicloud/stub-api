@@ -39,7 +39,7 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
     }
 
     public String getComment() {
-        return comment;
+        return comment == null ? "" : comment;
     }
 
     public void setExtendsFrom(String extendsFrom) {

@@ -51,7 +51,7 @@ public class Generator extends Doclet {
                 output.addObserver(new TestCaseWriter(env));
                 output.addObserver(new DocWriter(env));
                 output.addObserver(new LaravelWriter(env));
-                output.addObserver(new JavaClientWriter(env));
+//                output.addObserver(new JavaClientWriter(env));
             } else {
                 output.addObserver(new AutoTestWriter(env));
             }
@@ -110,6 +110,7 @@ public class Generator extends Doclet {
                         ""
                     );
                     parseAnnotations(error.getAnnotations(), errorStub);
+                    parseComment(fieldBuilder(error), errorStub);
                     templateStub.addError(errorStub);
                 }
             } catch (Exception e) {
@@ -274,7 +275,7 @@ public class Generator extends Doclet {
             return;
         }
         Arrays.asList(templateFiles).forEach(templateFile -> {
-            if (!templateFile.getName().contains("Template")) {
+            if (!templateFile.getName().contains("Errors.java")) {
                 return;
             }
             com.sun.tools.javadoc.Main.execute(new String[]{
@@ -324,6 +325,11 @@ public class Generator extends Doclet {
                     });
                 });
             }
+
+            Arrays.asList(cd.fields()).forEach(fieldDoc -> {
+                classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
+//                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
+            });
         }
         return true;
     }
