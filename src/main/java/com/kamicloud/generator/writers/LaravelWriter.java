@@ -265,7 +265,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, parameterName);
         classMethodCombiner.setBody("return $this->" + parameterStub.getName() + ";");
         String comment = parameterStub.getComment();
-        if (comment != null) {
+        if (!comment.equals("")) {
             classMethodCombiner.addComment(parameterStub.getComment());
         }
     }
