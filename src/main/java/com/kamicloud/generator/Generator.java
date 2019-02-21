@@ -275,7 +275,7 @@ public class Generator extends Doclet {
             return;
         }
         Arrays.asList(templateFiles).forEach(templateFile -> {
-            if (!templateFile.getName().contains("Errors.java")) {
+            if (!templateFile.getName().contains(".java")) {
                 return;
             }
             com.sun.tools.javadoc.Main.execute(new String[]{
