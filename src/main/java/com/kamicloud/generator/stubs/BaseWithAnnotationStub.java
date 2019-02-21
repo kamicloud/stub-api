@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
+    private String classpath;
     private String name;
     private HashMap<String, AnnotationStub> annotations = new HashMap<>();
     private ArrayList<String> comments = new ArrayList<>();
@@ -24,6 +25,16 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
 
     public void addAnnotation(AnnotationStub annotationStub) {
         annotations.put(annotationStub.getName(), annotationStub);
+    }
+
+    @Override
+    public String getClasspath() {
+        return classpath;
+    }
+
+    @Override
+    public void setClasspath(String classpath) {
+        this.classpath = classpath;
     }
 
     public void setComment(String comment) {

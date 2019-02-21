@@ -124,7 +124,7 @@ public class DocWriter extends BaseWriter {
             outputStreamWriter.write("|ErrorCode|Key|Description|\n|:-|:-|:-|\n");
             output.getErrors().forEach(error -> {
                 try {
-                    String comment = error.getComment() == null ? "" : error.getComment();
+                    String comment = error.getComment() == null ? "" : error.getComment().replace("\n", "<br>");
                     // 输出模型每一个请求参数
                     outputStreamWriter.write("|" + error.getCode() + "|" + error.getName() + "|" + comment + " |\n");
                 } catch (IOException e) {

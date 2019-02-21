@@ -29,7 +29,7 @@ public class Generator extends Doclet {
     private final Environment env;
 
     private static HashMap<String, ProgramElementDoc> classDocHashMap = new HashMap<>();
-    private static HashMap<String, CommentInterface> classHashMap = new HashMap<>();
+    private static ArrayList<CommentInterface> classHashMap = new ArrayList<>();
 
     public Generator(Environment env) {
         this.env = env;
@@ -290,8 +290,8 @@ public class Generator extends Doclet {
     }
 
     public static void syncComments() {
-        classHashMap.forEach((name, commentInterface) -> {
-            ProgramElementDoc programElementDoc = classDocHashMap.get(name);
+        classHashMap.forEach((commentInterface) -> {
+            ProgramElementDoc programElementDoc = classDocHashMap.get(commentInterface.getClasspath());
 
             if (programElementDoc != null && !programElementDoc.commentText().isEmpty()) {
                 commentInterface.setComment(programElementDoc.commentText());
@@ -300,7 +300,8 @@ public class Generator extends Doclet {
     }
 
     private void parseComment(String name, CommentInterface commentStub) {
-        classHashMap.put(name, commentStub);
+        commentStub.setClasspath(name);
+        classHashMap.add(commentStub);
     }
 
     private String fieldBuilder(Field field) {
