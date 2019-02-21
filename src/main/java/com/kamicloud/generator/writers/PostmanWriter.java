@@ -2,6 +2,7 @@ package com.kamicloud.generator.writers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kamicloud.generator.utils.StringUtil;
 import definitions.annotations.Request;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
@@ -31,7 +32,7 @@ public class PostmanWriter extends BaseWriter {
                 String jsonString;
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-                PostmanStub postmanStub = postmanOutput(templateStub);
+                PostmanStub postmanStub = postmanOutput(version, templateStub);
 
                 jsonString = gson.toJson(postmanStub);
 
@@ -48,7 +49,7 @@ public class PostmanWriter extends BaseWriter {
         });
     }
 
-    private PostmanStub postmanOutput(TemplateStub templateStub) {
+    private PostmanStub postmanOutput(String version, TemplateStub templateStub) {
         PostmanStub postmanStub = new PostmanStub();
         templateStub.getControllers().forEach(controller -> {
             PostmanItemStub postmanItemStub = new PostmanItemStub(controller.getName() + " " + (controller.getComment() == null ? "" : controller.getComment()));
@@ -73,9 +74,9 @@ public class PostmanWriter extends BaseWriter {
 
                 postmanItemRequestUrlStub.addHost("{{host}}");
                 postmanItemRequestUrlStub.addPath("api");
-                postmanItemRequestUrlStub.addPath("V1");
-                postmanItemRequestUrlStub.addPath(controller.getName());
-                postmanItemRequestUrlStub.addPath(action.getName());
+                postmanItemRequestUrlStub.addPath(StringUtil.transformVersion(version));
+                postmanItemRequestUrlStub.addPath(StringUtil.transformController(controller.getName()));
+                postmanItemRequestUrlStub.addPath(StringUtil.transformAction(action.getName()));
 
 
 

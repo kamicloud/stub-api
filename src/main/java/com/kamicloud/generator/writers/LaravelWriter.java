@@ -4,6 +4,7 @@ import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.utils.FileUtil;
+import com.kamicloud.generator.utils.StringUtil;
 import com.kamicloud.generator.writers.components.php.*;
 import definitions.annotations.*;
 import definitions.annotations.Optional;
@@ -45,13 +46,17 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 writeModels(templateStub);
                 writeHttp(templateStub);
                 writeEnums(templateStub);
-                writeRoute(templateStub);
                 writeErrors(templateStub);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         });
+        try {
+            writeRoute(((OutputStub) o));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void writeModels(TemplateStub o) {
@@ -211,27 +216,28 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         errorCodeClassCombiner.toFile();
     }
 
-    private void writeRoute(TemplateStub o) throws IOException {
+    private void writeRoute(OutputStub o) throws IOException {
         if (!routePath.getParentFile().exists()) {
             routePath.getParentFile().mkdirs();
         }
         FileOutputStream fileOutputStream = new FileOutputStream(routePath);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
         outputStreamWriter.write("<?php\n");
-
-        o.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
-            String method = "post";
-            try {
-                String middlewarePart = "";
-                if (action.hasAnnotation(Middleware.name)) {
-                    AnnotationStub x = action.getAnnotations().get(Middleware.name);
-                    middlewarePart = "->middleware(['" + String.join("', '", (String[]) x.getValues().get("value")) + "'])";
+        o.getTemplates().forEach((version, templateStub) -> {
+            templateStub.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
+                String method = "post";
+                try {
+                    String middlewarePart = "";
+                    if (action.hasAnnotation(Middleware.name)) {
+                        AnnotationStub x = action.getAnnotations().get(Middleware.name);
+                        middlewarePart = "->middleware(['" + String.join("', '", (String[]) x.getValues().get("value")) + "'])";
+                    }
+                    outputStreamWriter.write("Route::" + method + "('" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "')" + middlewarePart + ";\n");
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                outputStreamWriter.write("Route::" + method + "('" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "')" + middlewarePart + ";\n");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }));
+            }));
+        });
 
         outputStreamWriter.close();
         fileOutputStream.close();

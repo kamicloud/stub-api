@@ -1,5 +1,7 @@
 package com.kamicloud.generator.stubs;
 
+import com.kamicloud.generator.utils.StringUtil;
+
 import java.util.HashMap;
 import java.util.Observable;
 
@@ -24,7 +26,9 @@ public class OutputStub extends Observable {
         templates.forEach((version, templateStub) -> {
             templateStub.getControllers().forEach((controllerStub -> {
                 controllerStub.getActions().forEach((actionName, action) -> {
-                    String uri = "/" + version + "/" + controllerStub.getName() + "/" + actionName;
+                    String uri = "/" + StringUtil.transformVersion(version) +
+                        "/" + StringUtil.transformController(controllerStub.getName()) +
+                        "/" + StringUtil.transformAction(actionName);
                     action.setUri(uri);
                     action.setFullUri("/api" + uri);
                 });

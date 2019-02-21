@@ -6,6 +6,7 @@ import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.testcase.RequestStub;
 import com.kamicloud.generator.stubs.testcase.TestCaseStub;
 import com.kamicloud.generator.utils.FileUtil;
+import com.kamicloud.generator.utils.StringUtil;
 import com.kamicloud.generator.writers.components.php.ClassCombiner;
 import com.kamicloud.generator.writers.components.php.ClassMethodCombiner;
 import okhttp3.*;
@@ -77,9 +78,9 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                 "/",
                 "",
                 "api",
-                version,
-                controllerStub.getName(),
-                actionName
+                StringUtil.transformVersion(version),
+                StringUtil.transformController(controllerStub.getName()),
+                StringUtil.transformAction(actionName)
             );
 
             AtomicReference<Integer> i = new AtomicReference<>(0);
