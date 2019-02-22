@@ -8,6 +8,7 @@ import java.util.*;
 public class DefaultProfileUtil {
 
     private static final String SPRING_PROFILE_DEFAULT = "spring.profiles.default";
+    private static Environment env;
 
     private DefaultProfileUtil() {
     }
@@ -40,5 +41,13 @@ public class DefaultProfileUtil {
             return env.getDefaultProfiles();
         }
         return profiles;
+    }
+
+    public static Environment getEnv() {
+        return env;
+    }
+
+    public static void setEnv(Environment env) {
+        DefaultProfileUtil.env = env;
     }
 }

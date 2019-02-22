@@ -24,16 +24,15 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     private HashMap<String, ArrayList<RequestStub>> apiMap = new HashMap<>();
     private File outputDir;
     private File testDir;
+    private LinkedList<TestCaseStub> rawTestCases = new LinkedList<>();
 
-    public AutoTestWriter(Environment env) {
-        super(env);
+    public AutoTestWriter() {
         outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
         testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        OutputStub output = (OutputStub) o;
+    void update(OutputStub output) {
         try {
             FileUtil.deleteAllFilesOfDir(testDir);
 
@@ -42,6 +41,9 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
             File root = new File(env.getProperty("generator.testcases-path", ""));
 
             getTestCases(root);
+
+            rawTestCases.forEach(testCaseStub -> {
+            });
 
             getTestResponse(output);
 
@@ -62,13 +64,8 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                 }
             });
         } else {
-            FileInputStream fileInputStream = new FileInputStream(root);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            parseTestCases(bufferedReader);
-            bufferedReader.close();
-            inputStreamReader.close();
-            fileInputStream.close();
+            LinkedList<TestCaseStub> test = TestCaseStub.getTestCasesFromFile(root);
+            rawTestCases.addAll(test);
         }
     }
 
@@ -149,11 +146,11 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         requestStub.setResponse(response);
     }
 
-    private void parseTestCases(BufferedReader bufferedReader) throws IOException {
-        String line;
-        String api = null;
-        RequestStub requestStub = null;
-
+//    private void parseTestCases(BufferedReader bufferedReader) throws IOException {
+//        String line;
+//        String api = null;
+//        RequestStub requestStub = null;
+//
 //        Yaml yaml = new Yaml();
 //        FileInputStream in = new FileInputStream(new File(".\\src\\output\\testcases\\V1\\AdminUser\\GetUsers.yml"));
 //        Gson gson = new Gson();
@@ -164,29 +161,29 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 //            String k = "";
 //        });
 //        String kk = gson.toJson(x.get("params"));
-        while ((line = bufferedReader.readLine()) != null) {
-            ArrayList<String> splits = new ArrayList<>(Arrays.asList(line.split(":")));
-            String key = splits.get(0);
-            api = String.join(":", splits.subList(1, splits.size())).trim();
-            if (line.equals("---")) {
-                requestStub = null;
-                continue;
-            }
-            if (requestStub == null) {
-                requestStub = new RequestStub();
-            }
-            if (key.equals("api")) {
-                requestStub.setApi(api);
-                getRequestsByApi(api).add(requestStub);
-            } else if (!key.equals("")) {
-                requestStub.addParameter(key, api);
-            }
-        }
-        if (requestStub != null) {
-            getRequestsByApi(api).add(requestStub);
-        }
-
-    }
+//        while ((line = bufferedReader.readLine()) != null) {
+//            ArrayList<String> splits = new ArrayList<>(Arrays.asList(line.split(":")));
+//            String key = splits.get(0);
+//            api = String.join(":", splits.subList(1, splits.size())).trim();
+//            if (line.equals("---")) {
+//                requestStub = null;
+//                continue;
+//            }
+//            if (requestStub == null) {
+//                requestStub = new RequestStub();
+//            }
+//            if (key.equals("api")) {
+//                requestStub.setApi(api);
+//                getRequestsByApi(api).add(requestStub);
+//            } else if (!key.equals("")) {
+//                requestStub.addParameter(key, api);
+//            }
+//        }
+//        if (requestStub != null) {
+//            getRequestsByApi(api).add(requestStub);
+//        }
+//
+//    }
 
     private ArrayList<RequestStub> getRequestsByApi(String api) {
         return apiMap.computeIfAbsent(api, k -> new ArrayList<>());

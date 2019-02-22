@@ -16,5 +16,8 @@ public class StringUtil {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, action);
     }
 
+    public static String getUrl(String version, String controller, String action) {
+        return String.join("/", transformVersion(version), transformController(controller), transformAction(action));
+    }
 
 }

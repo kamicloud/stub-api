@@ -4,6 +4,7 @@ import com.kamicloud.generator.utils.StringUtil;
 
 import java.util.HashMap;
 import java.util.Observable;
+import java.util.Observer;
 
 public class OutputStub extends Observable {
     private HashMap<String, TemplateStub> templates = new HashMap<>();

@@ -24,8 +24,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private File generatedDir;
     private File routePath;
 
-    public LaravelWriter(Environment env) {
-        super(env);
+    public LaravelWriter() {
         String laravelPath = Objects.requireNonNull(env.getProperty("generator.laravel-path"));
         outputDir = new File(laravelPath);
         if (!outputDir.exists()) {
@@ -36,9 +35,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(OutputStub output) {
         FileUtil.deleteAllFilesOfDir(generatedDir);
-        ((OutputStub) o).getTemplates().forEach((version, templateStub) -> {
+        output.getTemplates().forEach((version, templateStub) -> {
             this.version = version;
 
             try {
@@ -53,7 +52,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
         });
         try {
-            writeRoute(((OutputStub) o));
+            writeRoute(output);
         } catch (IOException e) {
             e.printStackTrace();
         }

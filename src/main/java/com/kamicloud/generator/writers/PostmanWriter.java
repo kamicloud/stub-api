@@ -19,22 +19,19 @@ import java.util.Observable;
 
 public class PostmanWriter extends BaseWriter {
     private File outputPath;
-    public PostmanWriter(Environment env) {
-        super(env);
+    public PostmanWriter() {
         outputPath = new File(Objects.requireNonNull(env.getProperty("generator.postman-path")) + "/API Generator.postman_collection.json");
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        OutputStub output = (OutputStub) o;
+    public void update(OutputStub output) {
         output.getTemplates().forEach((version, templateStub) -> {
             try {
-                String jsonString;
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
                 PostmanStub postmanStub = postmanOutput(version, templateStub);
 
-                jsonString = gson.toJson(postmanStub);
+                String jsonString = gson.toJson(postmanStub);
 
                 FileOutputStream fileOutputStream = new FileOutputStream(outputPath.getAbsolutePath());
                 OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);

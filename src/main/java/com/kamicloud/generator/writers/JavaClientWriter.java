@@ -17,8 +17,7 @@ public class JavaClientWriter extends BaseWriter {
     private File generatedDir;
     private File routePath;
 
-    public JavaClientWriter(Environment env) {
-        super(env);
+    public JavaClientWriter() {
         String javaClientPath = Objects.requireNonNull(env.getProperty("generator.java-client-path"));
         String javaClasspath = Objects.requireNonNull(env.getProperty("generator.java-client-classpath"));
         outputDir = new File(javaClientPath);
@@ -31,9 +30,9 @@ public class JavaClientWriter extends BaseWriter {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(OutputStub output) {
         FileUtil.deleteAllFilesOfDir(generatedDir);
-        ((OutputStub) o).getTemplates().forEach((version, templateStub) -> {
+        output.getTemplates().forEach((version, templateStub) -> {
             this.version = version;
 
             try {

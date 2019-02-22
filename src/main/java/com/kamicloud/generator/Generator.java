@@ -33,6 +33,7 @@ public class Generator extends Doclet {
 
     public Generator(Environment env) {
         this.env = env;
+        DefaultProfileUtil.setEnv(env);
     }
 
     @PostConstruct
@@ -47,13 +48,13 @@ public class Generator extends Doclet {
         try {
             output.setActionUrl();
             if (process.equals("code")) {
-                output.addObserver(new PostmanWriter(env));
-                output.addObserver(new TestCaseWriter(env));
-                output.addObserver(new DocWriter(env));
-                output.addObserver(new LaravelWriter(env));
+                output.addObserver(new PostmanWriter());
+                output.addObserver(new TestCaseWriter());
+                output.addObserver(new DocWriter());
+                output.addObserver(new LaravelWriter());
 //                output.addObserver(new JavaClientWriter(env));
             } else {
-                output.addObserver(new AutoTestWriter(env));
+                output.addObserver(new AutoTestWriter());
             }
             output.notifyObservers();
         } catch (Exception e) {

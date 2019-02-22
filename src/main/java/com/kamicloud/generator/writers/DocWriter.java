@@ -18,14 +18,12 @@ public class DocWriter extends BaseWriter {
     private String docPath;
     private File outputDir;
 
-    public DocWriter(Environment env) {
-        super(env);
+    public DocWriter() {
         docPath = Objects.requireNonNull(env.getProperty("generator.doc-path"));
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        OutputStub output = (OutputStub) o;
+    public void update(OutputStub output) {
         output.getTemplates().forEach((version, templateStub) -> {
             outputDir = new File(docPath + "/resources/docs/" + version);
             if (outputDir.exists()) {

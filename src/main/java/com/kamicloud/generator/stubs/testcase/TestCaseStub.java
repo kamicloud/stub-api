@@ -1,22 +1,24 @@
 package com.kamicloud.generator.stubs.testcase;
 
 import com.google.gson.Gson;
+import com.kamicloud.generator.utils.StringUtil;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
+@SuppressWarnings("unchecked")
 public class TestCaseStub {
+    private Boolean enabled;
     private String api;
+    private String version;
     private String controller;
     private String action;
     private String role;
     private String user;
+    private String anchor;
     private LinkedHashMap<String, Object> params;
 
     private String response;
@@ -68,9 +70,9 @@ public class TestCaseStub {
 //        return params;
 //    }
 
-    public static LinkedList<TestCaseStub> getTestCasesFromFile(String filename) throws FileNotFoundException {
+    public static LinkedList<TestCaseStub> getTestCasesFromFile(File file) throws FileNotFoundException {
 
-        FileInputStream fileInputStream = new FileInputStream(new File(".\\src\\output\\testcases\\V1\\AdminUser\\GetUsers.yml"));
+        FileInputStream fileInputStream = new FileInputStream(file);
 
         LinkedHashMap<String, Object> attributes = yaml.load(fileInputStream);
 
@@ -79,12 +81,6 @@ public class TestCaseStub {
 
         collection.addAll(getTestCasesFromNode(attributes, null));
 
-//        x.forEach((a,b ) -> {
-//            String m = gson.toJson(b);
-//            String k = "";0
-//        });
-//        String kk = gson.toJson(x.get("params"));
-
         return collection;
     }
 
@@ -92,22 +88,28 @@ public class TestCaseStub {
         if (prev == null) {
             prev = new TestCaseStub();
         }
-        Object testcases = attributes.get("_testcases");
+        Object testcases = attributes.get("__testcases");
         LinkedList<TestCaseStub> collection = new LinkedList<>();
 
-        Object api = attributes.get("_api");
-        Object controller = attributes.get("_controller");
-        Object action = attributes.get("_action");
-        Object role = attributes.get("_role");
-        Object user = attributes.get("_user");
+        Object enabled = attributes.get("__enabled");
+        Object api = attributes.get("__api");
+        Object controller = attributes.get("__controller");
+        Object action = attributes.get("__action");
+        Object role = attributes.get("__role");
+        Object user = attributes.get("__user");
+        Object anchor = attributes.get("__anchor");
+        Object params = attributes.get("__params");
 
         TestCaseStub testCaseStub = new TestCaseStub();
 
+        testCaseStub.enabled = getBoolean(getString(enabled, prev.enabled != null ? prev.enabled.toString() : "false"));
         testCaseStub.api = getString(api, prev.api);
         testCaseStub.controller = getString(controller, prev.controller);
         testCaseStub.action = getString(action, prev.action);
         testCaseStub.role = getString(role, prev.role);
         testCaseStub.user = getString(user, prev.user);
+        testCaseStub.anchor = anchor == null ? null : anchor.toString();
+        testCaseStub.params = (LinkedHashMap<String, Object>) params;
 
         collection.add(testCaseStub);
 
@@ -128,5 +130,13 @@ public class TestCaseStub {
         }
 
         return string.toString();
+    }
+
+    private static boolean getBoolean(String s) {
+        return s != null && !s.equals("") && !s.equals("0") && !s.equals("false") && !s.equals("null");
+    }
+
+    public String getApi() {
+        return api == null ? "/api/" + StringUtil.transformVersion(version) + "/" + StringUtil.transformController(controller) + "/" + StringUtil.transformAction(action) : api;
     }
 }

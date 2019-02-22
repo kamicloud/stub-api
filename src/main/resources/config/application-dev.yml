@@ -5,6 +5,7 @@
 # ===================================================================
 
 generator:
+  api-prefix: /api
   template-path: ./src/main/java
   laravel-path: ./src/output/laravel
   auto-test-path: ./src/output/tests
