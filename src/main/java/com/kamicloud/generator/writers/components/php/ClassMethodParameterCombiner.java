@@ -29,7 +29,7 @@ public class ClassMethodParameterCombiner implements CombinerInterface, AddUseIn
     }
 
     @Override
-    public String write() {
+    public String toString() {
         String string;
         if (type == null) {
             string = "$" + name;

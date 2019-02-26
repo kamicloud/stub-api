@@ -1,11 +1,9 @@
 package com.kamicloud.generator.writers;
 
 import com.kamicloud.generator.stubs.OutputStub;
-import com.kamicloud.generator.utils.StringUtil;
-import org.springframework.core.env.Environment;
+import com.kamicloud.generator.utils.UrlUtil;
 
 import java.io.*;
-import java.util.Observable;
 
 public class TestCaseWriter extends BaseWriter {
 
@@ -26,7 +24,7 @@ public class TestCaseWriter extends BaseWriter {
                 controllerStub.getActions().forEach((actionName, actionStub) -> {
                     try {
                         String path = "/" + version + "/" + controllerStub.getName() + "/" + actionName;
-                        String url = "/" + StringUtil.transformVersion(version) + "/" + StringUtil.transformController(controllerStub.getName()) + "/" + StringUtil.transformAction(actionName);
+                        String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName(), actionName);
                         File file = new File(outputDir.getAbsolutePath() + path + ".yml");
                         file.getParentFile().mkdirs();
                         if (file.exists()) {
@@ -39,8 +37,9 @@ public class TestCaseWriter extends BaseWriter {
 
                         outputStreamWriter.write("# __api: /api" + url + "\n");
                         outputStreamWriter.write("__enabled: false\n");
-                        outputStreamWriter.write("__controller: " + controllerStub.getName() + "\n");
-                        outputStreamWriter.write("__action: " + actionName + "\n");
+//                        outputStreamWriter.write("# __version:\n");
+//                        outputStreamWriter.write("__controller: " + controllerStub.getName() + "\n");
+//                        outputStreamWriter.write("__action: " + actionName + "\n");
                         outputStreamWriter.write("__role:\n");
                         outputStreamWriter.write("__user:\n");
                         outputStreamWriter.write("__anchor:\n");
@@ -53,7 +52,7 @@ public class TestCaseWriter extends BaseWriter {
                                 e.printStackTrace();
                             }
                         });
-                        outputStreamWriter.write("__testcases:\n");
+                        outputStreamWriter.write("# __testcases:\n");
                         outputStreamWriter.write("\n");
 
 

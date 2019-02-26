@@ -1,12 +1,21 @@
 package com.kamicloud.generator.writers.components.common;
 
-import java.util.ArrayList;
+import com.kamicloud.generator.interfaces.CombinerInterface;
 
-public class MultiLinesCombiner extends ArrayList<String> {
-    private static final long serialVersionUID = 1L;
+import java.util.Arrays;
+import java.util.LinkedList;
 
-	public void wrapBody(ArrayList<String> header, ArrayList<String> footer) {
-        this.addAll(0, header);
-//        this.rep;
+public class MultiLinesCombiner extends Combiner implements CombinerInterface {
+    private LinkedList<String> blocks;
+
+    public MultiLinesCombiner(String ...blocks) {
+        this.blocks = new LinkedList<>(Arrays.asList(blocks));
+    }
+
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        blocks.forEach(block -> stringBuilder.append(block).append("\n"));
+
+        return stringBuilder.toString();
     }
 }

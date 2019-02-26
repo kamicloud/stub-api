@@ -1,13 +1,13 @@
 package com.kamicloud.generator.writers.components.java;
 
 import com.kamicloud.generator.interfaces.CombinerInterface;
+import com.kamicloud.generator.writers.components.common.FileCombiner;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class ClassCombiner implements CombinerInterface {
+public class ClassCombiner extends FileCombiner implements CombinerInterface {
     private static String root;
     private static String javaClasspath;
     private String fileName;
@@ -77,7 +77,7 @@ public class ClassCombiner implements CombinerInterface {
 //    }
 //
     @Override
-    public String write() {
+    public String toString() {
         StringBuilder content = new StringBuilder();
 
         content.append("package ").append(classpath).append(";\n\n");
@@ -109,12 +109,12 @@ public class ClassCombiner implements CombinerInterface {
         if (traits.size() > 0) {
             content.append("\n");
         }
-//        constants.forEach(constant -> content.append(constant.write()).append("\n"));
-//        attributes.forEach(attribute -> content.append(attribute.write()));
+//        constants.forEach(constant -> content.append(constant.toString()).append("\n"));
+//        attributes.forEach(attribute -> content.append(attribute.toString()));
 //        if (attributes.size() > 0) {
 //            content.append("\n");
 //        }
-//        methods.forEach(method -> content.append(method.write()).append("\n"));
+//        methods.forEach(method -> content.append(method.toString()).append("\n"));
 
 
         content.append("}\n");
@@ -122,20 +122,6 @@ public class ClassCombiner implements CombinerInterface {
         return content.toString();
     }
 
-    public void toFile() throws IOException {
-        File file = new File(root + "/" + fileName);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        FileOutputStream fileOutputStream = new FileOutputStream(file);
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
-
-        outputStreamWriter.write(write());
-
-        outputStreamWriter.close();
-        fileOutputStream.close();
-    }
-//
 //    public static String getNamespaceFromFullNamespace(String namespace) {
 //        ArrayList<String> classNamespace = new ArrayList<>();
 //        ArrayList<String> fullSplit = new ArrayList<>(Arrays.asList(namespace.split("\\\\")));
@@ -187,5 +173,13 @@ public class ClassCombiner implements CombinerInterface {
     public static void setRoot(String root, String javaClasspath) {
         ClassCombiner.root = root;
         ClassCombiner.javaClasspath = javaClasspath;
+    }
+
+    @Override
+    public void toFile() throws IOException {
+        blocks.clear();
+        blocks.add(this);
+
+        super.toFile();
     }
 }

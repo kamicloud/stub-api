@@ -26,7 +26,7 @@ public class ClassConstantCombiner implements CombinerInterface {
     }
 
     @Override
-    public String write() {
+    public String toString() {
         String intend = "    ";
         String valueString = String.join("\n" + intend, lines);
         String prefix = intend + access + " const " + name + " = ";

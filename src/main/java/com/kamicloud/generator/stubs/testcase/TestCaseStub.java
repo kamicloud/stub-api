@@ -1,7 +1,8 @@
 package com.kamicloud.generator.stubs.testcase;
 
 import com.google.gson.Gson;
-import com.kamicloud.generator.utils.StringUtil;
+import com.kamicloud.generator.utils.UrlUtil;
+import okhttp3.Response;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
@@ -19,9 +20,9 @@ public class TestCaseStub {
     private String role;
     private String user;
     private String anchor;
-    private LinkedHashMap<String, Object> params;
+    private LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
-    private String response;
+    private Response response;
 
     private static Yaml yaml = new Yaml();
     private static Gson gson = new Gson();
@@ -79,12 +80,12 @@ public class TestCaseStub {
 
         LinkedList<TestCaseStub> collection = new LinkedList<>();
 
-        collection.addAll(getTestCasesFromNode(attributes, null));
+        collection.addAll(getTestCasesFromNode(file, attributes, null));
 
         return collection;
     }
 
-    private static LinkedList<TestCaseStub> getTestCasesFromNode(LinkedHashMap<String, Object> attributes, TestCaseStub prev) {
+    private static LinkedList<TestCaseStub> getTestCasesFromNode(File file, LinkedHashMap<String, Object> attributes, TestCaseStub prev) {
         if (prev == null) {
             prev = new TestCaseStub();
         }
@@ -93,6 +94,7 @@ public class TestCaseStub {
 
         Object enabled = attributes.get("__enabled");
         Object api = attributes.get("__api");
+        Object version = attributes.get("__version");
         Object controller = attributes.get("__controller");
         Object action = attributes.get("__action");
         Object role = attributes.get("__role");
@@ -104,19 +106,39 @@ public class TestCaseStub {
 
         testCaseStub.enabled = getBoolean(getString(enabled, prev.enabled != null ? prev.enabled.toString() : "false"));
         testCaseStub.api = getString(api, prev.api);
+        testCaseStub.version = getString(version, prev.version);
         testCaseStub.controller = getString(controller, prev.controller);
         testCaseStub.action = getString(action, prev.action);
         testCaseStub.role = getString(role, prev.role);
         testCaseStub.user = getString(user, prev.user);
         testCaseStub.anchor = anchor == null ? null : anchor.toString();
-        testCaseStub.params = (LinkedHashMap<String, Object>) params;
+
+        if (testCaseStub.api == null) {
+            // 对于手动指定请求的接口，不使用默认的目录映射
+            if (testCaseStub.version != null && testCaseStub.controller != null && testCaseStub.action != null) {
+                testCaseStub.api = UrlUtil.getUrlWithPrefix(testCaseStub.version, testCaseStub.controller, testCaseStub.action);
+            } else {
+                List<String> paths = Arrays.asList(file.getAbsolutePath().split("[\\\\/]"));
+                int size = paths.size();
+                testCaseStub.action = paths.get(size - 1).replace(".yml", "");
+                testCaseStub.controller = paths.get(size - 2);
+                testCaseStub.version = paths.get(size - 3);
+            }
+        }
+
+        if (params instanceof LinkedHashMap) {
+            LinkedHashMap<String, Object> params1 = (LinkedHashMap<String, Object>) params;
+            params1.forEach((key, value) -> {
+                testCaseStub.params.put(key, gson.toJson(value));
+            });
+        }
 
         collection.add(testCaseStub);
 
         if (testcases instanceof ArrayList<?>) {
             ((ArrayList) testcases).forEach(obj -> {
                 if (obj instanceof LinkedHashMap) {
-                    collection.addAll(getTestCasesFromNode((LinkedHashMap<String, Object>) obj, testCaseStub));
+                    collection.addAll(getTestCasesFromNode(file, (LinkedHashMap<String, Object>) obj, testCaseStub));
                 }
             });
         }
@@ -137,6 +159,27 @@ public class TestCaseStub {
     }
 
     public String getApi() {
-        return api == null ? "/api/" + StringUtil.transformVersion(version) + "/" + StringUtil.transformController(controller) + "/" + StringUtil.transformAction(action) : api;
+        return api == null ? UrlUtil.getUrlWithPrefix(version, controller, action) : api;
     }
+
+    public Response getResponse() {
+        return response;
+    }
+
+    public void setResponse(Response response) {
+        this.response = response;
+    }
+
+    public HashMap<String, String> getParameters() {
+        return params;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public String getAnchor() {
+        return anchor;
+    }
+
 }

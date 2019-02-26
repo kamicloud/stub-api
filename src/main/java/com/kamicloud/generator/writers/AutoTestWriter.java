@@ -1,17 +1,13 @@
 package com.kamicloud.generator.writers;
 
-import com.google.gson.Gson;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.OutputStub;
-import com.kamicloud.generator.stubs.testcase.RequestStub;
 import com.kamicloud.generator.stubs.testcase.TestCaseStub;
 import com.kamicloud.generator.utils.FileUtil;
-import com.kamicloud.generator.utils.StringUtil;
+import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.php.ClassCombiner;
 import com.kamicloud.generator.writers.components.php.ClassMethodCombiner;
 import okhttp3.*;
-import org.springframework.core.env.Environment;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.time.Duration;
@@ -21,14 +17,16 @@ import java.util.concurrent.atomic.AtomicReference;
 @SuppressWarnings("unchecked")
 public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransformerInterface {
     private final OkHttpClient client = (new OkHttpClient.Builder()).readTimeout(Duration.ofMinutes(1)).build();
-    private HashMap<String, ArrayList<RequestStub>> apiMap = new HashMap<>();
+    private HashMap<String, LinkedList<TestCaseStub>> apiMap = new HashMap<>();
     private File outputDir;
     private File testDir;
+    private File root;
     private LinkedList<TestCaseStub> rawTestCases = new LinkedList<>();
 
     public AutoTestWriter() {
-        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
+        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.testcases-path")));
         testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
+        root = new File(env.getProperty("generator.testcases-path", ""));
     }
 
     @Override
@@ -38,11 +36,18 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
             ClassCombiner.setNamespacePathTransformer(this);
 
-            File root = new File(env.getProperty("generator.testcases-path", ""));
 
             getTestCases(root);
 
             rawTestCases.forEach(testCaseStub -> {
+                if (!testCaseStub.isEnabled()) {
+                    return;
+                }
+                LinkedList<TestCaseStub> testCaseStubs = apiMap.computeIfAbsent(testCaseStub.getApi(), k -> new LinkedList<>());
+
+                testCaseStubs.add(testCaseStub);
+
+                apiMap.put(testCaseStub.getApi(), testCaseStubs);
             });
 
             getTestResponse(output);
@@ -71,17 +76,10 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
     private void getTestResponse(OutputStub output) {
         output.getTemplates().forEach((version, templateStub) -> templateStub.getControllers().forEach(controllerStub -> controllerStub.getActions().forEach((actionName, actionStub) -> {
-            String url = String.join(
-                "/",
-                "",
-                "api",
-                StringUtil.transformVersion(version),
-                StringUtil.transformController(controllerStub.getName()),
-                StringUtil.transformAction(actionName)
-            );
+            String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName(), actionName);
 
             AtomicReference<Integer> i = new AtomicReference<>(0);
-            ArrayList<RequestStub> requests = apiMap.get(url);
+            LinkedList<TestCaseStub> requests = apiMap.get(url);
             try {
                 ClassCombiner classCombiner = new ClassCombiner(
                     "Tests\\Generated\\" + version + "\\" + controllerStub.getName() + "\\" + actionStub.getName() + "Test",
@@ -99,7 +97,10 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',"));
                             classMethodCombiner.setBody(params);
                             classMethodCombiner.wrapBody(
-                                "$response = $this->post('" + url + "', [",
+                                new ArrayList<>(Arrays.asList(
+                                    "# " + (requestStub.getAnchor() == null ? "" : requestStub.getAnchor()),
+                                    "$response = $this->post('" + url + "', ["
+                                )),
                                 new ArrayList<>(Arrays.asList(
                                     "]);",
                                     "$actual = $response->getContent();"
@@ -127,7 +128,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         })));
     }
 
-    private void requestApi(RequestStub requestStub) throws IOException {
+    private void requestApi(TestCaseStub requestStub) throws IOException {
         MultipartBody.Builder builder = new MultipartBody
             .Builder()
             .setType(MultipartBody.FORM);
@@ -184,10 +185,6 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 //        }
 //
 //    }
-
-    private ArrayList<RequestStub> getRequestsByApi(String api) {
-        return apiMap.computeIfAbsent(api, k -> new ArrayList<>());
-    }
 
     @Override
     public String namespaceToPath(String namespace) {

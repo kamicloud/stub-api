@@ -2,12 +2,11 @@ package com.kamicloud.generator.writers;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.kamicloud.generator.utils.StringUtil;
+import com.kamicloud.generator.utils.UrlUtil;
 import definitions.annotations.Request;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.stubs.postman.*;
-import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,7 +14,6 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
-import java.util.Observable;
 
 public class PostmanWriter extends BaseWriter {
     private File outputPath;
@@ -70,10 +68,10 @@ public class PostmanWriter extends BaseWriter {
                 postmanItemRequestStub.setUrl(postmanItemRequestUrlStub);
 
                 postmanItemRequestUrlStub.addHost("{{host}}");
-                postmanItemRequestUrlStub.addPath("api");
-                postmanItemRequestUrlStub.addPath(StringUtil.transformVersion(version));
-                postmanItemRequestUrlStub.addPath(StringUtil.transformController(controller.getName()));
-                postmanItemRequestUrlStub.addPath(StringUtil.transformAction(action.getName()));
+                postmanItemRequestUrlStub.addPath(UrlUtil.getUrlPrefix(true));
+                postmanItemRequestUrlStub.addPath(UrlUtil.transformVersion(version));
+                postmanItemRequestUrlStub.addPath(UrlUtil.transformController(controller.getName()));
+                postmanItemRequestUrlStub.addPath(UrlUtil.transformAction(action.getName()));
 
 
 

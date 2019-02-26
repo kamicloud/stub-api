@@ -2,16 +2,16 @@ package com.kamicloud.generator.writers.components.php;
 
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.interfaces.CombinerInterface;
+import com.kamicloud.generator.writers.components.common.FileWriter;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class ClassCombiner implements CombinerInterface, AddUseInterface {
+public class ClassCombiner implements FileWriter, CombinerInterface, AddUseInterface {
     private static PHPNamespacePathTransformerInterface namespacePathTransformer;
-    private String fileName;
+    protected String fileName;
     private String namespace;
     private ArrayList<String> uses = new ArrayList<>();
     private String className;
@@ -77,11 +77,9 @@ public class ClassCombiner implements CombinerInterface, AddUseInterface {
         return this;
     }
 
-    @Override
-    public String write() {
+    public String toString() {
         StringBuilder content = new StringBuilder();
 
-        content.append("<?php\n\n");
         content.append("namespace ").append(namespace).append(";\n\n");
 
         HashSet<String> unqiueUses = new HashSet<>(uses);
@@ -112,31 +110,17 @@ public class ClassCombiner implements CombinerInterface, AddUseInterface {
         if (traits.size() > 0) {
             content.append("\n");
         }
-        constants.forEach(constant -> content.append(constant.write()).append("\n"));
-        attributes.forEach(attribute -> content.append(attribute.write()));
+        constants.forEach(constant -> content.append(constant.toString()).append("\n"));
+        attributes.forEach(attribute -> content.append(attribute.toString()));
         if (attributes.size() > 0) {
             content.append("\n");
         }
-        methods.forEach(method -> content.append(method.write()).append("\n"));
+        methods.forEach(method -> content.append(method.toString()).append("\n"));
 
 
         content.append("}\n");
 
         return content.toString();
-    }
-
-    public void toFile() throws IOException {
-        File file = new File(fileName);
-        if (!file.getParentFile().exists()) {
-            file.getParentFile().mkdirs();
-        }
-        FileOutputStream fileOutputStream = new FileOutputStream(fileName);
-        OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
-
-        outputStreamWriter.write(write());
-
-        outputStreamWriter.close();
-        fileOutputStream.close();
     }
 
     public static String getNamespaceFromFullNamespace(String namespace) {
@@ -174,10 +158,17 @@ public class ClassCombiner implements CombinerInterface, AddUseInterface {
         return new File(fileName).exists();
     }
 
-    public void parse() throws Exception {
-        // FileInputStream fileInputStream = new FileInputStream(fileName);
-        // InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-//        inputStreamReader
+    @Override
+    public void toFile() throws IOException {
+        PHPFileCombiner fileCombiner = new PHPFileCombiner();
+
+        fileCombiner.setFileName(fileName);
+        fileCombiner.addBlock(this);
+
+        fileCombiner.toFile();
     }
 }

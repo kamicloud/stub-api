@@ -17,7 +17,7 @@ public class ClassAttributeCombiner implements CombinerInterface {
     }
 
     @Override
-    public String write() {
+    public String toString() {
         return "    " + access + " $" + name + ";\n";
     }
 

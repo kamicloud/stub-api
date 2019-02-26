@@ -92,7 +92,7 @@ public class ClassMethodCombiner implements CombinerInterface, AddUseInterface {
     }
 
     @Override
-    public String write() {
+    public String toString() {
         StringBuilder content = new StringBuilder();
 
         if (comments.size() > 0) {
@@ -107,7 +107,7 @@ public class ClassMethodCombiner implements CombinerInterface, AddUseInterface {
         content.append("function ").append(name).append("(");
         ArrayList<String> parameterArray = new ArrayList<>();
 
-        parameters.forEach(parameter -> parameterArray.add(parameter.write()));
+        parameters.forEach(parameter -> parameterArray.add(parameter.toString()));
         content.append(String.join(", ", parameterArray));
         content.append(")\n");
         content.append(intend).append("{\n");

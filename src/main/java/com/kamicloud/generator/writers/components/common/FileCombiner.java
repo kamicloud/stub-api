@@ -1,4 +1,4 @@
-package com.kamicloud.generator.writers.components;
+package com.kamicloud.generator.writers.components.common;
 
 import com.kamicloud.generator.interfaces.CombinerInterface;
 
@@ -7,15 +7,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedList;
 
-public class FileCombiner implements CombinerInterface {
+public class FileCombiner extends Combiner implements FileWriter, CombinerInterface {
     protected String fileName;
-    protected LinkedList<CombinerInterface> blocks = new LinkedList<>();
 
-    @Override
-    public String write() {
-        return String.join("", blocks);
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public void toFile() throws IOException {
@@ -26,7 +23,7 @@ public class FileCombiner implements CombinerInterface {
         FileOutputStream fileOutputStream = new FileOutputStream(fileName);
         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
 
-        outputStreamWriter.write(write());
+        outputStreamWriter.write(toString());
 
         outputStreamWriter.close();
         fileOutputStream.close();
