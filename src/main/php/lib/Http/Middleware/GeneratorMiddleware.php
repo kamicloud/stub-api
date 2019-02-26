@@ -31,6 +31,8 @@ class GeneratorMiddleware
                 /** @var JsonResponse $response */
                 $content = $response->getContent();
 
+                $content = str_replace('\\n', '\\\\n', $content);
+
                 $content = json_encode(json_decode($content), JSON_PRETTY_PRINT);
 
                 $response->setContent($content);
