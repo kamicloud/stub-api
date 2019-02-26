@@ -24,7 +24,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     private LinkedList<TestCaseStub> rawTestCases = new LinkedList<>();
 
     public AutoTestWriter() {
-        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.testcases-path")));
+        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
         testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
         root = new File(env.getProperty("generator.testcases-path", ""));
     }
@@ -40,7 +40,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
             getTestCases(root);
 
             rawTestCases.forEach(testCaseStub -> {
-                if (!testCaseStub.isEnabled()) {
+                if (!testCaseStub.isEnabled() ) {
                     return;
                 }
                 LinkedList<TestCaseStub> testCaseStubs = apiMap.computeIfAbsent(testCaseStub.getApi(), k -> new LinkedList<>());
