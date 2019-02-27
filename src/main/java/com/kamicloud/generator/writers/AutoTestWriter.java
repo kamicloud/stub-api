@@ -98,9 +98,9 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             classMethodCombiner.setBody(params);
                             ArrayList<String> callAndAnchor = new ArrayList<>();
                             if (requestStub.getAnchor() != null && requestStub.getAnchor().equals("null")) {
-                                callAndAnchor.add("$response = $this->post('" + url + "', [");
+                                callAndAnchor.add("# " + requestStub.getAnchor());
                             }
-                            callAndAnchor.add("# " + requestStub.getAnchor());
+                            callAndAnchor.add("$response = $this->post('" + url + "', [");
                             classMethodCombiner.wrapBody(
                                 callAndAnchor,
                                 new ArrayList<>(Arrays.asList(
