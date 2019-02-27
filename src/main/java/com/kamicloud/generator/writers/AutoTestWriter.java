@@ -20,14 +20,13 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     private final OkHttpClient client = (new OkHttpClient.Builder()).readTimeout(Duration.ofMinutes(1)).build();
     private HashMap<String, LinkedList<TestCaseStub>> apiMap = new HashMap<>();
     private File outputDir;
-    private File testDir;
     private File root;
     private LinkedList<TestCaseStub> rawTestCases = new LinkedList<>();
 
     public AutoTestWriter() {
         outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
-        testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
         root = new File(env.getProperty("generator.testcases-path", ""));
+        File testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
         if (DefaultProfileUtil.isAutoTestForceReplace()) {
             FileUtil.deleteAllFilesOfDir(testDir);
         }
@@ -98,7 +97,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',"));
                             classMethodCombiner.setBody(params);
                             ArrayList<String> callAndAnchor = new ArrayList<>();
-                            if (requestStub.getAnchor() != null) {
+                            if (requestStub.getAnchor() != null && requestStub.getAnchor().equals("null")) {
                                 callAndAnchor.add("$response = $this->post('" + url + "', [");
                             }
                             callAndAnchor.add("# " + requestStub.getAnchor());
