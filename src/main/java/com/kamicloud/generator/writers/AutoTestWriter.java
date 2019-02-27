@@ -1,5 +1,6 @@
 package com.kamicloud.generator.writers;
 
+import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.testcase.TestCaseStub;
@@ -27,20 +28,20 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
         testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
         root = new File(env.getProperty("generator.testcases-path", ""));
+        if (DefaultProfileUtil.isAutoTestForceReplace()) {
+            FileUtil.deleteAllFilesOfDir(testDir);
+        }
     }
 
     @Override
     void update(OutputStub output) {
         try {
-            FileUtil.deleteAllFilesOfDir(testDir);
-
             ClassCombiner.setNamespacePathTransformer(this);
-
 
             getTestCases(root);
 
             rawTestCases.forEach(testCaseStub -> {
-                if (!testCaseStub.isEnabled() ) {
+                if (!testCaseStub.isEnabled()) {
                     return;
                 }
                 LinkedList<TestCaseStub> testCaseStubs = apiMap.computeIfAbsent(testCaseStub.getApi(), k -> new LinkedList<>());
@@ -146,45 +147,6 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
         requestStub.setResponse(response);
     }
-
-//    private void parseTestCases(BufferedReader bufferedReader) throws IOException {
-//        String line;
-//        String api = null;
-//        RequestStub requestStub = null;
-//
-//        Yaml yaml = new Yaml();
-//        FileInputStream in = new FileInputStream(new File(".\\src\\output\\testcases\\V1\\AdminUser\\GetUsers.yml"));
-//        Gson gson = new Gson();
-//        LinkedHashMap x = yaml.load(bufferedReader);
-//        LinkedList<TestCaseStub> test = TestCaseStub.getTestCasesFromFile("");
-//        x.forEach((a,b ) -> {
-//            String m = gson.toJson(b);
-//            String k = "";
-//        });
-//        String kk = gson.toJson(x.get("params"));
-//        while ((line = bufferedReader.readLine()) != null) {
-//            ArrayList<String> splits = new ArrayList<>(Arrays.asList(line.split(":")));
-//            String key = splits.get(0);
-//            api = String.join(":", splits.subList(1, splits.size())).trim();
-//            if (line.equals("---")) {
-//                requestStub = null;
-//                continue;
-//            }
-//            if (requestStub == null) {
-//                requestStub = new RequestStub();
-//            }
-//            if (key.equals("api")) {
-//                requestStub.setApi(api);
-//                getRequestsByApi(api).add(requestStub);
-//            } else if (!key.equals("")) {
-//                requestStub.addParameter(key, api);
-//            }
-//        }
-//        if (requestStub != null) {
-//            getRequestsByApi(api).add(requestStub);
-//        }
-//
-//    }
 
     @Override
     public String namespaceToPath(String namespace) {

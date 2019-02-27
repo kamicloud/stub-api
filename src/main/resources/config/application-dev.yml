@@ -9,6 +9,7 @@ generator:
   template-path: ./src/main/java
   laravel-path: ./src/output/laravel
   auto-test-path: ./src/output/tests
+  auto-test-force-replace: false
   doc-path: ./src/output/larecipe
   postman-path: ./src/output
   testcases-path: ./src/output/testcases

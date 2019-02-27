@@ -132,8 +132,10 @@ public class TestCaseStub {
                 testCaseStub.params.put(key, gson.toJson(value));
             });
         }
-
-        collection.add(testCaseStub);
+        // 有子样例且外部无参数时忽略外部样例
+        if (params != null || testcases == null) {
+            collection.add(testCaseStub);
+        }
 
         if (testcases instanceof ArrayList<?>) {
             ((ArrayList) testcases).forEach(obj -> {
