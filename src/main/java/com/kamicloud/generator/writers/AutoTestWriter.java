@@ -62,7 +62,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
     private void getTestCases(File root) throws Exception {
         if (root.isDirectory()) {
-            Arrays.asList(root.listFiles()).forEach(file -> {
+            Arrays.asList(Objects.requireNonNull(root.listFiles())).forEach(file -> {
                 try {
                     getTestCases(file);
                 } catch (Exception e) {
@@ -97,11 +97,13 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             ArrayList<String> params = new ArrayList<>();
                             requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',"));
                             classMethodCombiner.setBody(params);
+                            ArrayList<String> callAndAnchor = new ArrayList<>();
+                            if (requestStub.getAnchor() != null) {
+                                callAndAnchor.add("$response = $this->post('" + url + "', [");
+                            }
+                            callAndAnchor.add("# " + requestStub.getAnchor());
                             classMethodCombiner.wrapBody(
-                                new ArrayList<>(Arrays.asList(
-                                    "# " + (requestStub.getAnchor() == null ? "" : requestStub.getAnchor()),
-                                    "$response = $this->post('" + url + "', ["
-                                )),
+                                callAndAnchor,
                                 new ArrayList<>(Arrays.asList(
                                     "]);",
                                     "$actual = $response->getContent();"
