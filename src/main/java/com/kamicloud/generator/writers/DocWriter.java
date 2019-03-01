@@ -142,12 +142,13 @@ public class DocWriter extends BaseWriter {
 
     private void writeErrors() {
         try {
-//            FileOutputStream fileOutputStream = new FileOutputStream(outputDir.getAbsolutePath() + "/generated/error-codes.md");
-//            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
-            FileCopyUtils.copy(new File("./src/main/resources/stubs/error-symlink.stub"), new File(outputDir.getAbsolutePath() + "/generated/error-codes.md"));
-
-//            outputStreamWriter.close();
-//            fileOutputStream.close();
+            String path;
+            if (env.getProperty("generator.env", "prod").equals("dev")) {
+                path = "./stubs/error-symlink.stub";
+            } else {
+                path = "./vendor/kamicloud/yet-another-generator/stubs/error-codes-symlink.stub";
+            }
+            FileCopyUtils.copy(new File(path), new File(outputDir.getAbsolutePath() + "/generated/error-codes.md"));
         } catch (IOException e) {
             e.printStackTrace();
         }

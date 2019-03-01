@@ -5,6 +5,7 @@
 # ===================================================================
 
 generator:
+  env: dev
   api-prefix: api
   template-path: ./src/main/java
   laravel-path: ./src/output/laravel
