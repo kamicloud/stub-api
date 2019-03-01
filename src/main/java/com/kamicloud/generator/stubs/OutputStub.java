@@ -2,11 +2,14 @@ package com.kamicloud.generator.stubs;
 
 import com.kamicloud.generator.utils.UrlUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 
 public class OutputStub extends Observable {
     private HashMap<String, TemplateStub> templates = new HashMap<>();
+
+    private ArrayList<ErrorStub> errors = new ArrayList<>();
 
     public HashMap<String, TemplateStub> getTemplates() {
         return templates;
@@ -34,5 +37,13 @@ public class OutputStub extends Observable {
                 });
             }));
         });
+    }
+
+    public void addError(ErrorStub errorStub) {
+        errors.add(errorStub);
+    }
+
+    public ArrayList<ErrorStub> getErrors() {
+        return errors;
     }
 }

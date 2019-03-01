@@ -73,6 +73,7 @@ public class Generator extends Doclet {
         OutputStub output = new OutputStub();
 
         Arrays.asList(TemplateList.templates).forEach(template -> parseTemplate(template, output));
+        parseErrors(TemplateList.errorsTemplate, output);
 
         return output;
     }
@@ -91,12 +92,11 @@ public class Generator extends Doclet {
                 parseModels(part.getDeclaredClasses(), templateStub);
             }
         });
-        parseErrors(TemplateList.errorsTemplate, templateStub);
 
         outputStub.addTemplate(templateStub);
     }
 
-    private void parseErrors(Class<? extends Enum> errorsTemplate, TemplateStub templateStub) {
+    private void parseErrors(Class<? extends Enum> errorsTemplate, OutputStub templateStub) {
         Arrays.asList(errorsTemplate.getFields()).forEach(error -> {
             try {
                 Enum<?> value = Enum.valueOf(errorsTemplate, error.getName());

@@ -6,7 +6,6 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class TemplateStub extends BaseWithAnnotationStub {
     private ArrayList<String> constants = new ArrayList<>();
-    private ArrayList<ErrorStub> errors = new ArrayList<>();
     private ArrayList<EnumStub> enums = new ArrayList<>();
     private HashMap<String, ModelStub> models = new HashMap<>();
     private ArrayList<ControllerStub> controllers = new ArrayList<>();
@@ -45,14 +44,6 @@ public class TemplateStub extends BaseWithAnnotationStub {
 
     public ArrayList<EnumStub> getEnums() {
         return enums;
-    }
-
-    public void addError(ErrorStub errorStub) {
-        errors.add(errorStub);
-    }
-
-    public ArrayList<ErrorStub> getErrors() {
-        return errors;
     }
 
     public ModelStub getModelByName(String name) {

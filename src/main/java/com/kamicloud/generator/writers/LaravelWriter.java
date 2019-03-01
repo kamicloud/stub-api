@@ -41,15 +41,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 writeModels(templateStub);
                 writeHttp(templateStub);
                 writeEnums(templateStub);
-                writeErrors(templateStub);
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
         });
         try {
+            writeErrors(output);
             writeRoute(output);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -185,7 +185,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         });
     }
 
-    private void writeErrors(TemplateStub o) throws Exception {
+    private void writeErrors(OutputStub o) throws Exception {
         ClassCombiner errorCodeClassCombiner = new ClassCombiner("App\\Generated\\Exceptions\\ErrorCode");
         o.getErrors().forEach(error -> {
             try {

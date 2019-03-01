@@ -7,6 +7,7 @@ import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.stubs.ParameterStub;
 import com.kamicloud.generator.utils.FileUtil;
 import org.springframework.core.env.Environment;
+import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -15,17 +16,17 @@ import java.util.Objects;
 import java.util.Observable;
 
 public class DocWriter extends BaseWriter {
-    private String docPath;
+    private File docPath;
     private File outputDir;
 
     public DocWriter() {
-        docPath = Objects.requireNonNull(env.getProperty("generator.doc-path"));
+        docPath = new File(Objects.requireNonNull(env.getProperty("generator.doc-path")) + "/resources/docs");
     }
 
     @Override
     public void update(OutputStub output) {
         output.getTemplates().forEach((version, templateStub) -> {
-            outputDir = new File(docPath + "/resources/docs/" + version);
+            outputDir = new File(docPath.getAbsolutePath() + "/" + version);
             if (outputDir.exists()) {
                 FileUtil.deleteAllFilesOfDir(outputDir);
             }
@@ -34,9 +35,10 @@ public class DocWriter extends BaseWriter {
             writeIndex(templateStub);
             writeModels(templateStub);
             writeAPIs(templateStub);
-            writeErrors(templateStub);
+            writeErrors();
             writeEnums(templateStub);
         });
+        writeErrors(output);
     }
 
     private void writeIndex(TemplateStub o) {
@@ -114,9 +116,9 @@ public class DocWriter extends BaseWriter {
         });
     }
 
-    private void writeErrors(TemplateStub output) {
+    private void writeErrors(OutputStub output) {
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(outputDir.getAbsolutePath() + "/generated/error-codes.md");
+            FileOutputStream fileOutputStream = new FileOutputStream(docPath.getAbsolutePath() + "/error-codes.md");
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
 
             outputStreamWriter.write("|ErrorCode|Key|Description|\n|:-|:-|:-|\n");
@@ -133,6 +135,19 @@ public class DocWriter extends BaseWriter {
 
             outputStreamWriter.close();
             fileOutputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void writeErrors() {
+        try {
+//            FileOutputStream fileOutputStream = new FileOutputStream(outputDir.getAbsolutePath() + "/generated/error-codes.md");
+//            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+            FileCopyUtils.copy(new File("./src/main/resources/stubs/error-symlink.stub"), new File(outputDir.getAbsolutePath() + "/generated/error-codes.md"));
+
+//            outputStreamWriter.close();
+//            fileOutputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
