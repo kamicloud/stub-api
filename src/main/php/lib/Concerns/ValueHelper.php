@@ -52,6 +52,9 @@ trait ValueHelper
 
     public function fromOne($value, $type, $isModel, $isEnum)
     {
+        if (is_null($value)) {
+            return null;
+        }
         if ($isModel) {
             /** @var DTO $type */
             return $type::initFromModel($value);
@@ -61,7 +64,7 @@ trait ValueHelper
         } elseif ($type === 'Date') {
             return ValueHelper::convertDate($value);
         } else {
-            return $this->parseScalar($value, $type);
+            return $value;
         }
     }
 
@@ -100,6 +103,10 @@ trait ValueHelper
 
             $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
             throw new $exception($location . "\n-----\n" . join("\n--\n", $messages));
+        } else {
+            foreach ($rules as $key => $rule) {
+                $this->$field = $this->parseScalar($this->$key, $type);
+            }
         }
     }
 
