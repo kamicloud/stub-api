@@ -105,7 +105,7 @@ trait ValueHelper
             throw new $exception($location . "\n-----\n" . join("\n--\n", $messages));
         } else {
             foreach ($rules as $key => $rule) {
-                $this->$field = $this->parseScalar($this->$key, $type);
+                $this->$key = $this->parseScalar($this->$key, $type);
             }
         }
     }
