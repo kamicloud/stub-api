@@ -81,7 +81,7 @@ public class DocWriter extends BaseWriter {
 
                 outputStreamWriter.write("# " + controller.getName() + "\n");
                 if (controller.getComment() != null) {
-                    outputStreamWriter.write("\n> {warning} " + controller.getComment() + "\n\n");
+                    outputStreamWriter.write("\n> {warning} " + transformLfToBr(controller.getComment()) + "\n\n");
                 }
                 outputStreamWriter.write("\n---\n\n");
 
@@ -99,7 +99,7 @@ public class DocWriter extends BaseWriter {
                         outputStreamWriter.write("<a name=\"" + action.getName() + "\"></a>\n");
                         outputStreamWriter.write("## " + action.getName() + "\n");
                         if (action.getComment() != null) {
-                            outputStreamWriter.write("\n> {warning} " + action.getComment() + "\n\n");
+                            outputStreamWriter.write("\n> {warning} " + transformLfToBr(action.getComment()) + "\n\n");
                         }
                         writeParameters("Requests", outputStreamWriter, action.getRequests());
                         writeParameters("Responses", outputStreamWriter, action.getResponses());
@@ -144,7 +144,7 @@ public class DocWriter extends BaseWriter {
         try {
             String path;
             if (env.getProperty("generator.env", "prod").equals("dev")) {
-                path = "./stubs/error-symlink.stub";
+                path = "./stubs/error-codes-symlink.stub";
             } else {
                 path = "./vendor/kamicloud/yet-another-generator/stubs/error-codes-symlink.stub";
             }
@@ -259,7 +259,7 @@ public class DocWriter extends BaseWriter {
     private void writeParameter(OutputStreamWriter outputStreamWriter, ParameterStub parameter) {
         try {
             outputStreamWriter.write("|" + parameter.getName() + " |");
-            outputStreamWriter.write((parameter.getComment() == null ? " " : parameter.getComment().replace("\n", "<br>")));
+            outputStreamWriter.write((parameter.getComment() == null ? " " : transformLfToBr(parameter.getComment())));
             outputStreamWriter.write(writeLink(parameter.getType()));
             outputStreamWriter.write((parameter.hasAnnotation(Optional.name) ? " " : "true") + "|");
             outputStreamWriter.write("\n");
@@ -276,5 +276,9 @@ public class DocWriter extends BaseWriter {
         } else {
             return ("|`" + template + "`|");
         }
+    }
+
+    private String transformLfToBr(String lf) {
+        return lf.replace("\n", "<br>");
     }
 }

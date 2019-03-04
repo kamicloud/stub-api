@@ -12,8 +12,10 @@ public enum Errors implements ErrorInterface {
     API_DEPRECATED(-10),
     /** 等同于404 */
     API_NOT_FOUND(-11),
+    /** 用户未登录 */
+    AUTH_FAIL(-100),
     /** 自定义的ERROR信息 */
-    CUSTOM_ERROR_MESSAGE(-100),
+    CUSTOM_ERROR_MESSAGE(-10000),
 
     // comment 2
     OBJECT_NOT_FOUND(10002),

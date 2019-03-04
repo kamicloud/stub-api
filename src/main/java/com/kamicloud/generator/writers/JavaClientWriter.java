@@ -3,7 +3,9 @@ package com.kamicloud.generator.writers;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.utils.FileUtil;
+import com.kamicloud.generator.writers.components.java.ClassAttributeCombiner;
 import com.kamicloud.generator.writers.components.java.ClassCombiner;
+import com.kamicloud.generator.writers.components.java.ClassMethodCombiner;
 import org.springframework.core.env.Environment;
 
 import java.io.File;
@@ -52,7 +54,13 @@ public class JavaClientWriter extends BaseWriter {
     private void writePojos(TemplateStub templateStub) {
         templateStub.getModels().forEach((modelName, modelStub) -> {
             try {
-                ClassCombiner classCombiner = new ClassCombiner("models." + modelName);
+                ClassCombiner classCombiner = new ClassCombiner("models." + modelName + "POJO");
+
+                modelStub.getParameters().forEach((parameterName, parameterStub) -> {
+                    new ClassAttributeCombiner(classCombiner, parameterName, "public");
+                    new ClassMethodCombiner(classCombiner, "get" + parameterName);
+                    new ClassMethodCombiner(classCombiner, "set" + parameterName);
+                });
 
                 classCombiner.toFile();
             } catch (Exception e) {

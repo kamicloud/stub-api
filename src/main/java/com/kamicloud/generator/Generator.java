@@ -52,7 +52,8 @@ public class Generator extends Doclet {
                 output.addObserver(new TestCaseWriter());
                 output.addObserver(new DocWriter());
                 output.addObserver(new LaravelWriter());
-//                output.addObserver(new JavaClientWriter(env));
+            } else if (process.equals("client")) {
+                output.addObserver(new JavaClientWriter());
             } else {
                 output.addObserver(new AutoTestWriter());
             }

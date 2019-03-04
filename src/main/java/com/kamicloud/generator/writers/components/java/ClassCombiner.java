@@ -7,10 +7,9 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class ClassCombiner extends FileCombiner implements CombinerInterface {
+public class ClassCombiner extends FileCombiner implements CombinerInterface, AddImportInterface {
     private static String root;
     private static String javaClasspath;
-    private String fileName;
     /**
      * com.kamicloud.generator.Classname
      */
@@ -19,18 +18,17 @@ public class ClassCombiner extends FileCombiner implements CombinerInterface {
      * com.kamicloud.generator
      */
     private String packagePath;
-    private ArrayList<String> uses = new ArrayList<>();
+    private ArrayList<String> imports = new ArrayList<>();
     /**
      * Classname
      */
     private String className;
     private String extend;
     private ArrayList<String> implementables = new ArrayList<>();
-    private ArrayList<String> traits = new ArrayList<>();
 
 //    private ArrayList<ClassConstantCombiner> constants = new ArrayList<>();
-//    private ArrayList<ClassAttributeCombiner> attributes = new ArrayList<>();
-//    private ArrayList<ClassMethodCombiner> methods = new ArrayList<>();
+    private ArrayList<ClassAttributeCombiner> attributes = new ArrayList<>();
+    private ArrayList<ClassMethodCombiner> methods = new ArrayList<>();
 
 
     public ClassCombiner(String classpath) throws Exception {
@@ -47,7 +45,7 @@ public class ClassCombiner extends FileCombiner implements CombinerInterface {
         String[] pieces = classpath.split("\\.");
 
         this.packagePath = String.join(".", pieces);
-        this.fileName = String.join("/", pieces) + ".java";
+        this.fileName = root + "/" + String.join("/", pieces) + ".java";
 
         if (extend != null) {
             this.extend = addImport(extend);
@@ -58,31 +56,30 @@ public class ClassCombiner extends FileCombiner implements CombinerInterface {
 //        this.constants.add(classConstantCombiner);
 //        return this;
 //    }
-//
-//    public ClassCombiner addAttribute(ClassAttributeCombiner attributeCombiner) {
-//        this.attributes.add(attributeCombiner);
-//        return this;
-//    }
-//
+
+    public ClassCombiner addAttribute(ClassAttributeCombiner attributeCombiner) {
+        this.attributes.add(attributeCombiner);
+        return this;
+    }
+
     public String addImport(String use) {
-        if (!uses.contains(use)) {
-            uses.add(use);
+        if (!imports.contains(use)) {
+            imports.add(use);
         }
         return getClassNameFromClasspath(use);
     }
-//
-//    public ClassCombiner addMethod(ClassMethodCombiner method) {
-//        this.methods.add(method);
-//        return this;
-//    }
-//
-    @Override
+
+    public ClassCombiner addMethod(ClassMethodCombiner method) {
+        this.methods.add(method);
+        return this;
+    }
+
     public String toString() {
         StringBuilder content = new StringBuilder();
 
         content.append("package ").append(classpath).append(";\n\n");
 
-        HashSet<String> unqiueUses = new HashSet<>(uses);
+        HashSet<String> unqiueUses = new HashSet<>(imports);
 
         unqiueUses.forEach(use -> {
             if (use.equals(packagePath + "\\" + className)) {
@@ -106,15 +103,12 @@ public class ClassCombiner extends FileCombiner implements CombinerInterface {
         content.append("\n");
         content.append("{\n");
 
-        if (traits.size() > 0) {
+//        constants.forEach(constant -> content.append(constant.toString()).append("\n"));
+        attributes.forEach(attribute -> content.append(attribute.toString()));
+        if (attributes.size() > 0) {
             content.append("\n");
         }
-//        constants.forEach(constant -> content.append(constant.toString()).append("\n"));
-//        attributes.forEach(attribute -> content.append(attribute.toString()));
-//        if (attributes.size() > 0) {
-//            content.append("\n");
-//        }
-//        methods.forEach(method -> content.append(method.toString()).append("\n"));
+        methods.forEach(method -> content.append(method.toString()).append("\n"));
 
 
         content.append("}\n");
@@ -132,7 +126,7 @@ public class ClassCombiner extends FileCombiner implements CombinerInterface {
 //        }
 //        return String.join("\\", classNamespace);
 //    }
-//
+
     public static String getClassNameFromClasspath(String namespace) {
         String[] names = namespace.split("\\.");
         String last = names[names.length - 1];
@@ -140,10 +134,10 @@ public class ClassCombiner extends FileCombiner implements CombinerInterface {
     }
 
     public void addImplement(String implement) {
-        uses.add(implement);
+        imports.add(implement);
         implementables.add(getClassNameFromClasspath(implement));
     }
-//
+
 //    public File getParentFile() {
 //        File file = getFile();
 //        return file.getParentFile();
