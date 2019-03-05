@@ -260,7 +260,7 @@ public class DocWriter extends BaseWriter {
         try {
             outputStreamWriter.write("|" + parameter.getName() + " |");
             outputStreamWriter.write((parameter.getComment() == null ? " " : transformLfToBr(parameter.getComment())));
-            outputStreamWriter.write(writeLink(parameter.getType()));
+            outputStreamWriter.write(writeLink(parameter));
             outputStreamWriter.write((parameter.hasAnnotation(Optional.name) ? " " : "true") + "|");
             outputStreamWriter.write("\n");
         } catch (IOException e) {
@@ -268,13 +268,14 @@ public class DocWriter extends BaseWriter {
         }
     }
 
-    private String writeLink(String template) {
-        if (template.startsWith("Models.")) {
-            return ("|[`" + template + "`](/docs/{{version}}/generated/models#" + template.substring(7).replace("[]", "") + ")|");
-        } else if (template.startsWith("Enums.")) {
-            return ("|[`" + template + "`](/docs/{{version}}/generated/enums#" + template.substring(6).replace("[]", "") + ")|");
+    private String writeLink(ParameterStub parameter) {
+        String type = parameter.getType();
+        if (parameter.isModel()) {
+            return ("|[`Models." + type + "`](/docs/{{version}}/generated/models#" + type + ")|");
+        } else if (parameter.isEnum()) {
+            return ("|[`Enums." + type + "`](/docs/{{version}}/generated/enums#" + type + ")|");
         } else {
-            return ("|`" + template + "`|");
+            return ("|`" + type + "`|");
         }
     }
 
