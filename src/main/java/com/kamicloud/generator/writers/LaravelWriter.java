@@ -321,7 +321,6 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 ruleList.add("bail");
 
                 ruleList.add(typeModelName);
-                typeModelName = "'" + String.join("|", ruleList) + "'";
             }
             if (parameterStub.hasAnnotation(Optional.name)) {
                 types.add("Constants::IS_OPTIONAL");
@@ -333,6 +332,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             if (isArray) {
                 types.add("Constants::IS_ARRAY");
             }
+            typeModelName = "'" + String.join("|", ruleList) + "'";
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
                 "'" + parameterName + "'",
                 "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
