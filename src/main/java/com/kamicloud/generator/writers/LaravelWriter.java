@@ -303,6 +303,16 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             boolean isArray = parameterStub.isArray();
             boolean isModel = parameterStub.isModel();
             boolean isEnum = parameterStub.isEnum();
+            if (parameterStub.hasAnnotation(Optional.name)) {
+                types.add("Constants::IS_OPTIONAL");
+                ruleList.add("nullable");
+            }
+            if (parameterStub.hasAnnotation(Mutable.name)) {
+                types.add("Constants::IS_MUTABLE");
+            }
+            if (isArray) {
+                types.add("Constants::IS_ARRAY");
+            }
             if (isModel) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeModelName + "Model");
                 typeModelName = typeModelName + "Model::class";
@@ -321,18 +331,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 ruleList.add("bail");
 
                 ruleList.add(typeModelName);
+                typeModelName = "'" + String.join("|", ruleList) + "'";
             }
-            if (parameterStub.hasAnnotation(Optional.name)) {
-                types.add("Constants::IS_OPTIONAL");
-                ruleList.add("nullable");
-            }
-            if (parameterStub.hasAnnotation(Mutable.name)) {
-                types.add("Constants::IS_MUTABLE");
-            }
-            if (isArray) {
-                types.add("Constants::IS_ARRAY");
-            }
-            typeModelName = "'" + String.join("|", ruleList) + "'";
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
                 "'" + parameterName + "'",
                 "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
