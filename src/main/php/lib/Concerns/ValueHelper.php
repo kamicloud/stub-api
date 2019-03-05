@@ -105,7 +105,7 @@ trait ValueHelper
             throw new $exception($location . "\n-----\n" . join("\n--\n", $messages));
         } else {
             foreach ($rules as $key => $rule) {
-                $this->$key = $this->parseScalar($this->$key, $type);
+                $this->$key = $this->parseScalar($this->$key, $rule);
             }
         }
     }
@@ -157,15 +157,15 @@ trait ValueHelper
      * 从标量数据类型中解析数据
      *
      * @param $value
-     * @param $type
+     * @param $rule
      * @return int|string|null
      */
-    public function parseScalar($value, $type)
+    public function parseScalar($value, $rule)
     {
         if (is_null($value)) {
             return null;
         }
-        if (stripos($type, 'int') !== false) {
+        if (stripos($rule, 'int') !== false) {
             return (int) $value;
         } else {
             return (string) $value;
