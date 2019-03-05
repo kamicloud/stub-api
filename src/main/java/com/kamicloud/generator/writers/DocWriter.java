@@ -269,7 +269,7 @@ public class DocWriter extends BaseWriter {
     }
 
     private String writeLink(ParameterStub parameter) {
-        String type = parameter.getType();
+        String type = parameter.getType().replace("[]", "");
         if (parameter.isModel()) {
             return ("|[`Models." + type + "`](/docs/{{version}}/generated/models#" + type + ")|");
         } else if (parameter.isEnum()) {
