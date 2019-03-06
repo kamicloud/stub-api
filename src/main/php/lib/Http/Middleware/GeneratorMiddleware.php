@@ -2,6 +2,7 @@
 
 namespace YetAnotherGenerator\Http\Middleware;
 
+use App\Generated\Exceptions\ApiNotFoundException;
 use Closure;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -17,9 +18,9 @@ class GeneratorMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (config('app.debug') === true) {
-            if ($request->input('__test_mode', false)) {
-
+        $testMode = $request->input('__test_mode', false);
+        if ($testMode) {
+            if (config('app.debug') === true) {
                 config([
                     'app.env' => 'testing',
                 ]);
@@ -40,6 +41,9 @@ class GeneratorMiddleware
                 DB::rollBack();
 
                 return $response;
+            } else {
+                // 非调试模式时，使用超全局参数会抛出异常
+                throw new ApiNotFoundException('Api not found!');
             }
         }
         return $next($request);

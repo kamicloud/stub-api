@@ -7,5 +7,7 @@ return [
 
         'server-internal-error' => YetAnotherGenerator\Exceptions\ServerInternalErrorException::class,
 
+        'maintain-mode-exception' => YetAnotherGenerator\Exceptions\MaintainModeException::class,
+
     ],
 ];

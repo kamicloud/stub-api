@@ -21,6 +21,10 @@ class Handler extends ExceptionHandler
         if (!starts_with($request->getRequestUri(), '/api')) {
             return parent::render($request, $exception);
         }
+        if ($exception instanceof \Illuminate\Foundation\Http\Exceptions\MaintenanceModeException) {
+            $exception = config('maintain-mode-exception', MaintainModeException::class);
+            $exception = new $exception;
+        }
         if ($exception instanceof BaseException) {
             return response()->json($exception->toResponse($request));
         }
