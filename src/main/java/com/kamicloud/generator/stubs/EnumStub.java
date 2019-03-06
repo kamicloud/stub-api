@@ -1,9 +1,10 @@
 package com.kamicloud.generator.stubs;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class EnumStub extends BaseWithAnnotationStub {
-    private HashMap<String, EnumStubItem> items = new HashMap<>();
+    private LinkedHashMap<String, EnumStubItem> items = new LinkedHashMap<>();
 
     public EnumStub(String name) {
         super(name);
