@@ -1,5 +1,7 @@
 package com.kamicloud.generator.writers;
 
+import com.kamicloud.generator.writers.components.common.FileCombiner;
+import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import definitions.annotations.Optional;
 import com.kamicloud.generator.stubs.EnumStub;
 import com.kamicloud.generator.stubs.OutputStub;
@@ -118,24 +120,30 @@ public class DocWriter extends BaseWriter {
 
     private void writeErrors(OutputStub output) {
         try {
-            new File(docPath.getAbsolutePath() + "/ErrorCodes").mkdirs();
-            FileOutputStream fileOutputStream = new FileOutputStream(docPath.getAbsolutePath() + "/ErrorCodes/error-codes.md");
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+            FileCombiner overview = new FileCombiner();
+            overview.setFileName(docPath.getAbsolutePath() + "/ErrorCodes/overview.md");
+            MultiLinesCombiner blocks = new MultiLinesCombiner();
+            blocks.addLine("|ErrorCode|Key|Description|");
+            blocks.addLine("|:-|:-|:-|");
 
-            outputStreamWriter.write("|ErrorCode|Key|Description|\n|:-|:-|:-|\n");
             output.getErrors().forEach(error -> {
-                try {
-                    String comment = error.getComment() == null ? "" : error.getComment().replace("\n", "<br>");
-                    // 输出模型每一个请求参数
-                    outputStreamWriter.write("|" + error.getCode() + "|" + error.getName() + "|" + comment + " |\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                String comment = error.getComment() == null ? "" : error.getComment().replace("\n", "<br>");
+                // 输出模型每一个请求参数
+                blocks.addLine("|" + error.getCode() + "|" + error.getName() + "|" + comment + " |");
             });
-            outputStreamWriter.write("\n");
 
-            outputStreamWriter.close();
-            fileOutputStream.close();
+            overview.addBlock(blocks);
+
+            FileCombiner index = new FileCombiner();
+            index.setFileName(docPath.getAbsolutePath() + "/ErrorCodes/index.md");
+            index.addBlock(new MultiLinesCombiner(
+                "- ## Get Started",
+                "  - [Overview](/docs/{{version}}/overview)\n"
+            ));
+
+
+            overview.toFile();
+            index.toFile();
         } catch (IOException e) {
             e.printStackTrace();
         }

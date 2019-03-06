@@ -18,4 +18,8 @@ public class MultiLinesCombiner extends Combiner implements CombinerInterface {
 
         return stringBuilder.toString();
     }
+
+    public void addLine(String line) {
+        blocks.add(line);
+    }
 }
