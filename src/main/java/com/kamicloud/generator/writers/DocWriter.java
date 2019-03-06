@@ -35,7 +35,7 @@ public class DocWriter extends BaseWriter {
             writeIndex(templateStub);
             writeModels(templateStub);
             writeAPIs(templateStub);
-            writeErrors();
+//            writeErrors();
             writeEnums(templateStub);
         });
         writeErrors(output);
@@ -118,7 +118,8 @@ public class DocWriter extends BaseWriter {
 
     private void writeErrors(OutputStub output) {
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(docPath.getAbsolutePath() + "/error-codes.md");
+            new File(docPath.getAbsolutePath() + "/ErrorCodes").mkdirs();
+            FileOutputStream fileOutputStream = new FileOutputStream(docPath.getAbsolutePath() + "/ErrorCodes/error-codes.md");
             OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
 
             outputStreamWriter.write("|ErrorCode|Key|Description|\n|:-|:-|:-|\n");
