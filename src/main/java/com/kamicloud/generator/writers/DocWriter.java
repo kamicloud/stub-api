@@ -212,7 +212,7 @@ public class DocWriter extends BaseWriter {
                             outputStreamWriter.write("|" + key + "|");
                             outputStreamWriter.write(value.getName());
                             outputStreamWriter.write("|");
-                            outputStreamWriter.write(" ");
+                            outputStreamWriter.write((value.getComment() == null ? " " : transformLfToBr(value.getComment())));
                             outputStreamWriter.write("|\n");
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -269,11 +269,11 @@ public class DocWriter extends BaseWriter {
     }
 
     private String writeLink(ParameterStub parameter) {
-        String type = parameter.getType().replace("[]", "");
+        String type = parameter.getType();
         if (parameter.isModel()) {
-            return ("|[`Models." + type + "`](/docs/{{version}}/generated/models#" + type + ")|");
+            return ("|[`Models." + type + "`](/docs/{{version}}/generated/models#" + type.replace("[]", "") + ")|");
         } else if (parameter.isEnum()) {
-            return ("|[`Enums." + type + "`](/docs/{{version}}/generated/enums#" + type + ")|");
+            return ("|[`Enums." + type + "`](/docs/{{version}}/generated/enums#" + type.replace("[]", "") + ")|");
         } else {
             return ("|`" + type + "`|");
         }
