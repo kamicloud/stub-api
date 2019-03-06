@@ -335,7 +335,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             }
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
                 "'" + parameterName + "'",
-                "'" + CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName) + "'", // DBField
+                "'" + (isModel ? parameterName :  CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName)) + "'", // DBField
                 typeModelName,
                 types.isEmpty() ? "null" : String.join(" | ", types)
             ));
