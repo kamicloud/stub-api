@@ -11,6 +11,11 @@ public class PostmanParameterStub {
         this.key = key;
     }
 
+    public PostmanParameterStub(String key, String value) {
+        this(key);
+        this.value = value;
+    }
+
     public String getKey() {
         return key;
     }

@@ -74,6 +74,7 @@ public class PostmanWriter extends BaseWriter {
                 postmanItemRequestUrlStub.addPath(UrlUtil.transformAction(action.getName()));
 
 
+                postmanItemRequestBodyStub.addParameter(new PostmanParameterStub("__access_token", "{{access_token}}"));
 
                 action.getRequests().forEach((parameterName, parameter) -> {
                     if (parameter.getAnnotations().containsKey(Request.name)) {
