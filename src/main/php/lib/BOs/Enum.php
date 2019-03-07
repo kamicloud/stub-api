@@ -10,11 +10,14 @@ abstract class Enum
     {
         $values = static::_MAP;
 
-        if (!isset($values[$value])) {
-            return false;
-        }
+        return isset($values[$value]);
+    }
 
-        return true;
+    public static function format($value)
+    {
+        $values = static::_MAP;
+
+        return array_flip($values)[$values[$value]];
     }
 
     public static function transform($value)

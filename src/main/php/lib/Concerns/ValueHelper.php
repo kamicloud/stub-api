@@ -91,7 +91,7 @@ trait ValueHelper
                 $data[$field] = $value;
                 $rules[$field] = $rule;
             } else {
-                $this->validateValue($value, $field, $rule, $type, "$location > $field");
+                $this->$field = $this->validateValue($value, $field, $rule, $type, "$location > $field");
             }
         }
 
@@ -131,7 +131,7 @@ trait ValueHelper
             foreach ($value as $index => $item) {
                 $this->validateValue($item, $field, $rule, $isModel | $isOptional | $isEnum, "$location(array) > $index");
             }
-            return ;
+            return $value;
         }
 
         if (!is_null($value)) {
@@ -147,10 +147,12 @@ trait ValueHelper
                 if ($rule::verify($value) === false) {
                     throw new $exception("{$location} should match enum");
                 }
+                $value = $rule::format($value);
             }
 
         }
 
+        return $value;
     }
 
     /**

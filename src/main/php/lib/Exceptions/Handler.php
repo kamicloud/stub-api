@@ -23,7 +23,7 @@ class Handler extends ExceptionHandler
         }
         if ($exception instanceof \Illuminate\Foundation\Http\Exceptions\MaintenanceModeException) {
             $exception = config('maintain-mode-exception', MaintainModeException::class);
-            $exception = new $exception;
+            $exception = new $exception('Maintaining');
         }
         if ($exception instanceof BaseException) {
             return response()->json($exception->toResponse($request));
