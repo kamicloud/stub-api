@@ -53,7 +53,7 @@ public class DocWriter extends BaseWriter {
                 "  - [Overview](/docs/{{version}}/overview)\n" +
 //                "  - [Example](/docs/{{version}}/example)\n" +
                 "- ## 数据字典\n" +
-                "  - [ErrorCodes](/docs/{{version}}/generated/error-codes)\n" +
+                "  - [ErrorCodes](/docs/ErrorCodes\n" +
                 "  - [Enums](/docs/{{version}}/generated/enums)\n" +
                 "  - [Models](/docs/{{version}}/generated/models)\n" +
                 "- ## 接口文档\n");
@@ -144,20 +144,6 @@ public class DocWriter extends BaseWriter {
 
             overview.toFile();
             index.toFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void writeErrors() {
-        try {
-            String path;
-            if (env.getProperty("generator.env", "prod").equals("dev")) {
-                path = "./stubs/error-codes-symlink.stub";
-            } else {
-                path = "./vendor/kamicloud/yet-another-generator/stubs/error-codes-symlink.stub";
-            }
-            FileCopyUtils.copy(new File(path), new File(outputDir.getAbsolutePath() + "/generated/error-codes.md"));
         } catch (IOException e) {
             e.printStackTrace();
         }
