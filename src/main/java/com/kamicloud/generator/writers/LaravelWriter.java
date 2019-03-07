@@ -341,7 +341,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             /* 如果参数有指定的映射关系，使用指定的映射 */
             if (annotationStub != null) {
                 HashMap<String, Object> field = annotationStub.getValues();
-                dbField = (String) field.get("value");
+                String fieldValue = (String) field.get("value");
+                if (!fieldValue.equals("")) {
+                    dbField = fieldValue;
+                }
             }
 
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
