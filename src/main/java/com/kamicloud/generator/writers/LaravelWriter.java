@@ -333,9 +333,20 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 ruleList.add(typeModelName);
                 typeModelName = "'" + String.join("|", ruleList) + "'";
             }
+
+            String dbField = isModel ? parameterName :  CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName); // DBField
+
+            AnnotationStub annotationStub = parameterStub.getAnnotation(DBField.name);
+
+            /* 如果参数有指定的映射关系，使用指定的映射 */
+            if (annotationStub != null) {
+                HashMap<String, Object> field = annotationStub.getValues();
+                dbField = (String) field.get("value");
+            }
+
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
                 "'" + parameterName + "'",
-                "'" + (isModel ? parameterName :  CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName)) + "'", // DBField
+                "'" + dbField + "'",
                 typeModelName,
                 types.isEmpty() ? "null" : String.join(" | ", types)
             ));

@@ -6,4 +6,6 @@ public interface AnnotationsInterface {
     void addAnnotation(AnnotationStub annotationStub);
 
     HashMap<String, AnnotationStub> getAnnotations();
+
+    AnnotationStub getAnnotation(String name);
 }

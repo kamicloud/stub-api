@@ -119,7 +119,7 @@ class TemplateV1 {
             /**
              * 一个注释
              */
-            @DBField(name = "id")
+            @DBField("id")
             @Mutable
             Integer id;
             /**
@@ -163,7 +163,7 @@ class TemplateV1 {
          * 模拟一个老师的信息
          */
         class Teacher {
-            @DBField(name = "id")
+            @DBField("id")
             int teacherId;
             String nickname;
             String pic;
@@ -232,7 +232,7 @@ class TemplateV1 {
          */
         public class User {
             @API(methods = {MethodType.POST, MethodType.DELETE})
-            @Middleware("某一个小范围的middleware")
+                // @Middleware("某一个小范围的middleware")
             class GetUsers {
                 /**
                  * 查询的ID
@@ -290,7 +290,7 @@ class TemplateV1 {
         /**
          * 老师控制器用来提供前台老师接口
          */
-        @Middleware("某一个作用范围很广的middleware")
+        // @Middleware("某一个作用范围很广的middleware")
         class Teacher {
             @API(methods = {MethodType.POST})
             class AddTeacherLeave {
@@ -313,7 +313,7 @@ class TemplateV1 {
              * 约课搜索老师
              */
             @API(methods = {MethodType.GET})
-            @Middleware("某一个小范围的middleware")
+                // @Middleware("某一个小范围的middleware")
             class List {
                 /**
                  * 教材分类

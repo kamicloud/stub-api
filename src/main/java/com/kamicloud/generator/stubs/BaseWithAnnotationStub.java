@@ -1,5 +1,7 @@
 package com.kamicloud.generator.stubs;
 
+import definitions.annotations.DBField;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -63,5 +65,9 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
 
     public Boolean hasAnnotation(String name) {
         return annotations.containsKey(name);
+    }
+
+    public AnnotationStub getAnnotation(String name) {
+        return annotations.get(name);
     }
 }
