@@ -1,5 +1,6 @@
 package com.kamicloud.generator.writers;
 
+import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import definitions.annotations.Optional;
@@ -36,7 +37,7 @@ public class DocWriter extends BaseWriter {
 
             writeIndex(templateStub);
             writeModels(templateStub);
-            writeAPIs(templateStub);
+            writeAPIs(version, templateStub);
 //            writeErrors();
             writeEnums(templateStub);
         });
@@ -69,7 +70,7 @@ public class DocWriter extends BaseWriter {
 
     }
 
-    private void writeAPIs(TemplateStub output) {
+    private void writeAPIs(String version, TemplateStub output) {
         output.getControllers().forEach(controller -> {
             try {
                 FileCombiner file = new FileCombiner();
@@ -78,7 +79,7 @@ public class DocWriter extends BaseWriter {
                 file.addLine("# " + controller.getName());
 
                 if (controller.getComment() != null) {
-                    file.addLine("\n> {warning} " + transformLfToBr(controller.getComment()) + "\n");
+                    file.addLine("\n> {info} " + transformLfToBr(controller.getComment()) + "\n");
                 }
                 file.addLine("\n---\n");
 
@@ -88,12 +89,14 @@ public class DocWriter extends BaseWriter {
 
                 file.addLine("");
                 controller.getActions().forEach((actionName, action) -> {
+                    file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName(), actionName) + "`");
+                    file.addLine("");
                     file.addBlock(new MultiLinesCombiner(
                         "<a name=\"" + action.getName() + "\"></a>",
                         "## " + action.getName()
                     ));
                     if (action.getComment() != null) {
-                        file.addLine("\n> {warning} " + transformLfToBr(action.getComment()) + "\n");
+                        file.addLine("\n> {info} " + transformLfToBr(action.getComment()) + "\n");
                     }
                     writeParameters("Requests", file, action.getRequests());
                     writeParameters("Responses", file, action.getResponses());
@@ -157,7 +160,7 @@ public class DocWriter extends BaseWriter {
                 ));
 
                 if (model.getComment() != null) {
-                    file.addBlock(new MultiLinesCombiner("\n> {warning} " + model.getComment() + "\n"));
+                    file.addBlock(new MultiLinesCombiner("\n> {info} " + model.getComment() + "\n"));
                 }
                 writeParameters("Attributes", file, model.getParameters());
             });
@@ -185,7 +188,7 @@ public class DocWriter extends BaseWriter {
                 if (enumStub.getComment() != null) {
                     file.addBlock(new MultiLinesCombiner(
                         "",
-                        "> {warning} " + enumStub.getComment(),
+                        "> {info} " + enumStub.getComment(),
                         ""
                     ));
                 }
