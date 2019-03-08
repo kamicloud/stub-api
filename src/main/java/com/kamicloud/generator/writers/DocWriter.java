@@ -89,12 +89,13 @@ public class DocWriter extends BaseWriter {
 
                 file.addLine("");
                 controller.getActions().forEach((actionName, action) -> {
-                    file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName(), actionName) + "`");
-                    file.addLine("");
                     file.addBlock(new MultiLinesCombiner(
                         "<a name=\"" + action.getName() + "\"></a>",
                         "## " + action.getName()
                     ));
+                    file.addLine("");
+                    file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName(), actionName) + "`");
+                    file.addLine("");
                     if (action.getComment() != null) {
                         file.addLine("\n> {info} " + transformLfToBr(action.getComment()) + "\n");
                     }
