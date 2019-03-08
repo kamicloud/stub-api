@@ -181,8 +181,10 @@ public class DocWriter extends BaseWriter {
                     "<a name=\"" + enumStub.getName() + "\"></a>",
                     "## " + enumStub.getName()
                 ));
+
                 if (enumStub.getComment() != null) {
                     file.addBlock(new MultiLinesCombiner(
+                        "",
                         "> {warning} " + enumStub.getComment(),
                         ""
                     ));
@@ -200,6 +202,7 @@ public class DocWriter extends BaseWriter {
                     );
                 });
             });
+            file.addLine("");
 
             file.toFile();
         } catch (IOException e) {
