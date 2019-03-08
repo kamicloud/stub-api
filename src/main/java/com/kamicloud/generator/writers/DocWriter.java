@@ -59,7 +59,7 @@ public class DocWriter extends BaseWriter {
             ));
 
             o.getControllers().forEach(controller -> {
-                index.addBlock(new MultiLinesCombiner("  - [" + controller.getName() + "](/docs/{{version}}/generated/apis/" + controller.getName() + ")"));
+                index.addLine("  - [" + controller.getName() + "](/docs/{{version}}/generated/apis/" + controller.getName() + ")");
             });
 
             index.toFile();
@@ -72,41 +72,34 @@ public class DocWriter extends BaseWriter {
     private void writeAPIs(TemplateStub output) {
         output.getControllers().forEach(controller -> {
             try {
-                FileOutputStream fileOutputStream = new FileOutputStream(outputDir.getAbsolutePath() + "/generated/apis/" + controller.getName() + ".md");
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+                FileCombiner file = new FileCombiner();
+                file.setFileName(outputDir.getAbsolutePath() + "/generated/apis/" + controller.getName() + ".md");
 
+                file.addLine("# " + controller.getName());
 
-                outputStreamWriter.write("# " + controller.getName() + "\n");
                 if (controller.getComment() != null) {
-                    outputStreamWriter.write("\n> {warning} " + transformLfToBr(controller.getComment()) + "\n\n");
+                    file.addLine("\n> {warning} " + transformLfToBr(controller.getComment()) + "\n");
                 }
-                outputStreamWriter.write("\n---\n\n");
+                file.addLine("\n---\n");
 
                 controller.getActions().forEach((actionName, action) -> {
-                    try {
-                        outputStreamWriter.write("  - [" + action.getName() + "](#" + action.getName() + ")\n");
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    file.addLine("  - [" + action.getName() + "](#" + action.getName() + ")");
                 });
-                outputStreamWriter.write("\n");
 
+                file.addLine("");
                 controller.getActions().forEach((actionName, action) -> {
-                    try {
-                        outputStreamWriter.write("<a name=\"" + action.getName() + "\"></a>\n");
-                        outputStreamWriter.write("## " + action.getName() + "\n");
-                        if (action.getComment() != null) {
-                            outputStreamWriter.write("\n> {warning} " + transformLfToBr(action.getComment()) + "\n\n");
-                        }
-                        writeParameters("Requests", outputStreamWriter, action.getRequests());
-                        writeParameters("Responses", outputStreamWriter, action.getResponses());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    file.addBlock(new MultiLinesCombiner(
+                        "<a name=\"" + action.getName() + "\"></a>",
+                        "## " + action.getName()
+                    ));
+                    if (action.getComment() != null) {
+                        file.addLine("\n> {warning} " + transformLfToBr(action.getComment()) + "\n");
                     }
+                    writeParameters("Requests", file, action.getRequests());
+                    writeParameters("Responses", file, action.getResponses());
                 });
+                file.toFile();
 
-                outputStreamWriter.close();
-                fileOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -146,34 +139,30 @@ public class DocWriter extends BaseWriter {
 
     private void writeModels(TemplateStub output) {
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(outputDir.getAbsolutePath() + "/generated/models.md");
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+            FileCombiner file = new FileCombiner();
+            file.setFileName(outputDir.getAbsolutePath() + "/generated/models.md");
 
             output.getModels().forEach((modelName, model) -> {
-                try {
-                    outputStreamWriter.write("  - [" + modelName + "](#" + modelName + ")\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                file.addBlock(new MultiLinesCombiner(
+                    "  - [" + modelName + "](#" + modelName + ")"
+                ));
             });
-            outputStreamWriter.write("\n");
+
+            file.addBlock(new MultiLinesCombiner(""));
 
             output.getModels().forEach((modelName, model) -> {
-                try {
-                    outputStreamWriter.write("<a name=\"" + model.getName() + "\"></a>\n");
-                    outputStreamWriter.write("## " + model.getName() + "\n");
-                    if (model.getComment() != null) {
-                        outputStreamWriter.write("\n> {warning} " + model.getComment() + "\n\n");
-                    }
-                    writeParameters("Attributes", outputStreamWriter, model.getParameters());
-                } catch (IOException e) {
-                    e.printStackTrace();
+                file.addBlock(new MultiLinesCombiner(
+                    "<a name=\"" + model.getName() + "\"></a>",
+                    "## " + model.getName()
+                ));
+
+                if (model.getComment() != null) {
+                    file.addBlock(new MultiLinesCombiner("\n> {warning} " + model.getComment() + "\n"));
                 }
+                writeParameters("Attributes", file, model.getParameters());
             });
 
-
-            outputStreamWriter.close();
-            fileOutputStream.close();
+            file.toFile();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -190,12 +179,12 @@ public class DocWriter extends BaseWriter {
             output.getEnums().forEach(enumStub -> {
                 file.addBlock(new MultiLinesCombiner(
                     "<a name=\"" + enumStub.getName() + "\"></a>",
-                    "## " + enumStub.getName(),
-                    ""
+                    "## " + enumStub.getName()
                 ));
                 if (enumStub.getComment() != null) {
                     file.addBlock(new MultiLinesCombiner(
-                        "> {warning} " + enumStub.getComment()
+                        "> {warning} " + enumStub.getComment(),
+                        ""
                     ));
                 }
                 file.addBlock(new MultiLinesCombiner(
@@ -206,9 +195,9 @@ public class DocWriter extends BaseWriter {
                 HashMap<String, EnumStub.EnumStubItem> enumItems = enumStub.getItems();
 
                 enumItems.forEach((key, value) -> {
-                    file.addBlock(new MultiLinesCombiner(
+                    file.addLine(
                         "|" + key + "|" + value.getName() + "|" + (value.getComment() == null ? " " : transformLfToBr(value.getComment())) + "|"
-                    ));
+                    );
                 });
             });
 
@@ -221,39 +210,24 @@ public class DocWriter extends BaseWriter {
     /**
      *
      * @param title 标题
-     * @param outputStreamWriter 输出流
+     * @param file 输出流
      * @param parameters 参数
-     * @throws IOException IO异常
      */
-    private void writeParameters(String title, OutputStreamWriter outputStreamWriter, HashMap<String, ParameterStub> parameters) throws IOException {
-        outputStreamWriter.write("### " + title + "\n");
-        writeParameters(outputStreamWriter, parameters);
-        outputStreamWriter.write("\n");
+    private void writeParameters(String title, FileCombiner file, HashMap<String, ParameterStub> parameters) {
+        file.addBlock(new MultiLinesCombiner(
+            "### " + title,
+            "|Key|Description|Type|Required|",
+            "|:-|:-|:-|:-|"
+        ));
+        parameters.forEach((parameterName, parameter) -> {
+            file.addBlock(new MultiLinesCombiner(
+                "|" + parameter.getName() + " |" +
+                    (parameter.getComment() == null ? " " : transformLfToBr(parameter.getComment())) + writeLink(parameter) +
+                    (parameter.hasAnnotation(Optional.name) ? " " : "true") + "|"
+            ));
+        });
     }
 
-    /**
-     *
-     * @param outputStreamWriter 输出流
-     * @param parameters 参数
-     * @throws IOException IO异常
-     */
-    private void writeParameters(OutputStreamWriter outputStreamWriter, HashMap<String, ParameterStub> parameters) throws IOException {
-        outputStreamWriter.write("|Key|Description|Type|Required|\n|:-|:-|:-|:-|\n");
-        // 输出模型每一个请求参数
-        parameters.forEach((parameterName, parameter) -> writeParameter(outputStreamWriter, parameter));
-    }
-
-    private void writeParameter(OutputStreamWriter outputStreamWriter, ParameterStub parameter) {
-        try {
-            outputStreamWriter.write("|" + parameter.getName() + " |");
-            outputStreamWriter.write((parameter.getComment() == null ? " " : transformLfToBr(parameter.getComment())));
-            outputStreamWriter.write(writeLink(parameter));
-            outputStreamWriter.write((parameter.hasAnnotation(Optional.name) ? " " : "true") + "|");
-            outputStreamWriter.write("\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     private String writeLink(ParameterStub parameter) {
         String type = parameter.getType();

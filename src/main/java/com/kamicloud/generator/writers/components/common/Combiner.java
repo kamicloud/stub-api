@@ -11,6 +11,10 @@ public class Combiner implements CombinerInterface {
         blocks.add(block);
     }
 
+    public void addLine(String line) {
+        blocks.add(new MultiLinesCombiner(line));
+    }
+
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
         blocks.forEach(block -> stringBuilder.append(block));
