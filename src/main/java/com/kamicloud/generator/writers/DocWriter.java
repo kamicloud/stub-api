@@ -96,7 +96,6 @@ public class DocWriter extends BaseWriter {
                         file.addLine("\n> {warning} " + transformLfToBr(action.getComment()) + "\n");
                     }
                     writeParameters("Requests", file, action.getRequests());
-                    file.addLine("");
                     writeParameters("Responses", file, action.getResponses());
                 });
                 file.toFile();
@@ -161,7 +160,6 @@ public class DocWriter extends BaseWriter {
                     file.addBlock(new MultiLinesCombiner("\n> {warning} " + model.getComment() + "\n"));
                 }
                 writeParameters("Attributes", file, model.getParameters());
-                file.addLine("");
             });
 
             file.toFile();
