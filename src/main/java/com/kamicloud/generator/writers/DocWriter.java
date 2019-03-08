@@ -229,6 +229,7 @@ public class DocWriter extends BaseWriter {
                     (parameter.hasAnnotation(Optional.name) ? " " : "true") + "|"
             ));
         });
+        file.addLine("");
     }
 
 
