@@ -32,7 +32,7 @@ public class DocWriter extends BaseWriter {
             if (outputDir.exists()) {
                 FileUtil.deleteAllFilesOfDir(outputDir);
             }
-            (new File(outputDir.getAbsolutePath() + "/generated/apis")).mkdirs();
+//            (new File(outputDir.getAbsolutePath() + "/generated/apis")).mkdirs();
 
             writeIndex(templateStub);
             writeModels(templateStub);
@@ -96,6 +96,7 @@ public class DocWriter extends BaseWriter {
                         file.addLine("\n> {warning} " + transformLfToBr(action.getComment()) + "\n");
                     }
                     writeParameters("Requests", file, action.getRequests());
+                    file.addLine("");
                     writeParameters("Responses", file, action.getResponses());
                 });
                 file.toFile();
