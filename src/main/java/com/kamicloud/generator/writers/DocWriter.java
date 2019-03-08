@@ -52,7 +52,7 @@ public class DocWriter extends BaseWriter {
                 "- ## Get Started",
                 "  - [Overview](/docs/{{version}}/overview)",
                 "- ## 数据字典",
-                "  - [ErrorCodes](/docs/ErrorCodes",
+                "  - [ErrorCodes](/docs/ErrorCodes)",
                 "  - [Enums](/docs/{{version}}/generated/enums)",
                 "  - [Models](/docs/{{version}}/generated/models)",
                 "- ## 接口文档"
@@ -195,11 +195,13 @@ public class DocWriter extends BaseWriter {
                 ));
                 if (enumStub.getComment() != null) {
                     file.addBlock(new MultiLinesCombiner(
-                        "\n> {warning} " + enumStub.getComment(),
-                        "|Key|Value|Description|",
-                        "|:-|:-|:-|"
+                        "> {warning} " + enumStub.getComment()
                     ));
                 }
+                file.addBlock(new MultiLinesCombiner(
+                    "|Key|Value|Description|",
+                    "|:-|:-|:-|"
+                ));
 
                 HashMap<String, EnumStub.EnumStubItem> enumItems = enumStub.getItems();
 
