@@ -99,6 +99,7 @@ public class DocWriter extends BaseWriter {
                     file.addLine("");
                     writeParameters("Responses", file, action.getResponses());
                 });
+                file.addLine("");
                 file.toFile();
 
             } catch (IOException e) {
@@ -161,6 +162,7 @@ public class DocWriter extends BaseWriter {
                     file.addBlock(new MultiLinesCombiner("\n> {warning} " + model.getComment() + "\n"));
                 }
                 writeParameters("Attributes", file, model.getParameters());
+                file.addLine("");
             });
 
             file.toFile();
