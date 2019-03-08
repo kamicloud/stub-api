@@ -44,30 +44,26 @@ public class DocWriter extends BaseWriter {
     }
 
     private void writeIndex(TemplateStub o) {
-
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(outputDir.getAbsolutePath() + "/index.md");
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+            FileCombiner index = new FileCombiner();
+            index.setFileName(outputDir.getAbsolutePath() + "/index.md");
 
-            outputStreamWriter.write("- ## Get Started\n" +
-                "  - [Overview](/docs/{{version}}/overview)\n" +
-//                "  - [Example](/docs/{{version}}/example)\n" +
-                "- ## 数据字典\n" +
-                "  - [ErrorCodes](/docs/ErrorCodes\n" +
-                "  - [Enums](/docs/{{version}}/generated/enums)\n" +
-                "  - [Models](/docs/{{version}}/generated/models)\n" +
-                "- ## 接口文档\n");
+            index.addBlock(new MultiLinesCombiner(
+                "- ## Get Started",
+                "  - [Overview](/docs/{{version}}/overview)",
+                "- ## 数据字典",
+                "",
+                "  - [ErrorCodes](/docs/ErrorCodes",
+                "  - [Enums](/docs/{{version}}/generated/enums)",
+                "  - [Models](/docs/{{version}}/generated/models)",
+                "- ## 接口文档"
+            ));
+
             o.getControllers().forEach(controller -> {
-                try {
-                    outputStreamWriter.write("  - [" + controller.getName() + "](/docs/{{version}}/generated/apis/" + controller.getName() + ")\n");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                index.addBlock(new MultiLinesCombiner("  - [" + controller.getName() + "](/docs/{{version}}/generated/apis/" + controller.getName() + ")"));
             });
 
-            outputStreamWriter.close();
-            fileOutputStream.close();
-
+            index.toFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -188,39 +184,33 @@ public class DocWriter extends BaseWriter {
 
     private void writeEnums(TemplateStub output) {
         try {
-            FileOutputStream fileOutputStream = new FileOutputStream(outputDir.getAbsolutePath() + "/generated/enums.md");
-            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+            FileCombiner file = new FileCombiner();
+            file.setFileName(outputDir.getAbsolutePath() + "/generated/enums.md");
+
 
             output.getEnums().forEach(enumStub -> {
-                try {
-                    outputStreamWriter.write("<a name=\"" + enumStub.getName() + "\"></a>\n");
-                    outputStreamWriter.write("## " + enumStub.getName() + "\n");
-                    if (enumStub.getComment() != null) {
-                        outputStreamWriter.write("\n> {warning} " + enumStub.getComment() + "\n\n");
-                    }
-
-                    HashMap<String, EnumStub.EnumStubItem> enumItems = enumStub.getItems();
-
-                    outputStreamWriter.write("|Key|Value|Description|\n|:-|:-|:-|\n");
-                    enumItems.forEach((key, value) -> {
-                        try {
-                            outputStreamWriter.write("|" + key + "|");
-                            outputStreamWriter.write(value.getName());
-                            outputStreamWriter.write("|");
-                            outputStreamWriter.write((value.getComment() == null ? " " : transformLfToBr(value.getComment())));
-                            outputStreamWriter.write("|\n");
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                } catch (IOException e) {
-                    e.printStackTrace();
+                file.addBlock(new MultiLinesCombiner(
+                    "<a name=\"" + enumStub.getName() + "\"></a>",
+                    "## " + enumStub.getName(),
+                    ""
+                ));
+                if (enumStub.getComment() != null) {
+                    file.addBlock(new MultiLinesCombiner(
+                        "\n> {warning} " + enumStub.getComment() + "\n\n",
+                        "|Key|Value|Description|\n|:-|:-|:-|\n"
+                    ));
                 }
-            });
-            outputStreamWriter.write("\n");
 
-            outputStreamWriter.close();
-            fileOutputStream.close();
+                HashMap<String, EnumStub.EnumStubItem> enumItems = enumStub.getItems();
+
+                enumItems.forEach((key, value) -> {
+                    file.addBlock(new MultiLinesCombiner(
+                        "|" + key + "|" + value.getName() + "|" + (value.getComment() == null ? " " : transformLfToBr(value.getComment())) + "|\n"
+                    ));
+                });
+            });
+
+            file.toFile();
         } catch (IOException e) {
             e.printStackTrace();
         }
