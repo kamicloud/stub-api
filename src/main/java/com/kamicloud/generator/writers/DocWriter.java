@@ -52,7 +52,6 @@ public class DocWriter extends BaseWriter {
                 "- ## Get Started",
                 "  - [Overview](/docs/{{version}}/overview)",
                 "- ## 数据字典",
-                "",
                 "  - [ErrorCodes](/docs/ErrorCodes",
                 "  - [Enums](/docs/{{version}}/generated/enums)",
                 "  - [Models](/docs/{{version}}/generated/models)",
@@ -196,8 +195,9 @@ public class DocWriter extends BaseWriter {
                 ));
                 if (enumStub.getComment() != null) {
                     file.addBlock(new MultiLinesCombiner(
-                        "\n> {warning} " + enumStub.getComment() + "\n\n",
-                        "|Key|Value|Description|\n|:-|:-|:-|\n"
+                        "\n> {warning} " + enumStub.getComment(),
+                        "|Key|Value|Description|",
+                        "|:-|:-|:-|"
                     ));
                 }
 
@@ -205,7 +205,7 @@ public class DocWriter extends BaseWriter {
 
                 enumItems.forEach((key, value) -> {
                     file.addBlock(new MultiLinesCombiner(
-                        "|" + key + "|" + value.getName() + "|" + (value.getComment() == null ? " " : transformLfToBr(value.getComment())) + "|\n"
+                        "|" + key + "|" + value.getName() + "|" + (value.getComment() == null ? " " : transformLfToBr(value.getComment())) + "|"
                     ));
                 });
             });
