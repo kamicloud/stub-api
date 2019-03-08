@@ -99,7 +99,6 @@ public class DocWriter extends BaseWriter {
                     file.addLine("");
                     writeParameters("Responses", file, action.getResponses());
                 });
-                file.addLine("");
                 file.toFile();
 
             } catch (IOException e) {
