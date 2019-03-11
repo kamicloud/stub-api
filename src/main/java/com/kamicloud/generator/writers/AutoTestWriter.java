@@ -94,6 +94,8 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             Response response = requestStub.getResponse();
                             ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, "testCase" + i);
                             ArrayList<String> params = new ArrayList<>();
+                            params.add("'__role' => '" + requestStub.getRole() + "',");
+                            params.add("'__user' => '" + requestStub.getUsre() + "',");
                             requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',"));
                             classMethodCombiner.setBody(params);
                             ArrayList<String> callAndAnchor = new ArrayList<>();
@@ -137,6 +139,8 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
         builder.addFormDataPart("__test_mode", "1");
         requestStub.getParameters().forEach(builder::addFormDataPart);
+        builder.addFormDataPart("__role", requestStub.getRole());
+        builder.addFormDataPart("__user", requestStub.getUsre());
         RequestBody requestBody = builder.build();
         String testHost = env.getProperty("test-host", "http://localhost");
         Request request = new Request.Builder()

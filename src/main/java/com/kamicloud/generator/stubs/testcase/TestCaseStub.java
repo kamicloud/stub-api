@@ -184,4 +184,11 @@ public class TestCaseStub {
         return anchor;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public String getUsre() {
+        return user;
+    }
 }
