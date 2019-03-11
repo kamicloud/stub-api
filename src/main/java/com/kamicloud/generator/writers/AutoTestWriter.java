@@ -96,7 +96,9 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             ArrayList<String> params = new ArrayList<>();
                             params.add("'__role' => '" + requestStub.getRole() + "',");
                             params.add("'__user' => '" + requestStub.getUsre() + "',");
-                            requestStub.getParameters().forEach((key, value) -> params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',"));
+                            requestStub.getParameters().forEach((key, value) -> {
+                                params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',");
+                            });
                             classMethodCombiner.setBody(params);
                             ArrayList<String> callAndAnchor = new ArrayList<>();
                             if (requestStub.getAnchor() != null && requestStub.getAnchor().equals("null")) {

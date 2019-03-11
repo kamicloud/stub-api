@@ -129,7 +129,11 @@ public class TestCaseStub {
         if (params instanceof LinkedHashMap) {
             LinkedHashMap<String, Object> params1 = (LinkedHashMap<String, Object>) params;
             params1.forEach((key, value) -> {
-                testCaseStub.params.put(key, gson.toJson(value));
+                if (value instanceof List || value instanceof Map) {
+                    testCaseStub.params.put(key, gson.toJson(value));
+                } else if (value != null) {
+                    testCaseStub.params.put(key, value.toString());
+                }
             });
         }
         // 有子样例且外部无参数时忽略外部样例
