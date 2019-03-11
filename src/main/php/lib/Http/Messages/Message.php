@@ -52,9 +52,9 @@ abstract class Message
         }
 
         $response = [
-            'status' => 0,
-            'message' => 'success',
-            'data' => $data,
+            config('generator.keys.status', 'status') => 0,
+            config('generator.keys.message', 'message') => 'success',
+            config('generator.keys.data', 'data') => $data,
         ];
 
         return $response;

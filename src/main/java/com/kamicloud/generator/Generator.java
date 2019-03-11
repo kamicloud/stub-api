@@ -95,6 +95,10 @@ public class Generator extends Doclet {
         });
 
         outputStub.addTemplate(templateStub);
+
+        if (template == TemplateList.currentTemplate) {
+            outputStub.setCurrentTemplate(templateStub);
+        }
     }
 
     private void parseErrors(Class<? extends Enum> errorsTemplate, OutputStub templateStub) {
@@ -151,10 +155,10 @@ public class Generator extends Doclet {
         });
     }
 
-    private void parseEnums(Class<?>[] enumsTemplate, TemplateStub output) {
+    private void parseEnums(Class<?>[] enumsTemplate, TemplateStub templateStub) {
         Arrays.asList(enumsTemplate).forEach(enumTemplate -> {
             EnumStub enumStub = new EnumStub(enumTemplate.getSimpleName());
-            output.addEnum(enumStub);
+            templateStub.addEnum(enumStub);
 
             parseComment(enumTemplate.getCanonicalName(), enumStub);
             parseAnnotations(enumTemplate.getAnnotations(), enumStub);

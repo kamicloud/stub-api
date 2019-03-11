@@ -12,10 +12,9 @@ import definitions.annotations.Optional;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransformerInterface {
-    private String version;
-
     private File outputDir;
     private File generatedDir;
     private File routePath;
@@ -34,13 +33,13 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     public void update(OutputStub output) {
         FileUtil.deleteAllFilesOfDir(generatedDir);
         output.getTemplates().forEach((version, templateStub) -> {
-            this.version = version;
-
             try {
                 ClassCombiner.setNamespacePathTransformer(this);
-                writeModels(templateStub);
-                writeHttp(templateStub);
-                writeEnums(templateStub);
+                writeHttp(version, templateStub);
+                writeModels(version, templateStub);
+                writeEnums(version, templateStub.getEnums());
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -49,13 +48,17 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         try {
             writeErrors(output);
             writeRoute(output);
+
+            writeEnums("BOs", output.getCurrentTemplate().getEnums().stream().filter(enumStub -> {
+                return enumStub.hasAnnotation(AsBO.name);
+            }).collect(Collectors.toList()));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void writeModels(TemplateStub o) {
-        o.getModels().forEach((modelName, modelStub) -> {
+    private void writeModels(String version, TemplateStub templateStub) {
+        templateStub.getModels().forEach((modelName, modelStub) -> {
             try {
                 ClassCombiner modelClassCombiner = new ClassCombiner(
                     "App\\Generated\\" + version + "\\Models\\" + modelName + "Model",
@@ -69,7 +72,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 writeParameterAttributes(parameters, modelClassCombiner);
                 writeParameterGetters(parameters, modelClassCombiner);
                 writeParameterSetters(parameters, modelClassCombiner);
-                writeGetAttributeMapMethod("getAttributeMap", parameters, modelClassCombiner);
+                writeGetAttributeMapMethod(version, "getAttributeMap", parameters, modelClassCombiner);
 
                 modelClassCombiner.toFile();
             } catch (Exception e) {
@@ -85,7 +88,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
      *
      * @param o 模板解析文件
      */
-    private void writeHttp(TemplateStub o) {
+    private void writeHttp(String version, TemplateStub o) {
         o.getControllers().forEach(controllerStub -> {
             try {
                 ClassCombiner controllerClassCombiner = new ClassCombiner(
@@ -130,8 +133,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         writeParameterGetters(action.getRequests(), messageClassCombiner);
                         writeParameterAttributes(action.getRequests(), messageClassCombiner);
                         writeParameterAttributes(action.getResponses(), messageClassCombiner);
-                        writeGetAttributeMapMethod("requestRules", action.getRequests(), messageClassCombiner);
-                        writeGetAttributeMapMethod("responseRules", action.getResponses(), messageClassCombiner);
+                        writeGetAttributeMapMethod(version, "requestRules", action.getRequests(), messageClassCombiner);
+                        writeGetAttributeMapMethod(version, "responseRules", action.getResponses(), messageClassCombiner);
                         ClassMethodCombiner setResponseMethod = new ClassMethodCombiner(messageClassCombiner, "setResponse");
                         writeMethodParameters(action.getResponses(), setResponseMethod);
 
@@ -147,8 +150,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         });
     }
 
-    private void writeEnums(TemplateStub o) {
-        o.getEnums().forEach(enumStub -> {
+    private void writeEnums(String version, List<EnumStub> enumStubs) {
+        enumStubs.forEach(enumStub -> {
             try {
                 ClassCombiner enumClassCombiner = new ClassCombiner(
                     "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName(),
@@ -291,7 +294,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
      * @param parameters    参数
      * @param classCombiner 目标类
      */
-    private void writeGetAttributeMapMethod(String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
+    private void writeGetAttributeMapMethod(String version, String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
         classCombiner.addUse("YetAnotherGenerator\\Utils\\Constants");
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, methodName);
 

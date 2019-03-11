@@ -8,6 +8,7 @@ import java.util.Observable;
 
 public class OutputStub extends Observable {
     private HashMap<String, TemplateStub> templates = new HashMap<>();
+    private TemplateStub currentTemplate;
 
     private ArrayList<ErrorStub> errors = new ArrayList<>();
 
@@ -45,5 +46,13 @@ public class OutputStub extends Observable {
 
     public ArrayList<ErrorStub> getErrors() {
         return errors;
+    }
+
+    public TemplateStub getCurrentTemplate() {
+        return currentTemplate;
+    }
+
+    public void setCurrentTemplate(TemplateStub currentTemplate) {
+        this.currentTemplate = currentTemplate;
     }
 }

@@ -25,8 +25,8 @@ class BaseException extends Exception implements Responsable
     public function toResponse($request)
     {
         return [
-            'status' => $this->getStatus(),
-            'message' => $this->getMessage(),
+            config('generator.keys.status', 'status') => $this->getStatus(),
+            config('generator.keys.message', 'message') => $this->getMessage(),
         ];
     }
 }
