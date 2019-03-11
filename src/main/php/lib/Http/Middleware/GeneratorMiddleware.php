@@ -34,7 +34,7 @@ class GeneratorMiddleware
 
                 $content = str_replace('\\n', '\\\\n', $content);
 
-                $content = json_encode(json_decode($content), JSON_PRETTY_PRINT);
+                $content = json_encode(json_decode($content), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
                 $response->setContent($content);
 

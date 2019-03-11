@@ -139,8 +139,12 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
         builder.addFormDataPart("__test_mode", "1");
         requestStub.getParameters().forEach(builder::addFormDataPart);
-        builder.addFormDataPart("__role", requestStub.getRole());
-        builder.addFormDataPart("__user", requestStub.getUsre());
+        if (requestStub.getRole() != null) {
+            builder.addFormDataPart("__role", requestStub.getRole());
+        }
+        if (requestStub.getUsre() != null) {
+            builder.addFormDataPart("__user", requestStub.getUsre());
+        }
         RequestBody requestBody = builder.build();
         String testHost = env.getProperty("test-host", "http://localhost");
         Request request = new Request.Builder()
