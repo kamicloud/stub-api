@@ -7,6 +7,7 @@ import com.kamicloud.generator.config.DefaultProfileUtil;
 import definitions.annotations.FixedEnumValueInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
+import definitions.types.CustomizeInterface;
 import templates.TemplateList;
 import com.sun.javadoc.*;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -18,6 +19,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -250,20 +252,34 @@ public class Generator extends Doclet {
         if (parameter.getName().startsWith("this")) {
             return null;
         }
+        boolean isArray = false;
         // 类型+变量
         Class<?> parameterType = parameter.getType();
         String typeName = parameterType.getName();
         String typeSimpleName = parameterType.getSimpleName();
+
+        // int[] 在typeName里是I[
+        if (typeSimpleName.endsWith("[]")) {
+            isArray = true;
+        }
+
+        if (Arrays.asList(parameterType.getInterfaces()).contains(CustomizeInterface.class)) {
+            try {
+                CustomizeInterface x = (CustomizeInterface) parameterType.newInstance();
+                typeSimpleName = x.getType();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            }
+        }
         ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);
         if (typeName.contains("$Models$")) {
             parameterStub.setModel(true);
         } else if (typeName.contains("$Enums$")) {
             parameterStub.setEnum(true);
         }
-        // int[] 在typeName里是I[
-        if (typeSimpleName.endsWith("[]")) {
-            parameterStub.setArray(true);
-        }
+        parameterStub.setArray(isArray);
 
         // 注解
         parseAnnotations(parameter.getAnnotations(), parameterStub);
