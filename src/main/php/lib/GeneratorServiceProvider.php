@@ -41,6 +41,10 @@ class GeneratorServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../config/generator.php' => config_path('generator.php'),
             ], 'generator-config');
+
+            $this->publishes([
+                __DIR__ . '/../bin' => app_path('bin'),
+            ], 'generator-bin');
         }
     }
 

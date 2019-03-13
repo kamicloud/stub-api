@@ -40,6 +40,9 @@ class InstallCommand extends Command
         $this->comment('Publishing Generator Configuration...');
         $this->callSilent('vendor:publish', ['--tag' => 'generator-config']);
 
+        $this->comment('Publishing Generator Runnable Files...');
+        $this->callSilent('vendor:publish', ['--tag' => 'generator-bin']);
+
 //        $this->registerGeneratorServiceProvider();
 
         $this->info('Generator scaffolding installed successfully.');
