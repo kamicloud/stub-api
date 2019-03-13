@@ -43,7 +43,7 @@ class GeneratorServiceProvider extends ServiceProvider
             ], 'generator-config');
 
             $this->publishes([
-                __DIR__ . '/../bin' => app_path('bin'),
+                __DIR__ . '/../bin' => base_path('bin'),
             ], 'generator-bin');
         }
     }
