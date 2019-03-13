@@ -45,6 +45,12 @@ class GeneratorServiceProvider extends ServiceProvider
             $this->publishes([
                 __DIR__ . '/../bin' => base_path('bin'),
             ], 'generator-bin');
+
+
+            if (!file_exists(storage_path('generator'))) {
+                mkdir(storage_path('generator'));
+            }
+            file_put_contents(storage_path('generator/.gitignore'), "*\n!.gitignore\n");
         }
     }
 

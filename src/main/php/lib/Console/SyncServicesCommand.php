@@ -21,6 +21,10 @@ class SyncServicesCommand extends Command
     {
         $controllersPath = app_path('Generated/Controllers');
 
+        if (!file_exists(app_path('Http/Services'))) {
+            mkdir(app_path('Http/Services'));
+        }
+
         foreach (scandir($controllersPath) as $version) {
             if (in_array($version, ['.', '..'])) {
                 continue;
@@ -28,6 +32,9 @@ class SyncServicesCommand extends Command
             foreach (scandir("$controllersPath/$version") as $controllerName) {
                 if (in_array($controllerName, ['.', '..'])) {
                     continue;
+                }
+                if (!file_exists(app_path("Http/Services/$version"))) {
+                    mkdir(app_path("Http/Services/$version"));
                 }
                 $controllerPath = "$controllersPath/$version/$controllerName";
                 $serviceName = str_replace('Controller', 'Service', $controllerName);
