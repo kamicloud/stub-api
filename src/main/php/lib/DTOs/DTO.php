@@ -44,7 +44,11 @@ abstract class DTO implements JsonSerializable
         }, $values);
     }
 
-    public static function initFromEloquent(?Model $orm)
+    /**
+     * @param Model|array|null $orm
+     * @return DTO|null
+     */
+    public static function initFromEloquent($orm)
     {
         if ($orm === null) {
             return null;
@@ -52,7 +56,12 @@ abstract class DTO implements JsonSerializable
 
         $model = new static();
 
-        $values = $orm->attributesToArray() + $orm->getRelations();
+        if ($orm instanceof Model) {
+            $values = $orm->attributesToArray() + $orm->getRelations();
+        } else {
+            // array
+            $values = $orm;
+        }
 
         $attributeMap = $model->getAttributeMap();
 
@@ -79,15 +88,22 @@ abstract class DTO implements JsonSerializable
         return $model;
     }
 
-    public static function initFromEloquents(?Collection $orms)
+    /**
+     * @param Collection|array|null $orms
+     * @return array
+     */
+    public static function initFromEloquents($orms)
     {
         if ($orms === null) {
             return [];
+        } elseif ($orms instanceof Collection) {
+            $orms = $orms->all();
         }
 
-        return $orms->map(function ($orm) {
+
+        return array_map(function ($orm) {
             return static::initFromEloquent($orm);
-        })->all();
+        }, $orms);
     }
 
     abstract public function getAttributeMap();
