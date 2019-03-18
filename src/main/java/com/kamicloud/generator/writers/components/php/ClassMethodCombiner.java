@@ -133,6 +133,8 @@ public class ClassMethodCombiner implements CombinerInterface, AddUseInterface {
     }
 
     public void addComment(String comment) {
-        this.comments.add(comment);
+        if (comment != null) {
+            this.comments.addAll(Arrays.asList(comment.split("\n")));
+        }
     }
 }

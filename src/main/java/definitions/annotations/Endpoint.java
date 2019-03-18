@@ -1,7 +1,7 @@
 package definitions.annotations;
 
 @SuppressWarnings("unused")
-public enum  Endpoint {
+public enum Endpoint {
     NONE,
     LARAVEL,
     DOCS,

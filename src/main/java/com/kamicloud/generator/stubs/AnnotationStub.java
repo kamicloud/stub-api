@@ -1,5 +1,9 @@
 package com.kamicloud.generator.stubs;
 
+import definitions.annotations.MethodType;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class AnnotationStub {
@@ -28,5 +32,16 @@ public class AnnotationStub {
             return false;
         }
         return ((AnnotationStub) obj).getName().equals(this.name);
+    }
+
+    public ArrayList<String> getAPIMethods() {
+        ArrayList<String> methodResults = new ArrayList<>();
+        MethodType[] methodTypes = (MethodType[]) values.get("methods");
+        Arrays.asList(methodTypes).forEach(method -> {
+            String methodName = method.toString();
+            methodResults.add(methodName);
+        });
+
+        return methodResults;
     }
 }

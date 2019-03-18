@@ -8,7 +8,7 @@ public @interface API {
     String name = "API";
     String methods = "methods";
 
-    MethodType[] methods() default { MethodType.GET };
+    MethodType[] methods() default { MethodType.POST };
     String path() default "";
     boolean transactional() default false;
 //    Middleware[] middlewares() default {};

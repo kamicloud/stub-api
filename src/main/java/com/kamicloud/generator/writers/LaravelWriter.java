@@ -221,15 +221,23 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
         o.getTemplates().forEach((version, templateStub) -> {
             templateStub.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
-                String method = "post";
+                AnnotationStub apiAnnotation = action.getAnnotation(API.name);
+                ArrayList<String> allowMethods;
+                String method;
+                if (apiAnnotation != null) {
+                    allowMethods = apiAnnotation.getAPIMethods();
+                    method = "['" + String.join("', '", allowMethods) + "']";
+                } else {
+                    method = "['POST']";
+                }
                 String middlewarePart = "";
                 if (action.hasAnnotation(Middleware.name)) {
                     AnnotationStub x = action.getAnnotations().get(Middleware.name);
                     middlewarePart = "->middleware(['" + String.join("', '", (String[]) x.getValues().get("value")) + "'])";
                 }
-                fileCombiner.addBlock(new MultiLinesCombiner(
-                    "Route::" + method + "('" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "')" + middlewarePart + ";"
-                ));
+                fileCombiner.addLine(
+                    "Route::match(" + method + ", '" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "')" + middlewarePart + ";"
+                );
             }));
         });
 
@@ -264,9 +272,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, parameterName);
         classMethodCombiner.setBody("return $this->" + parameterStub.getName() + ";");
         String comment = parameterStub.getComment();
-        if (comment != null) {
-            classMethodCombiner.addComment(parameterStub.getComment());
-        }
+        classMethodCombiner.addComment(parameterStub.getComment());
     }
 
     private void writeParameterSetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
