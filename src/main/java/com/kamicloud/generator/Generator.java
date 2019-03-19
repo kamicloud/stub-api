@@ -1,10 +1,8 @@
 package com.kamicloud.generator;
 
-import definitions.annotations.ErrorInterface;
-import definitions.annotations.Request;
+import definitions.annotations.*;
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
-import definitions.annotations.FixedEnumValueInterface;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
 import definitions.types.CustomizeInterface;
@@ -252,16 +250,13 @@ public class Generator extends Doclet {
         if (parameter.getName().startsWith("this")) {
             return null;
         }
-        boolean isArray = false;
+
         // 类型+变量
         Class<?> parameterType = parameter.getType();
         String typeName = parameterType.getName();
         String typeSimpleName = parameterType.getSimpleName();
 
-        // int[] 在typeName里是I[
-        if (typeSimpleName.endsWith("[]")) {
-            isArray = true;
-        }
+        boolean isArray = parameterType.isArray();
 
         if (Arrays.asList(parameterType.getInterfaces()).contains(CustomizeInterface.class)) {
             try {
