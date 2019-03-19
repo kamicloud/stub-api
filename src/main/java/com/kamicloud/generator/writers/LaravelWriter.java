@@ -115,12 +115,17 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         ClassMethodCombiner actionClassMethodCombiner = new ClassMethodCombiner(controllerClassCombiner, lowerCamelActionName);
                         new ClassMethodParameterCombiner(actionClassMethodCombiner, "request", requestClassName);
 
+                        String getResponseMethod = "getResponse";
+                        if (action.hasAnnotation(FileResponse.name)) {
+                            getResponseMethod = "getFileResponse";
+                        }
+
                         actionClassMethodCombiner.setBody(
                             "$message = new " + actionClassMethodCombiner.addUse(messageClassName) + "($request);",
                             "$message->validateInput();",
                             controllerStub.getName() + "Service::" + lowerCamelActionName + "($message);",
                             "$message->validateOutput();",
-                            "return $message->getResponse();"
+                            "return $message->" + getResponseMethod + "();"
                         );
                         if (action.getAnnotations().containsKey(Transactional.name)) {
                             actionClassMethodCombiner.wrapBody(
@@ -136,8 +141,14 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         writeParameterAttributes(action.getResponses(), messageClassCombiner);
                         writeGetAttributeMapMethod(version, "requestRules", action.getRequests(), messageClassCombiner);
                         writeGetAttributeMapMethod(version, "responseRules", action.getResponses(), messageClassCombiner);
-                        ClassMethodCombiner setResponseMethod = new ClassMethodCombiner(messageClassCombiner, "setResponse");
-                        writeMethodParameters(action.getResponses(), setResponseMethod);
+                        if (action.hasAnnotation(FileResponse.name)) {
+                            ClassMethodCombiner setResponseMethod = new ClassMethodCombiner(messageClassCombiner, "setFileResponse");
+                            new ClassMethodParameterCombiner(setResponseMethod, "fileResponse");
+                            setResponseMethod.addBody("$this->fileResponse = $fileResponse;");
+                        } else {
+                            ClassMethodCombiner setResponseMethod = new ClassMethodCombiner(messageClassCombiner, "setResponse");
+                            writeMethodParameters(action.getResponses(), setResponseMethod);
+                        }
 
                         messageClassCombiner.toFile();
                     } catch (Exception e) {

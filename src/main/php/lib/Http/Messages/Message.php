@@ -13,6 +13,7 @@ abstract class Message
      * @var Request
      */
     protected $request;
+    protected $fileResponse;
 
     public function __construct(Request $request)
     {
@@ -38,6 +39,16 @@ abstract class Message
     public function validateOutput()
     {
         $this->validateAttributes($this->responseRules());
+    }
+
+    public function setFileResponse($fileResponse)
+    {
+        $this->fileResponse = $fileResponse;
+    }
+
+    public function getFileResponse()
+    {
+        return response()->download($this->fileResponse);
     }
 
     public function getResponse()
