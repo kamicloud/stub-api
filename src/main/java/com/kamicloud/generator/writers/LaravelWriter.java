@@ -3,6 +3,7 @@ package com.kamicloud.generator.writers;
 import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.*;
+import com.kamicloud.generator.stubs.annotations.APIAnnotationStub;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import com.kamicloud.generator.writers.components.php.*;
@@ -221,11 +222,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
         o.getTemplates().forEach((version, templateStub) -> {
             templateStub.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
-                AnnotationStub apiAnnotation = action.getAnnotation(API.name);
+                AnnotationStub methodsAnnotation = action.getAnnotation(Methods.name);
                 ArrayList<String> allowMethods;
                 String method;
-                if (apiAnnotation != null) {
-                    allowMethods = apiAnnotation.getAPIMethods();
+                if (methodsAnnotation != null) {
+                    allowMethods = methodsAnnotation.getValues();
                     method = "['" + String.join("', '", allowMethods) + "']";
                 } else {
                     method = "['POST']";
@@ -233,7 +234,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 String middlewarePart = "";
                 if (action.hasAnnotation(Middleware.name)) {
                     AnnotationStub x = action.getAnnotations().get(Middleware.name);
-                    middlewarePart = "->middleware(['" + String.join("', '", (String[]) x.getValues().get("value")) + "'])";
+                    middlewarePart = "->middleware(['" + String.join("', '", x.getValues()) + "'])";
                 }
                 fileCombiner.addLine(
                     "Route::match(" + method + ", '" + action.getUri() + "', '" + version + "\\" + controller.getName() + "Controller@" + actionName + "')" + middlewarePart + ";"
@@ -349,8 +350,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
             /* 如果参数有指定的映射关系，使用指定的映射 */
             if (annotationStub != null) {
-                HashMap<String, Object> field = annotationStub.getValues();
-                String fieldValue = (String) field.get("value");
+                String fieldValue = annotationStub.getValue();
                 if (!fieldValue.equals("")) {
                     dbField = fieldValue;
                 }

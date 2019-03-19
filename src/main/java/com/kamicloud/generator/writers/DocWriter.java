@@ -38,7 +38,6 @@ public class DocWriter extends BaseWriter {
             writeIndex(templateStub);
             writeModels(templateStub);
             writeAPIs(version, templateStub);
-//            writeErrors();
             writeEnums(templateStub);
         });
         writeErrors(output);

@@ -75,6 +75,7 @@ public class PostmanWriter extends BaseWriter {
 
 
                 postmanItemRequestBodyStub.addParameter(new PostmanParameterStub("__access_token", "{{access_token}}"));
+                postmanItemRequestBodyStub.addParameter(new PostmanParameterStub("__test_mode", "1"));
 
                 action.getRequests().forEach((parameterName, parameter) -> {
                     if (parameter.getAnnotations().containsKey(Request.name)) {

@@ -1,14 +1,11 @@
 package com.kamicloud.generator.stubs;
 
-import definitions.annotations.MethodType;
-
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
 public class AnnotationStub {
     private String name;
-    private HashMap<String, Object> values = new HashMap<>();
+    private String value = "";
+    private ArrayList<String> values = new ArrayList<>();
 
     public AnnotationStub(String name) {
         this.name = name;
@@ -18,30 +15,19 @@ public class AnnotationStub {
         return name;
     }
 
-    public void addValue(String key, Object value) {
-        values.put(key, value);
+    public void setValue(String value) {
+        this.value = value;
     }
 
-    public HashMap<String, Object> getValues() {
+    public void addValue(String value) {
+        this.values.add(value);
+    }
+
+    public ArrayList<String> getValues() {
         return values;
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof AnnotationStub)) {
-            return false;
-        }
-        return ((AnnotationStub) obj).getName().equals(this.name);
-    }
-
-    public ArrayList<String> getAPIMethods() {
-        ArrayList<String> methodResults = new ArrayList<>();
-        MethodType[] methodTypes = (MethodType[]) values.get("methods");
-        Arrays.asList(methodTypes).forEach(method -> {
-            String methodName = method.toString();
-            methodResults.add(methodName);
-        });
-
-        return methodResults;
+    public String getValue() {
+        return value;
     }
 }

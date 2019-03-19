@@ -199,27 +199,29 @@ public class Generator extends Doclet {
             AnnotationStub annotationStub = new AnnotationStub(annotationName);
 
             baseStub.addAnnotation(annotationStub);
-//            HashMap<MethodType, MethodType> methodTypes = new HashMap<>();
-//            if (annotationClass.equals(API.class)) {
-//                API api = (API) annotation;
-//                Arrays.asList(api.methods()).forEach(methodType -> {
-//                    methodTypes.put(methodType, methodType);
-//                });
-//            }
-//            Method[] methods = annotationClass.getDeclaredMethods();
 
             List<Method> annotationMethods = Arrays.asList(annotationClass.getDeclaredMethods());
 
-            if (!annotationMethods.isEmpty()) {
-                annotationMethods.forEach(method -> {
-                    try {
-                        Object value = method.invoke(annotation);
-                        annotationStub.addValue(method.getName(), value);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+            annotationMethods.forEach(method -> {
+                try {
+                    Object value = method.invoke(annotation);
+                    Object[] values;
+                    Class<?> valueClass = value.getClass();
+
+                    if (valueClass.isArray()) {
+                        values = (Object[]) value;
+                        Arrays.asList(values).forEach(subValue -> {
+                            annotationStub.addValue(subValue.toString());
+                        });
+                    } else {
+                        annotationStub.setValue(value.toString());
                     }
-                });
-            }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
         });
     }
 
@@ -256,8 +258,6 @@ public class Generator extends Doclet {
         String typeName = parameterType.getName();
         String typeSimpleName = parameterType.getSimpleName();
 
-        boolean isArray = parameterType.isArray();
-
         if (Arrays.asList(parameterType.getInterfaces()).contains(CustomizeInterface.class)) {
             try {
                 CustomizeInterface x = (CustomizeInterface) parameterType.newInstance();
@@ -274,7 +274,7 @@ public class Generator extends Doclet {
         } else if (typeName.contains("$Enums$")) {
             parameterStub.setEnum(true);
         }
-        parameterStub.setArray(isArray);
+        parameterStub.setArray(parameterType.isArray());
 
         // 注解
         parseAnnotations(parameter.getAnnotations(), parameterStub);
