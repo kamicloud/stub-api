@@ -29,14 +29,16 @@ class GeneratorMiddleware
 
                 $response = $next($request);
 
-                /** @var JsonResponse $response */
-                $content = $response->getContent();
+                if ($response instanceof JsonResponse) {
+                    /** @var JsonResponse $response */
+                    $content = $response->getContent();
 
-                $content = str_replace('\\n', '\\\\n', $content);
+                    $content = str_replace('\\n', '\\\\n', $content);
 
-                $content = json_encode(json_decode($content), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
+                    $content = json_encode(json_decode($content), JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE);
 
-                $response->setContent($content);
+                    $response->setContent($content);
+                }
 
                 DB::rollBack();
 

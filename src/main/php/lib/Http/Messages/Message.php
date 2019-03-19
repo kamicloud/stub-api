@@ -48,7 +48,7 @@ abstract class Message
 
     public function getFileResponse()
     {
-        return response()->download($this->fileResponse);
+        return $this->fileResponse;
     }
 
     public function getResponse()
