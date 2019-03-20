@@ -128,8 +128,8 @@ trait ValueHelper
                 throw new $exception("{$location} should be array");
             }
 
-            foreach ($value as $index => $item) {
-                $this->validateValue($item, $field, $rule, $isModel | $isOptional | $isEnum, "$location(array) > $index");
+            foreach ($value as $index => &$item) {
+                $item = $this->validateValue($item, $field, $rule, $isModel | $isOptional | $isEnum, "$location(array) > $index");
             }
             return $value;
         }
@@ -148,6 +148,8 @@ trait ValueHelper
                     throw new $exception("{$location} should match enum");
                 }
                 $value = $rule::format($value);
+            } elseif ($type !== 'Date') {
+                $value = $this->parseScalar($value, $rule);
             }
 
         }
