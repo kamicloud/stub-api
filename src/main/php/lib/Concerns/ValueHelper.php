@@ -173,9 +173,11 @@ trait ValueHelper
             return (int) $value;
         } elseif (stripos($rule, 'bool')) {
             return (bool) $value;
-        } else {
+        } elseif (stripos($rule, 'string')) {
             return (string) $value;
         }
+
+        return $value;
     }
 
     public static function convertDate($value, $format = 'Y-m-d H:i:s')
