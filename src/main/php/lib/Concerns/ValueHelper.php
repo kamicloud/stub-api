@@ -171,6 +171,8 @@ trait ValueHelper
         }
         if (stripos($rule, 'int') !== false) {
             return (int) $value;
+        } elseif (stripos($rule, 'bool')) {
+            return (bool) $value;
         } else {
             return (string) $value;
         }
