@@ -103,7 +103,7 @@ public class DocWriter extends BaseWriter {
                     file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName(), actionName) + "`");
                     file.addLine("");
                     if (action.getComment() != null) {
-                        file.addLine("\n> {info} " + transformLfToBr(action.getComment()) + "\n");
+                        file.addLine("\n> {warning} " + transformLfToBr(action.getComment()) + "\n");
                     }
                     writeParameters("Requests", file, action.getRequests());
                     writeParameters("Responses", file, action.getResponses());
