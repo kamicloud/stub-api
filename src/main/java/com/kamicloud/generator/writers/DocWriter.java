@@ -3,6 +3,7 @@ package com.kamicloud.generator.writers;
 import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
+import definitions.annotations.Methods;
 import definitions.annotations.Optional;
 import com.kamicloud.generator.stubs.EnumStub;
 import com.kamicloud.generator.stubs.OutputStub;
@@ -92,6 +93,12 @@ public class DocWriter extends BaseWriter {
                         "<a name=\"" + action.getName() + "\"></a>",
                         "## " + action.getName()
                     ));
+                    file.addLine("");
+                    if (action.hasAnnotation(Methods.name)) {
+                        file.addLine("`" + String.join("` `", action.getAnnotation(Methods.name).getValues()) + "`");
+                    } else {
+                        file.addLine("`POST`");
+                    }
                     file.addLine("");
                     file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName(), actionName) + "`");
                     file.addLine("");

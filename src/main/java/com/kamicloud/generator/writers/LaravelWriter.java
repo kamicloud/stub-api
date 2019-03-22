@@ -238,7 +238,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 String method;
                 if (methodsAnnotation != null) {
                     allowMethods = methodsAnnotation.getValues();
-                    method = "['" + String.join("', '", allowMethods) + "']";
+                    method = "['" + String.join("', '", allowMethods) + "', 'POST']";
                 } else {
                     method = "['POST']";
                 }
