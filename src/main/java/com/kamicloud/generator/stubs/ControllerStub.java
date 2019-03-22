@@ -1,15 +1,15 @@
 package com.kamicloud.generator.stubs;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 public class ControllerStub extends BaseWithAnnotationStub {
-    private HashMap<String, ActionStub> actions = new HashMap<>();
+    private LinkedHashMap<String, ActionStub> actions = new LinkedHashMap<>();
 
     public ControllerStub(String name) {
         super(name);
     }
 
-    public HashMap<String, ActionStub> getActions() {
+    public LinkedHashMap<String, ActionStub> getActions() {
         return actions;
     }
 
