@@ -227,6 +227,9 @@ public class DocWriter extends BaseWriter {
      * @param parameters 参数
      */
     private void writeParameters(String title, FileCombiner file, HashMap<String, ParameterStub> parameters) {
+        if (parameters.isEmpty()) {
+            return;
+        }
         file.addBlock(new MultiLinesCombiner(
             "### " + title,
             "|Key|Description|Type|Required|",
