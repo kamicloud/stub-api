@@ -31,7 +31,7 @@ public class TemplateStub extends BaseWithAnnotationStub {
     }
 
     public void addController(ControllerStub controllerStub) {
-        controllerStub.setParent(this);
+        controllerStub.setParentNode(this);
         controllers.add(controllerStub);
     }
 

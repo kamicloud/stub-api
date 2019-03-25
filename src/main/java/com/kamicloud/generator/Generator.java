@@ -17,7 +17,6 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
@@ -29,7 +28,8 @@ public class Generator extends Doclet {
     private final Environment env;
 
     private static HashMap<String, ProgramElementDoc> classDocHashMap = new HashMap<>();
-    private static ArrayList<CommentInterface> classHashMap = new ArrayList<>();
+    private static HashMap<String, ModelStub> modelHashMap = new HashMap<>();
+    private static ArrayList<BaseWithAnnotationStub> classHashMap = new ArrayList<>();
 
     public Generator(Environment env) {
         this.env = env;
@@ -42,6 +42,7 @@ public class Generator extends Doclet {
         OutputStub output = this.parse();
         getComments();
         syncComments();
+        syncModels();
 
         String process = env.getProperty("process", "code");
 
@@ -238,8 +239,10 @@ public class Generator extends Doclet {
 //            }
 
             templateStub.addModel(modelStub);
+            modelHashMap.put(model.getCanonicalName(), modelStub);
 
             parseComment(model.getCanonicalName(), modelStub);
+            modelStub.setParentKey(model.getSuperclass().getCanonicalName());
             // 遍历每一个参数，注解+类型+变量
             Arrays.asList(model.getDeclaredFields()).forEach(parameter -> {
                 ParameterStub parameterStub = parseParameter(parameter);
@@ -319,7 +322,13 @@ public class Generator extends Doclet {
         });
     }
 
-    private void parseComment(String name, CommentInterface commentStub) {
+    private static void syncModels() {
+        modelHashMap.forEach((s, modelStub) -> {
+            modelStub.setParent(modelHashMap.get(modelStub.getParentKey()));
+        });
+    }
+
+    private void parseComment(String name, BaseWithAnnotationStub commentStub) {
         commentStub.setClasspath(name);
         classHashMap.add(commentStub);
     }

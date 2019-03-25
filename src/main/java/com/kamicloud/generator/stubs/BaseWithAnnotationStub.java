@@ -1,6 +1,5 @@
 package com.kamicloud.generator.stubs;
 
-import definitions.annotations.DBField;
 import definitions.annotations.Extendable;
 
 import java.lang.annotation.Annotation;
@@ -10,7 +9,7 @@ import java.util.HashMap;
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
     private String classpath;
     private String name;
-    private BaseWithAnnotationStub parent;
+    private BaseWithAnnotationStub parentNode;
     private HashMap<String, AnnotationStub> annotations = new HashMap<>();
     private ArrayList<String> comments = new ArrayList<>();
     private String comment;
@@ -62,26 +61,26 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
         return extendsFrom;
     }
 
-    public void setParent(BaseWithAnnotationStub parent) {
-        this.parent = parent;
+    public void setParentNode(BaseWithAnnotationStub parentNode) {
+        this.parentNode = parentNode;
     }
 
-    public BaseWithAnnotationStub getParent() {
-        return parent;
+    public BaseWithAnnotationStub getParentNode() {
+        return parentNode;
     }
 
     public Boolean hasAnnotation(Class<?> type) {
         boolean hasAnnotation = annotations.containsKey(type.getCanonicalName());
         if (type.getAnnotation(Extendable.class) != null) {
-            hasAnnotation = hasAnnotation || (parent != null && parent.hasAnnotation(type));
+            hasAnnotation = hasAnnotation || (parentNode != null && parentNode.hasAnnotation(type));
         }
         return hasAnnotation;
     }
 
     public AnnotationStub getAnnotation(Class<?> type) {
         AnnotationStub annotationStub = annotations.get(type.getCanonicalName());
-        if (type.getAnnotation(Extendable.class) != null && annotationStub == null && parent != null) {
-            annotationStub = parent.getAnnotation(type);
+        if (type.getAnnotation(Extendable.class) != null && annotationStub == null && parentNode != null) {
+            annotationStub = parentNode.getAnnotation(type);
         }
         return annotationStub;
     }
