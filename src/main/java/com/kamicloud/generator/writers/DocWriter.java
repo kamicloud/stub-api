@@ -37,6 +37,7 @@ public class DocWriter extends BaseWriter {
 //            (new File(outputDir.getAbsolutePath() + "/generated/apis")).mkdirs();
 
             writeIndex(templateStub);
+            writeOverview(version, templateStub);
             writeModels(templateStub);
             writeAPIs(version, templateStub);
             writeEnums(templateStub);
@@ -68,6 +69,21 @@ public class DocWriter extends BaseWriter {
             e.printStackTrace();
         }
 
+    }
+
+    private void writeOverview(String version, TemplateStub templateStub) {
+        try {
+            FileCombiner file = new FileCombiner();
+            file.setFileName(outputDir.getAbsolutePath() + "/generated/overview.md");
+
+            if (templateStub.getComment() != null) {
+                file.addLine(templateStub.getComment());
+            }
+
+            file.toFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void writeAPIs(String version, TemplateStub output) {

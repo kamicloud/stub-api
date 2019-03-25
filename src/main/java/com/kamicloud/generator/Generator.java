@@ -94,6 +94,8 @@ public class Generator extends Doclet {
             }
         });
 
+        parseComment(template.getCanonicalName(), templateStub);
+
         outputStub.addTemplate(templateStub);
 
         if (template == TemplateList.currentTemplate) {

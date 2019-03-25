@@ -8,6 +8,7 @@ import java.util.HashMap;
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
     private String classpath;
     private String name;
+    private BaseWithAnnotationStub parent;
     private HashMap<String, AnnotationStub> annotations = new HashMap<>();
     private ArrayList<String> comments = new ArrayList<>();
     private String comment;
@@ -61,6 +62,14 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
 
     public String getExtendsFrom() {
         return extendsFrom;
+    }
+
+    public void setParent(BaseWithAnnotationStub parent) {
+        this.parent = parent;
+    }
+
+    public BaseWithAnnotationStub getParent() {
+        return parent;
     }
 
     public Boolean hasAnnotation(String name) {
