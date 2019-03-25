@@ -4,6 +4,7 @@ import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import definitions.annotations.Methods;
+import definitions.annotations.Named;
 import definitions.annotations.Optional;
 import com.kamicloud.generator.stubs.EnumStub;
 import com.kamicloud.generator.stubs.OutputStub;
@@ -95,12 +96,20 @@ public class DocWriter extends BaseWriter {
                 file.addLine("# " + controller.getName());
 
                 if (controller.getComment() != null) {
-                    file.addLine("\n> {info} " + transformLfToBr(controller.getComment()) + "\n");
+                    file.addLine();
+                    file.addLine("> {info} " + transformLfToBr(controller.getComment()));
+                    file.addLine();
                 }
-                file.addLine("\n---\n");
+                file.addLine("");
+                file.addLine("---");
+                file.addLine("");
 
+                // 菜单列表
                 controller.getActions().forEach((actionName, action) -> {
-                    file.addLine("  - [" + action.getName() + "](#" + action.getName() + ")");
+                    if (action.hasAnnotation(Named.name)) {
+                        actionName = action.getAnnotation(Named.name).getValue() + "@" + actionName;
+                    }
+                    file.addLine("  - [" + actionName + "](#" + action.getName() + ")");
                 });
 
                 file.addLine("");

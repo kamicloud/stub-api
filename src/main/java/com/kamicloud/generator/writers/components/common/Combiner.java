@@ -12,7 +12,14 @@ public class Combiner implements CombinerInterface {
     }
 
     public void addLine(String line) {
+        if (line == null) {
+            line = "";
+        }
         blocks.add(new MultiLinesCombiner(line));
+    }
+
+    public void addLine() {
+        addLine("");
     }
 
     public String toString() {
