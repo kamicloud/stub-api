@@ -73,10 +73,14 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
     }
 
     public Boolean hasAnnotation(String name) {
-        return annotations.containsKey(name);
+        return annotations.containsKey(name) || (parent != null && parent.hasAnnotation(name));
     }
 
     public AnnotationStub getAnnotation(String name) {
-        return annotations.get(name);
+        AnnotationStub annotationStub = annotations.get(name);
+        if (annotationStub == null && parent != null) {
+            annotationStub = parent.getAnnotation(name);
+        }
+        return annotationStub;
     }
 }

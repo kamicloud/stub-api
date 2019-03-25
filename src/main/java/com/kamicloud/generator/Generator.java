@@ -132,6 +132,7 @@ public class Generator extends Doclet {
             ControllerStub controllerStub = new ControllerStub(controller.getSimpleName());
             templateStub.addController(controllerStub);
 
+            parseAnnotations(controller.getAnnotations(), controllerStub);
             parseComment(controller.getCanonicalName(), controllerStub);
 
             Arrays.asList(controller.getDeclaredClasses()).forEach(action -> {

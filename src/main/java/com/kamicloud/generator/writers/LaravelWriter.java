@@ -244,7 +244,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 }
                 String middlewarePart = "";
                 if (action.hasAnnotation(Middleware.name)) {
-                    AnnotationStub x = action.getAnnotations().get(Middleware.name);
+                    AnnotationStub x = action.getAnnotation(Middleware.name);
                     middlewarePart = "->middleware(['" + String.join("', '", x.getValues()) + "'])";
                 }
                 fileCombiner.addLine(

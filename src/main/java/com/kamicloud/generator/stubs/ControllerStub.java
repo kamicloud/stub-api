@@ -14,6 +14,7 @@ public class ControllerStub extends BaseWithAnnotationStub {
     }
 
     public void addAction(ActionStub actionStub) {
+        actionStub.setParent(this);
         actions.put(actionStub.getName(), actionStub);
     }
 }
