@@ -138,7 +138,7 @@ trait ValueHelper
             if ($isModel) {
                 /** @var DTO $rule */
                 if (!is_object($value) || !($value instanceof DTO) || get_class($value) !== $rule) {
-                    throw new $exception("{$location} must be instance of {$field}");
+                    throw new $exception("{$location} must be instance of {$rule}");
                 }
 
                 $value->validateAttributes($value->getAttributeMap(), $location);
