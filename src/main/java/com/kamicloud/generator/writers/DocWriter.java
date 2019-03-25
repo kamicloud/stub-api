@@ -106,8 +106,8 @@ public class DocWriter extends BaseWriter {
 
                 // 菜单列表
                 controller.getActions().forEach((actionName, action) -> {
-                    if (action.hasAnnotation(Named.name)) {
-                        actionName = action.getAnnotation(Named.name).getValue() + "@" + actionName;
+                    if (action.hasAnnotation(Named.class)) {
+                        actionName = action.getAnnotation(Named.class).getValue() + "@" + actionName;
                     }
                     file.addLine("  - [" + actionName + "](#" + action.getName() + ")");
                 });
@@ -119,8 +119,8 @@ public class DocWriter extends BaseWriter {
                         "## " + action.getName()
                     ));
                     file.addLine("");
-                    if (action.hasAnnotation(Methods.name)) {
-                        file.addLine("`" + String.join("` `", action.getAnnotation(Methods.name).getValues()) + "`");
+                    if (action.hasAnnotation(Methods.class)) {
+                        file.addLine("`" + String.join("` `", action.getAnnotation(Methods.class).getValues()) + "`");
                     } else {
                         file.addLine("`POST`");
                     }
@@ -264,7 +264,7 @@ public class DocWriter extends BaseWriter {
             file.addBlock(new MultiLinesCombiner(
                 "|" + parameter.getName() + " |" +
                     (parameter.getComment() == null ? " " : transformLfToBr(parameter.getComment())) + writeLink(parameter) +
-                    (parameter.hasAnnotation(Optional.name) ? " " : "true") + "|"
+                    (parameter.hasAnnotation(Optional.class) ? " " : "true") + "|"
             ));
         });
         file.addLine("");

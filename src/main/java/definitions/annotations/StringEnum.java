@@ -10,5 +10,4 @@ import java.lang.annotation.RetentionPolicy;
  */
 @Retention(RetentionPolicy.RUNTIME)
 public @interface StringEnum {
-    String name = "StringEnum";
 }

@@ -147,7 +147,7 @@ public class Generator extends Doclet {
                 Arrays.asList(action.getDeclaredFields()).forEach(parameter -> {
                     ParameterStub parameterStub = parseParameter(parameter);
                     if (parameterStub != null) {
-                        if (parameterStub.hasAnnotation(Request.name)) {
+                        if (parameterStub.hasAnnotation(Request.class)) {
                             actionStub.addRequest(parameterStub);
                         } else {
                             actionStub.addResponse(parameterStub);
@@ -201,7 +201,7 @@ public class Generator extends Doclet {
 
             AnnotationStub annotationStub = new AnnotationStub(annotationName);
 
-            baseStub.addAnnotation(annotationStub);
+            baseStub.addAnnotation(annotation, annotationStub);
 
             List<Method> annotationMethods = Arrays.asList(annotationClass.getDeclaredMethods());
 

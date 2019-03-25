@@ -1,7 +1,9 @@
 package com.kamicloud.generator.stubs;
 
 import definitions.annotations.DBField;
+import definitions.annotations.Extendable;
 
+import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -22,12 +24,8 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
         return name;
     }
 
-    public HashMap<String, AnnotationStub> getAnnotations() {
-        return annotations;
-    }
-
-    public void addAnnotation(AnnotationStub annotationStub) {
-        annotations.put(annotationStub.getName(), annotationStub);
+    public void addAnnotation(Annotation type, AnnotationStub annotationStub) {
+        annotations.put(type.annotationType().getName(), annotationStub);
     }
 
     @Override
@@ -72,14 +70,18 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
         return parent;
     }
 
-    public Boolean hasAnnotation(String name) {
-        return annotations.containsKey(name) || (parent != null && parent.hasAnnotation(name));
+    public Boolean hasAnnotation(Class<?> type) {
+        boolean hasAnnotation = annotations.containsKey(type.getCanonicalName());
+        if (type.getAnnotation(Extendable.class) != null) {
+            hasAnnotation = hasAnnotation || (parent != null && parent.hasAnnotation(type));
+        }
+        return hasAnnotation;
     }
 
-    public AnnotationStub getAnnotation(String name) {
-        AnnotationStub annotationStub = annotations.get(name);
-        if (annotationStub == null && parent != null) {
-            annotationStub = parent.getAnnotation(name);
+    public AnnotationStub getAnnotation(Class<?> type) {
+        AnnotationStub annotationStub = annotations.get(type.getCanonicalName());
+        if (type.getAnnotation(Extendable.class) != null && annotationStub == null && parent != null) {
+            annotationStub = parent.getAnnotation(type);
         }
         return annotationStub;
     }

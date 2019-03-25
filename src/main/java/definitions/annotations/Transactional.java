@@ -1,5 +1,5 @@
 package definitions.annotations;
 
+@Extendable
 public @interface Transactional {
-    String name = "Transactional";
 }

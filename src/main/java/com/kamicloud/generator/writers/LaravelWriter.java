@@ -51,7 +51,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             writeRoute(output);
 
             writeEnums("BOs", output.getCurrentTemplate().getEnums().stream().filter(enumStub -> {
-                return enumStub.hasAnnotation(AsBO.name);
+                return enumStub.hasAnnotation(AsBO.class);
             }).collect(Collectors.toList()));
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,7 +116,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         new ClassMethodParameterCombiner(actionClassMethodCombiner, "request", requestClassName);
 
                         String getResponseMethod = "getResponse";
-                        if (action.hasAnnotation(FileResponse.name)) {
+                        if (action.hasAnnotation(FileResponse.class)) {
                             getResponseMethod = "getFileResponse";
                         }
 
@@ -127,7 +127,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             "$message->validateOutput();",
                             "return $message->" + getResponseMethod + "();"
                         );
-                        if (action.getAnnotations().containsKey(Transactional.name)) {
+                        if (action.hasAnnotation(Transactional.class)) {
                             actionClassMethodCombiner.wrapBody(
                                 "return DB::transaction(function () use ($request) {",
                                 "});"
@@ -141,7 +141,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         writeParameterAttributes(action.getResponses(), messageClassCombiner);
                         writeGetAttributeMapMethod(version, "requestRules", action.getRequests(), messageClassCombiner);
                         writeGetAttributeMapMethod(version, "responseRules", action.getResponses(), messageClassCombiner);
-                        if (action.hasAnnotation(FileResponse.name)) {
+                        if (action.hasAnnotation(FileResponse.class)) {
                             ClassMethodCombiner setResponseMethod = new ClassMethodCombiner(messageClassCombiner, "setFileResponse");
                             new ClassMethodParameterCombiner(setResponseMethod, "fileResponse");
                             setResponseMethod.addBody("$this->fileResponse = $fileResponse;");
@@ -180,7 +180,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     String valueName = value.getName();
                     EnumStub.EnumStubItemType valueType = value.getType();
 
-                    if (enumStub.hasAnnotation(StringEnum.name)) {
+                    if (enumStub.hasAnnotation(StringEnum.class)) {
                         valueType = EnumStub.EnumStubItemType.STRING;
                         valueName = key;
                     }
@@ -233,7 +233,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
         o.getTemplates().forEach((version, templateStub) -> {
             templateStub.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
-                AnnotationStub methodsAnnotation = action.getAnnotation(Methods.name);
+                AnnotationStub methodsAnnotation = action.getAnnotation(Methods.class);
                 ArrayList<String> allowMethods;
                 String method;
                 if (methodsAnnotation != null) {
@@ -243,8 +243,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     method = "['POST']";
                 }
                 String middlewarePart = "";
-                if (action.hasAnnotation(Middleware.name)) {
-                    AnnotationStub x = action.getAnnotation(Middleware.name);
+                if (action.hasAnnotation(Middleware.class)) {
+                    AnnotationStub x = action.getAnnotation(Middleware.class);
                     middlewarePart = "->middleware(['" + String.join("', '", x.getValues()) + "'])";
                 }
                 fileCombiner.addLine(
@@ -324,11 +324,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             boolean isArray = parameterStub.isArray();
             boolean isModel = parameterStub.isModel();
             boolean isEnum = parameterStub.isEnum();
-            if (parameterStub.hasAnnotation(Optional.name)) {
+            if (parameterStub.hasAnnotation(Optional.class)) {
                 types.add("Constants::IS_OPTIONAL");
                 ruleList.add("nullable");
             }
-            if (parameterStub.hasAnnotation(Mutable.name)) {
+            if (parameterStub.hasAnnotation(Mutable.class)) {
                 types.add("Constants::IS_MUTABLE");
             }
             if (isArray) {
@@ -357,7 +357,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
             String dbField = isModel ? parameterName :  CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName); // DBField
 
-            AnnotationStub annotationStub = parameterStub.getAnnotation(DBField.name);
+            AnnotationStub annotationStub = parameterStub.getAnnotation(DBField.class);
 
             /* 如果参数有指定的映射关系，使用指定的映射 */
             if (annotationStub != null) {
