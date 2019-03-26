@@ -11,6 +11,7 @@ import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.stubs.ParameterStub;
 import com.kamicloud.generator.utils.FileUtil;
+import definitions.annotations.StringEnum;
 import org.springframework.core.env.Environment;
 import org.springframework.util.FileCopyUtils;
 
@@ -97,7 +98,7 @@ public class DocWriter extends BaseWriter {
 
                 if (controller.getComment() != null) {
                     file.addLine();
-                    file.addLine("> {info} " + transformLfToBr(controller.getComment()));
+                    file.addLine("> {warning} " + transformLfToBr(controller.getComment()));
                     file.addLine();
                 }
                 file.addLine("");
@@ -177,11 +178,7 @@ public class DocWriter extends BaseWriter {
             FileCombiner file = new FileCombiner();
             file.setFileName(outputDir.getAbsolutePath() + "/generated/models.md");
 
-            output.getModels().forEach((modelName, model) -> {
-                file.addBlock(new MultiLinesCombiner(
-                    "  - [" + modelName + "](#" + modelName + ")"
-                ));
-            });
+            output.getModels().forEach((modelName, model) -> file.addLine("  - [" + modelName + "](#" + modelName + ")"));
 
             file.addBlock(new MultiLinesCombiner(""));
 
@@ -192,7 +189,7 @@ public class DocWriter extends BaseWriter {
                 ));
 
                 if (model.getComment() != null) {
-                    file.addBlock(new MultiLinesCombiner("\n> {info} " + model.getComment() + "\n"));
+                    file.addBlock(new MultiLinesCombiner("\n> {warning} " + model.getComment() + "\n"));
                 }
                 writeParameters("Attributes", file, model.getParameters());
             });
@@ -220,7 +217,7 @@ public class DocWriter extends BaseWriter {
                 if (enumStub.getComment() != null) {
                     file.addBlock(new MultiLinesCombiner(
                         "",
-                        "> {info} " + enumStub.getComment(),
+                        "> {warning} " + enumStub.getComment(),
                         ""
                     ));
                 }
@@ -232,6 +229,9 @@ public class DocWriter extends BaseWriter {
                 HashMap<String, EnumStub.EnumStubItem> enumItems = enumStub.getItems();
 
                 enumItems.forEach((key, value) -> {
+                    if (enumStub.hasAnnotation(StringEnum.class)) {
+                        key = value.getName();
+                    }
                     file.addLine(
                         "|" + key + "|" + value.getName() + "|" + (value.getComment() == null ? " " : transformLfToBr(value.getComment())) + "|"
                     );
