@@ -229,11 +229,9 @@ public class DocWriter extends BaseWriter {
                 HashMap<String, EnumStub.EnumStubItem> enumItems = enumStub.getItems();
 
                 enumItems.forEach((key, value) -> {
-                    if (enumStub.hasAnnotation(StringEnum.class)) {
-                        key = value.getName();
-                    }
+                    String valueName = enumStub.hasAnnotation(StringEnum.class) ? key : value.getName();
                     file.addLine(
-                        "|" + key + "|" + value.getName() + "|" + (value.getComment() == null ? " " : transformLfToBr(value.getComment())) + "|"
+                        "|" + key + "|" + valueName + "|" + (value.getComment() == null ? " " : transformLfToBr(value.getComment())) + "|"
                     );
                 });
             });
