@@ -6,6 +6,16 @@
 本项目依赖 JDK8
 
 ## 使用方法
+
+接口部分使用说明
+https://learnku.com/articles/25288
+
+注解和对应生成代码详解
+https://learnku.com/articles/26733
+
+DEMO
+https://github.com/Kamicloud/GeneratorDemoProject
+
 #### 引入
 添加git到composer.json，并composer require kamicloud/yet-another-generator
 
