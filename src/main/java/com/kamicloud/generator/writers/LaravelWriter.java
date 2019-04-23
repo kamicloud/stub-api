@@ -345,7 +345,13 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             } else if (typeModelName.equals("Date")) {
                 typeModelName = "'" + typeName + "'";
             } else {
-                if (typeModelName.equals("float")) {
+                if (
+                    typeModelName.equals("float") ||
+                        typeModelName.equals("double") ||
+                        typeModelName.equals("Float") ||
+                        typeModelName.equals("Double") ||
+                        typeModelName.equals("Number")
+                ) {
                     typeModelName = "numeric";
                 }
                 // 参数校验
@@ -355,7 +361,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 typeModelName = "'" + String.join("|", ruleList) + "'";
             }
 
-            String dbField = isModel ? parameterName :  CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName); // DBField
+            String dbField = isModel ? parameterName : CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName); // DBField
 
             AnnotationStub annotationStub = parameterStub.getAnnotation(DBField.class);
 
