@@ -173,6 +173,8 @@ trait ValueHelper
             return (int) $value;
         } elseif (stripos($rule, 'bool')) {
             return (bool) $value;
+        } elseif (stripos($rule, 'numeric')) {
+            return (float) $value;
         } elseif (stripos($rule, 'string')) {
             return (string) $value;
         }
