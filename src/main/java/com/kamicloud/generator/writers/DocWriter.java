@@ -24,9 +24,11 @@ import java.util.Observable;
 public class DocWriter extends BaseWriter {
     private File docPath;
     private File outputDir;
+    private String docPrefix;
 
     public DocWriter() {
         docPath = new File(Objects.requireNonNull(env.getProperty("generator.doc-path")) + "/resources/docs");
+        docPrefix = env.getProperty("generator.doc-http-prefix", "docs");
     }
 
     @Override
@@ -54,16 +56,16 @@ public class DocWriter extends BaseWriter {
 
             index.addBlock(new MultiLinesCombiner(
                 "- ## Get Started",
-                "  - [Overview](/docs/{{version}}/overview)",
+                "  - [Overview](/" + docPrefix + "/{{version}}/overview)",
                 "- ## 数据字典",
-                "  - [ErrorCodes](/docs/ErrorCodes)",
-                "  - [Enums](/docs/{{version}}/generated/enums)",
-                "  - [Models](/docs/{{version}}/generated/models)",
+                "  - [ErrorCodes](/" + docPrefix + "/ErrorCodes)",
+                "  - [Enums](/" + docPrefix + "/{{version}}/generated/enums)",
+                "  - [Models](/" + docPrefix + "/{{version}}/generated/models)",
                 "- ## 接口文档"
             ));
 
             o.getControllers().forEach(controller -> {
-                index.addLine("  - [" + controller.getName() + "](/docs/{{version}}/generated/apis/" + controller.getName() + ")");
+                index.addLine("  - [" + controller.getName() + "](/" + docPrefix + "/{{version}}/generated/apis/" + controller.getName() + ")");
             });
 
             index.toFile();
@@ -162,7 +164,7 @@ public class DocWriter extends BaseWriter {
             index.setFileName(docPath.getAbsolutePath() + "/ErrorCodes/index.md");
             index.addBlock(new MultiLinesCombiner(
                 "- ## Get Started",
-                "  - [Overview](/docs/{{version}}/overview)\n"
+                "  - [Overview](/" + docPrefix + "/{{version}}/overview)\n"
             ));
 
 
@@ -272,9 +274,9 @@ public class DocWriter extends BaseWriter {
     private String writeLink(ParameterStub parameter) {
         String type = parameter.getType();
         if (parameter.isModel()) {
-            return ("|[`Models." + type + "`](/docs/{{version}}/generated/models#" + type.replace("[]", "") + ")|");
+            return ("|[`Models." + type + "`](/" + docPrefix + "/{{version}}/generated/models#" + type.replace("[]", "") + ")|");
         } else if (parameter.isEnum()) {
-            return ("|[`Enums." + type + "`](/docs/{{version}}/generated/enums#" + type.replace("[]", "") + ")|");
+            return ("|[`Enums." + type + "`](/" + docPrefix + "/{{version}}/generated/enums#" + type.replace("[]", "") + ")|");
         } else {
             return ("|`" + type + "`|");
         }
