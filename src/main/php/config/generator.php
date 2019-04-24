@@ -10,4 +10,10 @@ return [
         'maintain-mode-exception' => YetAnotherGenerator\Exceptions\MaintainModeException::class,
 
     ],
+
+    'values' => [
+        'success-status' => 0,
+        'success-message' => 'message',
+    ],
+
 ];
