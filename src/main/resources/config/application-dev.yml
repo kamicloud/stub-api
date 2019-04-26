@@ -12,6 +12,7 @@ generator:
   auto-test-path: ./src/output/tests
   auto-test-force-replace: false
   doc-path: ./src/output/larecipe
+  doc-http-prefix: docs
   postman-path: ./src/output
   testcases-path: ./src/output/testcases
   test-host: http://localhost

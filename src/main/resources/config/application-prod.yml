@@ -10,6 +10,7 @@ generator:
   laravel-path: .
   auto-test-path: .
   doc-path: .
+  doc-http-prefix: docs
   postman-path: .
   testcases-path: ./resources/generator/testcases
   test-host: http://localhost
