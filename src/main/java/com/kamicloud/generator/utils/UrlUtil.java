@@ -22,7 +22,7 @@ public class UrlUtil {
     }
 
     public static String getUrlPrefix(boolean noRoot) {
-        return (noRoot ? "" : "/") + DefaultProfileUtil.getEnv().getProperty("api-prefix", "api");
+        return (noRoot ? "" : "/") + DefaultProfileUtil.getEnv().getProperty("generator.api-prefix", "api");
     }
 
     public static String getUrlWithPrefix(String version, String controller, String action) {
