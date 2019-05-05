@@ -115,9 +115,7 @@ public class ClassCombiner implements FileWriter, CombinerInterface, AddUseInter
         if (attributes.size() > 0) {
             content.append("\n");
         }
-        methods.forEach(method -> {
-            content.append("\n").append(method.toString());
-        });
+        methods.forEach(method -> content.append(method.toString()).append("\n"));
 
 
         content.append("}\n");
