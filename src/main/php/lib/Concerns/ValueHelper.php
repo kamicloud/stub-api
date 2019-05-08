@@ -98,11 +98,9 @@ trait ValueHelper
         $validator = Validator::make($data, $rules);
 
         if ($validator->fails()) {
-            $messages = $validator->messages()->messages();
-            $messages = array_flatten($messages);
-
+            $messages = $validator->messages()->toJson();
             $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
-            throw new $exception($location . "\n-----\n" . join("\n--\n", $messages));
+            throw new $exception($location . $messages);
         } else {
             foreach ($rules as $key => $rule) {
                 $this->$key = $this->parseScalar($this->$key, $rule);

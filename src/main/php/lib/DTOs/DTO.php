@@ -129,4 +129,14 @@ abstract class DTO implements JsonSerializable
 
     }
 
+    public function toDBArray()
+    {
+        return array_reduce($this->getAttributeMap(), function ($c, $attribute) {
+            [$field, $dbField] = $attribute;
+
+            $c[$dbField] = $this->{$field};
+
+            return $c;
+        }, []);
+    }
 }
