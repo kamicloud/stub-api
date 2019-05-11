@@ -2,7 +2,7 @@
 
 namespace YetAnotherGenerator\Concerns;
 
-use Illuminate\Support\Carbon;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 use Throwable;
@@ -87,7 +87,7 @@ trait ValueHelper
 
             $value = $this->$field;
 
-            if (!$isModel && !$isArray && !$isEnum && $type !== 'Date') {
+            if (!$isModel && !$isArray && !$isEnum && $rule !== 'Date') {
                 $data[$field] = $value;
                 $rules[$field] = $rule;
             } else {
@@ -146,7 +146,7 @@ trait ValueHelper
                     throw new $exception("{$location} should match enum");
                 }
                 $value = $rule::format($value);
-            } elseif ($type !== 'Date') {
+            } else {
                 $value = $this->parseScalar($value, $rule);
             }
 
@@ -169,12 +169,20 @@ trait ValueHelper
         }
         if (stripos($rule, 'int') !== false) {
             return (int) $value;
-        } elseif (stripos($rule, 'bool')) {
+        } elseif (stripos($rule, 'bool') !== false) {
             return (bool) $value;
-        } elseif (stripos($rule, 'numeric')) {
+        } elseif (stripos($rule, 'numeric') !== false) {
             return (float) $value;
-        } elseif (stripos($rule, 'string')) {
+        } elseif (stripos($rule, 'string') !== false) {
             return (string) $value;
+        } elseif (stripos($rule, 'date') !== false) {
+            if ($value instanceof Carbon) {
+                return $value->getTimestamp();
+            } elseif (is_integer($value)) {
+                return $value;
+            } elseif (is_string($value)) {
+                return strtotime($value);
+            }
         }
 
         return $value;
