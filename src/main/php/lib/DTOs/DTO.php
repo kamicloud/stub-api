@@ -46,7 +46,7 @@ abstract class DTO implements JsonSerializable
 
     /**
      * @param Model|array|null $orm
-     * @return DTO|null|static
+     * @return null|static
      */
     public static function initFromEloquent($orm)
     {
