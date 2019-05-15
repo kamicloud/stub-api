@@ -21,7 +21,7 @@
         "nikic/php-parser": "^4.2"
     },
     "require-dev": {
-        "binarytorch/larecipe": "^1.2"
+        "binarytorch/larecipe": "^1.2|^2.1"
     },
     "extra": {
         "laravel": {
