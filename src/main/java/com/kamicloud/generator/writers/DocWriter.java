@@ -1,5 +1,6 @@
 package com.kamicloud.generator.writers;
 
+import com.kamicloud.generator.utils.CommentUtil;
 import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
@@ -65,7 +66,15 @@ public class DocWriter extends BaseWriter {
             ));
 
             o.getControllers().forEach(controller -> {
-                index.addLine("  - [" + controller.getName() + "](/" + docPrefix + "/{{version}}/generated/apis/" + controller.getName() + ")");
+                String comment = controller.getComment();
+                index.addLine(
+                    "  - [" + controller.getName() +
+                    (comment != null ? CommentUtil.getTitle(comment) : "") +
+                    "](/" + docPrefix +
+                    "/{{version}}/generated/apis/" +
+                    controller.getName() +
+                    ")"
+                );
             });
 
             index.toFile();
@@ -109,10 +118,19 @@ public class DocWriter extends BaseWriter {
 
                 // 菜单列表
                 controller.getActions().forEach((actionName, action) -> {
+                    String comment = action.getComment();
+                    comment = comment != null ? CommentUtil.getTitle(comment) : "";
                     if (action.hasAnnotation(Named.class)) {
                         actionName = action.getAnnotation(Named.class).getValue() + "@" + actionName;
                     }
-                    file.addLine("  - [" + actionName + "](#" + action.getName() + ")");
+                    file.addLine(
+                        "  - [" +
+                        actionName +
+                        comment +
+                        "](#" +
+                        action.getName() +
+                        ")"
+                    );
                 });
 
                 file.addLine("");
