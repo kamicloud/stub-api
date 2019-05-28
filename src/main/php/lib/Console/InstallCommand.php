@@ -15,7 +15,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'generator:install';
+    protected $signature = 'stub-api:install';
 
     /**
      * The console command description.

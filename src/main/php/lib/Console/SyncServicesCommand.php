@@ -13,7 +13,7 @@ use Exception;
 
 class SyncServicesCommand extends Command
 {
-    protected $signature = 'sync:services';
+    protected $signature = 'stub-api:sync-services';
 
     protected $description = 'Command description';
 
@@ -49,6 +49,10 @@ class SyncServicesCommand extends Command
                 $diffActions = array_diff($controllerActions, $serviceActions);
 
                 foreach ($diffActions as $actionName) {
+                    if ($actionName === '__construct') {
+                        continue;
+                    }
+
                     $upperActionName = strtoupper($actionName[0]) . substr($actionName, 1);
                     $messageName = "{$upperActionName}Message";
                     $controllerRealName = str_replace('Controller.php', '', $controllerName);
