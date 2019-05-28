@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Kamicloud\\StubApi": "src/main/php/lib/"
+            "Kamicloud\\StubApi\\": "src/main/php/lib/"
         }
     },
     "require": {
