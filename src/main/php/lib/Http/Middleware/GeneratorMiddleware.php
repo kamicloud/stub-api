@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\Http\Middleware;
+namespace Kamicloud\StubApi\Http\Middleware;
 
 use App\Generated\Exceptions\ApiNotFoundException;
 use Closure;

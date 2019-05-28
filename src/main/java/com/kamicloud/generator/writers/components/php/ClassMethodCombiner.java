@@ -63,13 +63,17 @@ public class ClassMethodCombiner implements CombinerInterface, AddUseInterface {
         this.body = body;
     }
 
-    public void setBody(String ...body) {
+    public ClassMethodCombiner setBody(String ...body) {
         setBody(new ArrayList<>(Arrays.asList(body)));
+
+        return this;
     }
 
-    public void setBody(ArrayList<String> body) {
+    public ClassMethodCombiner setBody(ArrayList<String> body) {
         this.body = new ArrayList<>();
         body.forEach(this::addBody);
+
+        return this;
     }
 
     public void addBody(String line) {
@@ -136,5 +140,9 @@ public class ClassMethodCombiner implements CombinerInterface, AddUseInterface {
         if (comment != null) {
             this.comments.addAll(Arrays.asList(comment.split("\n")));
         }
+    }
+
+    public static ClassMethodCombiner build(ClassCombiner classCombiner, String name, String access) {
+        return new ClassMethodCombiner(classCombiner, name, access);
     }
 }

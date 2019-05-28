@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\Console;
+namespace Kamicloud\StubApi\Console;
 
 use Illuminate\Console\Command;
 use PhpParser\Node;
@@ -54,7 +54,7 @@ class SyncServicesCommand extends Command
                     $controllerRealName = str_replace('Controller.php', '', $controllerName);
                     $body = join("\n", [
                         "//use App\\Generated\\{$version}\\Messages\\{$controllerRealName}\\$messageName;",
-                        "//public static function $actionName($messageName \$message)",
+                        "//public function $actionName($messageName \$message)",
                         "//{",
                         "//}",
                         ""

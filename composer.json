@@ -1,5 +1,5 @@
 {
-    "name": "kamicloud/yet-another-generator",
+    "name": "kamicloud/stub-api",
     "description": "API Generator",
     "type": "library",
     "license": "MIT",
@@ -11,7 +11,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "YetAnotherGenerator\\": "src/main/php/lib/"
+            "Kamicloud\\StubApi": "src/main/php/lib/"
         }
     },
     "require": {

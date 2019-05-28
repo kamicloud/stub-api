@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\Exceptions;
+namespace Kamicloud\StubApi\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;

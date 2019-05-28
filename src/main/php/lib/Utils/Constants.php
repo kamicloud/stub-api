@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\Utils;
+namespace Kamicloud\StubApi\Utils;
 
 class Constants
 {

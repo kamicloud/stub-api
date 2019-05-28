@@ -1,15 +1,15 @@
 <?php
 
-namespace YetAnotherGenerator\Concerns;
+namespace Kamicloud\StubApi\Concerns;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 
 use Throwable;
-use YetAnotherGenerator\BOs\Enum;
-use YetAnotherGenerator\DTOs\DTO;
-use YetAnotherGenerator\Exceptions\InvalidParameterException;
-use YetAnotherGenerator\Utils\Constants;
+use Kamicloud\StubApi\BOs\Enum;
+use Kamicloud\StubApi\DTOs\DTO;
+use Kamicloud\StubApi\Exceptions\InvalidParameterException;
+use Kamicloud\StubApi\Utils\Constants;
 
 trait ValueHelper
 {

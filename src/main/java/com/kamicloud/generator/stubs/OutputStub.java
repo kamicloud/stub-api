@@ -54,5 +54,6 @@ public class OutputStub extends Observable {
 
     public void setCurrentTemplate(TemplateStub currentTemplate) {
         this.currentTemplate = currentTemplate;
+        currentTemplate.setCurrent(true);
     }
 }

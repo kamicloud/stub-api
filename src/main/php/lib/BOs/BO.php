@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\BOs;
+namespace Kamicloud\StubApi\BOs;
 
 abstract class BO
 {

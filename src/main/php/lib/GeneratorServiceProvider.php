@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator;
+namespace Kamicloud\StubApi;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Route;

@@ -1,6 +1,7 @@
 package com.kamicloud.generator.stubs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -9,6 +10,8 @@ public class TemplateStub extends BaseWithAnnotationStub {
     private ArrayList<EnumStub> enums = new ArrayList<>();
     private HashMap<String, ModelStub> models = new HashMap<>();
     private ArrayList<ControllerStub> controllers = new ArrayList<>();
+
+    private boolean current = false;
 
     public TemplateStub(String name) {
         super(name);
@@ -57,5 +60,13 @@ public class TemplateStub extends BaseWithAnnotationStub {
         });
 
         return model.get();
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
     }
 }

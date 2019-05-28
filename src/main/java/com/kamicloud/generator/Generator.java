@@ -240,6 +240,9 @@ public class Generator extends Doclet {
 
             templateStub.addModel(modelStub);
             modelHashMap.put(model.getCanonicalName(), modelStub);
+            // 注解
+            parseAnnotations(model.getAnnotations(), modelStub);
+            parseComment(model.getCanonicalName(), modelStub);
 
             parseComment(model.getCanonicalName(), modelStub);
             modelStub.setParentKey(model.getSuperclass().getCanonicalName());

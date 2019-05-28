@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\Http\Messages;
+namespace Kamicloud\StubApi\Http\Messages;
 
 use Illuminate\Http\Request;
 use YetAnotherGenerator\Concerns\ValueHelper;

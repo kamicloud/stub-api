@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\DTOs;
+namespace Kamicloud\StubApi\DTOs;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;

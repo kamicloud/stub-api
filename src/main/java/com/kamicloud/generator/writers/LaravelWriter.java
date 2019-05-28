@@ -39,8 +39,6 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 writeHttp(version, templateStub);
                 writeModels(version, templateStub);
                 writeEnums(version, templateStub.getEnums());
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -60,26 +58,37 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
     private void writeModels(String version, TemplateStub templateStub) {
         templateStub.getModels().forEach((modelName, modelStub) -> {
-            try {
-                ClassCombiner modelClassCombiner = new ClassCombiner(
-                    "App\\Generated\\" + version + "\\Models\\" + modelName + "Model",
-                    "YetAnotherGenerator\\DTOs\\DTO"
-                );
-
-                modelClassCombiner.addTrait("YetAnotherGenerator\\Concerns\\ValueHelper");
-
-                HashMap<String, ParameterStub> parameters = modelStub.getParameters();
-
-                writeParameterAttributes(parameters, modelClassCombiner);
-                writeParameterGetters(parameters, modelClassCombiner);
-                writeParameterSetters(parameters, modelClassCombiner);
-                writeGetAttributeMapMethod(version, "getAttributeMap", parameters, modelClassCombiner);
-
-                modelClassCombiner.toFile();
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (
+                modelStub.hasAnnotation(AsBO.class) &&
+                templateStub.isCurrent()
+            ) {
+                writeModel("BOs", modelStub);
             }
+            writeModel(version, modelStub);
         });
+    }
+
+    private void writeModel(String version, ModelStub modelStub) {
+        try {
+            String modelName = modelStub.getName();
+            ClassCombiner modelClassCombiner = new ClassCombiner(
+                "App\\Generated\\" + version + "\\DTOs\\" + modelName + "DTO",
+                "Kamicloud\\StubApi\\DTOs\\DTO"
+            );
+
+            modelClassCombiner.addTrait("Kamicloud\\StubApi\\Concerns\\ValueHelper");
+
+            HashMap<String, ParameterStub> parameters = modelStub.getParameters();
+
+            writeParameterAttributes(parameters, modelClassCombiner);
+            writeParameterGetters(parameters, modelClassCombiner);
+            writeParameterSetters(parameters, modelClassCombiner);
+            writeGetAttributeMapMethod(version, "getAttributeMap", parameters, modelClassCombiner);
+
+            modelClassCombiner.toFile();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -92,28 +101,40 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private void writeHttp(String version, TemplateStub o) {
         o.getControllers().forEach(controllerStub -> {
             try {
+                String serviceClassName = "App\\Http\\Services\\" + version + "\\" + controllerStub.getName() + "Service";
                 ClassCombiner controllerClassCombiner = new ClassCombiner(
                     "App\\Generated\\Controllers\\" + version + "\\" + controllerStub.getName() + "Controller",
                     "App\\Http\\Controllers\\Controller"
                 );
 
+                new ClassAttributeCombiner(controllerClassCombiner, "service", "public");
+
+                ClassMethodCombiner constructor = ClassMethodCombiner.build(
+                    controllerClassCombiner,
+                    "__construct",
+                    "public"
+                ).setBody(
+                    "$this->service = $service;"
+                );
+
+                new ClassMethodParameterCombiner(constructor, "service", serviceClassName);
+
                 controllerStub.getActions().forEach((actionName, action) -> {
                     try {
-                        String requestClassName = "Illuminate\\Http\\Request";
                         String messageClassName = "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + actionName + "Message";
 
                         ClassCombiner messageClassCombiner = new ClassCombiner(
                             messageClassName,
-                            "YetAnotherGenerator\\Http\\Messages\\Message"
+                            "Kamicloud\\StubApi\\Http\\Messages\\Message"
                         );
 
                         String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
 
-                        controllerClassCombiner.addUse("App\\Http\\Services\\" + version + "\\" + controllerStub.getName() + "Service");
+                        controllerClassCombiner.addUse(serviceClassName);
                         controllerClassCombiner.addUse("DB");
 
                         ClassMethodCombiner actionClassMethodCombiner = new ClassMethodCombiner(controllerClassCombiner, lowerCamelActionName);
-                        new ClassMethodParameterCombiner(actionClassMethodCombiner, "request", requestClassName);
+                        new ClassMethodParameterCombiner(actionClassMethodCombiner, "message", messageClassName);
 
                         String getResponseMethod = "getResponse";
                         if (action.hasAnnotation(FileResponse.class)) {
@@ -121,9 +142,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         }
 
                         actionClassMethodCombiner.setBody(
-                            "$message = new " + actionClassMethodCombiner.addUse(messageClassName) + "($request);",
                             "$message->validateInput();",
-                            controllerStub.getName() + "Service::" + lowerCamelActionName + "($message);",
+                            "$this->service->" + lowerCamelActionName + "($message);",
                             "$message->validateOutput();",
                             "return $message->" + getResponseMethod + "();"
                         );
@@ -134,7 +154,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             );
                         }
 
-                        messageClassCombiner.addTrait("YetAnotherGenerator\\Concerns\\ValueHelper");
+                        messageClassCombiner.addTrait("Kamicloud\\StubApi\\Concerns\\ValueHelper");
                         // message
                         writeParameterGetters(action.getRequests(), messageClassCombiner);
                         writeParameterAttributes(action.getRequests(), messageClassCombiner);
@@ -167,7 +187,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             try {
                 ClassCombiner enumClassCombiner = new ClassCombiner(
                     "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName(),
-                    "YetAnotherGenerator\\BOs\\Enum"
+                    "Kamicloud\\StubApi\\BOs\\Enum"
                 );
 
                 ClassConstantCombiner mapConstant = new ClassConstantCombiner(
@@ -211,7 +231,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 String exceptionName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName());
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
                     "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
-                    "YetAnotherGenerator\\Exceptions\\BaseException"
+                    "Kamicloud\\StubApi\\Exceptions\\BaseException"
                 );
 
                 ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner(exceptionClassCombiner, "__construct");
@@ -313,7 +333,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
      * @param classCombiner 目标类
      */
     private void writeGetAttributeMapMethod(String version, String methodName, HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        classCombiner.addUse("YetAnotherGenerator\\Utils\\Constants");
+        classCombiner.addUse("Kamicloud\\StubApi\\Utils\\Constants");
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, methodName);
 
         parameters.forEach((parameterName, parameterStub) -> {
@@ -335,8 +355,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 types.add("Constants::IS_ARRAY");
             }
             if (isModel) {
-                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeModelName + "Model");
-                typeModelName = typeModelName + "Model::class";
+                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeModelName + "DTO");
+                typeModelName = typeModelName + "DTO::class";
                 types.add("Constants::IS_MODEL");
             } else if (isEnum) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName);

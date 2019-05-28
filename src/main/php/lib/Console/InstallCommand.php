@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\Console;
+namespace Kamicloud\StubApi\Console;
 
 use Illuminate\Support\Str;
 use Illuminate\Console\Command;

@@ -1,6 +1,6 @@
 <?php
 
-namespace YetAnotherGenerator\Exceptions;
+namespace Kamicloud\StubApi\Exceptions;
 
 class MaintainModeException extends BaseException
 {
