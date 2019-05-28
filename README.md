@@ -17,14 +17,13 @@ DEMO
 https://github.com/Kamicloud/GeneratorDemoProject
 
 #### 引入
-添加git到composer.json，并composer require kamicloud/yet-another-generator
+添加git到composer.json，并composer require kamicloud/stub-api
 
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/Ttdnts/APIGenerator.git"
-        }
-    ]
+````bash
+
+composer require kamicloud/stub-api:0.0.2
+
+````
     
 执行 php artisan generator:install 将配置、模板及脚本自动配置在项目目录
 
