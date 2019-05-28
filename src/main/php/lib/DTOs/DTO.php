@@ -5,8 +5,8 @@ namespace Kamicloud\StubApi\DTOs;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use JsonSerializable;
-use YetAnotherGenerator\Utils\Constants;
-use YetAnotherGenerator\Concerns\ValueHelper;
+use Kamicloud\StubApi\Utils\Constants;
+use Kamicloud\StubApi\Concerns\ValueHelper;
 
 abstract class DTO implements JsonSerializable
 {

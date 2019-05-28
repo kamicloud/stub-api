@@ -3,7 +3,7 @@
 namespace Kamicloud\StubApi\Http\Messages;
 
 use Illuminate\Http\Request;
-use YetAnotherGenerator\Concerns\ValueHelper;
+use Kamicloud\StubApi\Concerns\ValueHelper;
 
 abstract class Message
 {

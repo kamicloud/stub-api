@@ -3,11 +3,11 @@
 return [
     'exceptions' => [
 
-        'invalid-parameter-exception' => YetAnotherGenerator\Exceptions\InvalidParameterException::class,
+        'invalid-parameter-exception' => Kamicloud\StubApi\Exceptions\InvalidParameterException::class,
 
-        'server-internal-error' => YetAnotherGenerator\Exceptions\ServerInternalErrorException::class,
+        'server-internal-error' => Kamicloud\StubApi\Exceptions\ServerInternalErrorException::class,
 
-        'maintain-mode-exception' => YetAnotherGenerator\Exceptions\MaintainModeException::class,
+        'maintain-mode-exception' => Kamicloud\StubApi\Exceptions\MaintainModeException::class,
 
     ],
 
