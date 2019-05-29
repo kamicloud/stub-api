@@ -355,7 +355,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 types.add("Constants::IS_ARRAY");
             }
             if (isModel) {
-                classCombiner.addUse("App\\Generated\\" + version + "\\Models\\" + typeModelName + "DTO");
+                classCombiner.addUse("App\\Generated\\" + version + "\\DTOs\\" + typeModelName + "DTO");
                 typeModelName = typeModelName + "DTO::class";
                 types.add("Constants::IS_MODEL");
             } else if (isEnum) {
