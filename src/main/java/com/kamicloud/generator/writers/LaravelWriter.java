@@ -107,7 +107,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     "App\\Http\\Controllers\\Controller"
                 );
 
-                new ClassAttributeCombiner(controllerClassCombiner, "service", "public");
+                new ClassAttributeCombiner(controllerClassCombiner, "application", "protected");
 
                 ClassMethodCombiner constructor = ClassMethodCombiner.build(
                     controllerClassCombiner,
