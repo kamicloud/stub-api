@@ -114,10 +114,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     "__construct",
                     "public"
                 ).setBody(
-                    "$this->service = $service;"
+                    "$this->application = $application;"
                 );
 
-                new ClassMethodParameterCombiner(constructor, "service", serviceClassName);
+                new ClassMethodParameterCombiner(constructor, "application", "Illuminate\\Contracts\\Foundation\\Application");
 
                 controllerStub.getActions().forEach((actionName, action) -> {
                     try {
@@ -143,13 +143,13 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         actionClassMethodCombiner.setBody(
                             "$message->validateInput();",
-                            "$this->service->" + lowerCamelActionName + "($message);",
+                            "$this->application->call(" + controllerStub.getName() + "Service::class, [], '" + lowerCamelActionName + "');",
                             "$message->validateOutput();",
                             "return $message->" + getResponseMethod + "();"
                         );
                         if (action.hasAnnotation(Transactional.class)) {
                             actionClassMethodCombiner.wrapBody(
-                                "return DB::transaction(function () use ($request) {",
+                                "return DB::transaction(function () use ($message) {",
                                 "});"
                             );
                         }
