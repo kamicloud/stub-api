@@ -141,6 +141,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             getResponseMethod = "getFileResponse";
                         }
 
+                        constructor.addBody("$this->application->singleton(" + action.getName() + "Message::class);");
+
                         actionClassMethodCombiner.setBody(
                             "$message->validateInput();",
                             "$this->application->call(" + controllerStub.getName() + "Service::class, [], '" + lowerCamelActionName + "');",
