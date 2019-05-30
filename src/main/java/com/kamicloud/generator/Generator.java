@@ -7,7 +7,7 @@ import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
 import definitions.types.CustomizeInterface;
 import templates.TemplateList;
-import com.sun.javadoc.*;
+import com.sun.javadoc.ProgramElementDoc;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
@@ -24,10 +24,9 @@ import java.util.*;
 @SpringBootApplication
 @EnableConfigurationProperties({ApplicationProperties.class})
 @SuppressWarnings("unchecked")
-public class Generator extends Doclet {
+public class Generator {
     private final Environment env;
 
-    private static HashMap<String, ProgramElementDoc> classDocHashMap = new HashMap<>();
     private static HashMap<String, ModelStub> modelHashMap = new HashMap<>();
     private static ArrayList<BaseWithAnnotationStub> classHashMap = new ArrayList<>();
 
@@ -307,7 +306,7 @@ public class Generator extends Doclet {
             com.sun.tools.javadoc.Main.execute(new String[]{
 //                "-verbose",
                 "-package",
-                "-doclet", "com.kamicloud.generator.Generator",
+                "-doclet", "com.kamicloud.generator.DocParser",
                 "-encoding", "utf-8",
                 templateFile.getAbsolutePath()
             });
@@ -317,7 +316,7 @@ public class Generator extends Doclet {
 
     public static void syncComments() {
         classHashMap.forEach((commentInterface) -> {
-            ProgramElementDoc programElementDoc = classDocHashMap.get(commentInterface.getClasspath());
+            ProgramElementDoc programElementDoc = DocParser.classDocHashMap.get(commentInterface.getClasspath());
 
             if (programElementDoc != null && !programElementDoc.commentText().isEmpty()) {
                 commentInterface.setComment(programElementDoc.commentText());
@@ -338,32 +337,5 @@ public class Generator extends Doclet {
 
     private String fieldBuilder(Field field) {
         return field.getDeclaringClass().getCanonicalName() + "." + field.getName();
-    }
-
-    @SuppressWarnings("unused")
-    public static boolean start(RootDoc root) {
-        ClassDoc[] classes = root.classes();
-        for (ClassDoc cd : classes) {
-            classDocHashMap.put(cd.qualifiedTypeName(), cd);
-//            System.out.println(cd.name() + "   " + cd.commentText());
-            ClassDoc[] innerClasses = cd.innerClasses();
-            for (ClassDoc innerClass : innerClasses) {
-                Arrays.asList(innerClass.innerClasses()).forEach(classDoc -> {
-//                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
-                    classDocHashMap.put(classDoc.qualifiedTypeName(), classDoc);
-
-                    Arrays.asList(classDoc.fields()).forEach(fieldDoc -> {
-                        classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
-//                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
-                    });
-                });
-            }
-
-            Arrays.asList(cd.fields()).forEach(fieldDoc -> {
-                classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
-//                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
-            });
-        }
-        return true;
     }
 }
