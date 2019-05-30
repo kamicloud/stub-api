@@ -6,6 +6,10 @@ import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
 import definitions.types.CustomizeInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 import templates.TemplateList;
 import com.sun.javadoc.ProgramElementDoc;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,10 +31,20 @@ import java.util.*;
 public class Generator {
     private final Environment env;
 
+    private static final Logger log = LoggerFactory.getLogger(Generator.class);
+
     private static HashMap<String, ModelStub> modelHashMap = new HashMap<>();
     private static ArrayList<BaseWithAnnotationStub> classHashMap = new ArrayList<>();
 
     public Generator(Environment env) {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        Locale locale = Locale.forLanguageTag("cn-zh");
+        Context context = new Context(locale);
+        context.setVariable("user", "xxx");
+        context.setVariable("baseUrl", "xxx");
+        String content = templateEngine.process("<p th:text=\"${user}\"></p>", context);
+
+        System.out.println(content);
         this.env = env;
         DefaultProfileUtil.setEnv(env);
     }

@@ -18,3 +18,8 @@ generator:
   test-host: http://localhost
   java-client-path: ./src/output/java-client
   java-client-classpath:
+  switch:
+
+spring:
+  thymeleaf:
+    mode: TEXT
