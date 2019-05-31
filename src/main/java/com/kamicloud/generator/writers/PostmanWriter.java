@@ -7,22 +7,26 @@ import definitions.annotations.Request;
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.stubs.postman.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.Locale;
 import java.util.Objects;
 
 public class PostmanWriter extends BaseWriter {
     private File outputPath;
-    public PostmanWriter() {
-        outputPath = new File(Objects.requireNonNull(env.getProperty("generator.postman-path")) + "/API Generator.postman_collection.json");
-    }
+
 
     @Override
     public void update(OutputStub output) {
+        outputPath = new File(Objects.requireNonNull(env.getProperty("generator.postman-path")) + "/API Generator.postman_collection.json");
         output.getTemplates().forEach((version, templateStub) -> {
             try {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();

@@ -23,17 +23,14 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     private File root;
     private LinkedList<TestCaseStub> rawTestCases = new LinkedList<>();
 
-    public AutoTestWriter() {
+    @Override
+    void update(OutputStub output) {
         outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
         root = new File(env.getProperty("generator.testcases-path", ""));
         File testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
         if (DefaultProfileUtil.isAutoTestForceReplace()) {
             FileUtil.deleteAllFilesOfDir(testDir);
         }
-    }
-
-    @Override
-    void update(OutputStub output) {
         try {
             ClassCombiner.setNamespacePathTransformer(this);
 

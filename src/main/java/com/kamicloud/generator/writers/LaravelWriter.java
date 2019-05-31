@@ -9,6 +9,7 @@ import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import com.kamicloud.generator.writers.components.php.*;
 import definitions.annotations.*;
 import definitions.annotations.Optional;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +21,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private File generatedDir;
     private File routePath;
 
-    public LaravelWriter() {
+    @Override
+    public void update(OutputStub output) {
         String laravelPath = Objects.requireNonNull(env.getProperty("generator.laravel-path"));
         outputDir = new File(laravelPath);
         if (!outputDir.exists()) {
@@ -28,10 +30,6 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         }
         generatedDir = new File(outputDir.getAbsolutePath() + "/app/Generated");
         routePath = new File(outputDir.getAbsolutePath() + "/routes/generated_routes.php");
-    }
-
-    @Override
-    public void update(OutputStub output) {
         FileUtil.deleteAllFilesOfDir(generatedDir);
         output.getTemplates().forEach((version, templateStub) -> {
             try {

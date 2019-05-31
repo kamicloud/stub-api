@@ -2,6 +2,7 @@ package com.kamicloud.generator.writers;
 
 import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.utils.UrlUtil;
+import org.springframework.core.env.Environment;
 
 import java.io.*;
 
@@ -9,12 +10,9 @@ public class TestCaseWriter extends BaseWriter {
 
     private File outputDir;
 
-    public TestCaseWriter() {
-        this.outputDir = new File(env.getProperty("generator.testcases-path", ""));
-    }
-
     @Override
     public void update(OutputStub output) {
+        this.outputDir = new File(env.getProperty("generator.testcases-path", ""));
         writeTestCases(output);
     }
 

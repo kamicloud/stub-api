@@ -23,3 +23,6 @@ generator:
 spring:
   thymeleaf:
     mode: TEXT
+    suffix: .stub
+    encoding: UTF-8
+    prefix: classpath:/templates/

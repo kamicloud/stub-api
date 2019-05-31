@@ -19,7 +19,8 @@ public class JavaClientWriter extends BaseWriter {
     private File generatedDir;
     private File routePath;
 
-    public JavaClientWriter() {
+    @Override
+    public void update(OutputStub output) {
         String javaClientPath = Objects.requireNonNull(env.getProperty("generator.java-client-path"));
         String javaClasspath = Objects.requireNonNull(env.getProperty("generator.java-client-classpath"));
         outputDir = new File(javaClientPath);
@@ -29,10 +30,6 @@ public class JavaClientWriter extends BaseWriter {
         ClassCombiner.setRoot(javaClientPath, javaClasspath);
         generatedDir = new File(outputDir.getAbsolutePath() + "/app/Generated");
         routePath = new File(outputDir.getAbsolutePath() + "/routes/generated_routes.php");
-    }
-
-    @Override
-    public void update(OutputStub output) {
         FileUtil.deleteAllFilesOfDir(generatedDir);
         output.getTemplates().forEach((version, templateStub) -> {
             this.version = version;
