@@ -9,7 +9,6 @@ import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import com.kamicloud.generator.writers.components.php.*;
 import definitions.annotations.*;
 import definitions.annotations.Optional;
-import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.IOException;
@@ -58,7 +57,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         templateStub.getModels().forEach((modelName, modelStub) -> {
             if (
                 modelStub.hasAnnotation(AsBO.class) &&
-                templateStub.isCurrent()
+                    templateStub.isCurrent()
             ) {
                 writeModel("BOs", modelStub);
             }
@@ -105,17 +104,17 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                     "App\\Http\\Controllers\\Controller"
                 );
 
-                new ClassAttributeCombiner(controllerClassCombiner, "application", "protected");
+                new ClassAttributeCombiner(controllerClassCombiner, "service", "public");
 
                 ClassMethodCombiner constructor = ClassMethodCombiner.build(
                     controllerClassCombiner,
                     "__construct",
                     "public"
                 ).setBody(
-                    "$this->application = $application;"
+                    "$this->service = $service;"
                 );
 
-                new ClassMethodParameterCombiner(constructor, "application", "Illuminate\\Contracts\\Foundation\\Application");
+                new ClassMethodParameterCombiner(constructor, "service", serviceClassName);
 
                 controllerStub.getActions().forEach((actionName, action) -> {
                     try {
@@ -139,17 +138,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             getResponseMethod = "getFileResponse";
                         }
 
-                        constructor.addBody("$this->application->singleton(" + action.getName() + "Message::class);");
-
                         actionClassMethodCombiner.setBody(
                             "$message->validateInput();",
-                            "$this->application->call(" + controllerStub.getName() + "Service::class, [], '" + lowerCamelActionName + "');",
+                            "$this->service->" + lowerCamelActionName + "($message);",
                             "$message->validateOutput();",
                             "return $message->" + getResponseMethod + "();"
                         );
                         if (action.hasAnnotation(Transactional.class)) {
                             actionClassMethodCombiner.wrapBody(
-                                "return DB::transaction(function () use ($message) {",
+                                "return DB::transaction(function () use ($request) {",
                                 "});"
                             );
                         }
