@@ -67,6 +67,7 @@ public class Generator {
 
     @PostConstruct
     public void initApplication() {
+        DefaultProfileUtil.setEnv(env);
         OutputStub output = this.parser.parse();
         getComments();
         syncComments();
