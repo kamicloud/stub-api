@@ -20,6 +20,11 @@ public class JavaClientWriter extends BaseWriter {
     private File routePath;
 
     @Override
+    void postConstruct() {
+
+    }
+
+    @Override
     public void update(OutputStub output) {
         String javaClientPath = Objects.requireNonNull(env.getProperty("generator.java-client-path"));
         String javaClasspath = Objects.requireNonNull(env.getProperty("generator.java-client-classpath"));

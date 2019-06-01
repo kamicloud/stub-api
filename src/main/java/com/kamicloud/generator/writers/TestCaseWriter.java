@@ -11,6 +11,11 @@ public class TestCaseWriter extends BaseWriter {
     private File outputDir;
 
     @Override
+    void postConstruct() {
+
+    }
+
+    @Override
     public void update(OutputStub output) {
         this.outputDir = new File(env.getProperty("generator.testcases-path", ""));
         writeTestCases(output);

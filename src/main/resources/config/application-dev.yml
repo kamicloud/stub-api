@@ -20,6 +20,15 @@ generator:
   java-client-classpath:
   switch:
 
+  writers:
+    laravel:
+      bo-suffix: BO
+      bo-folder: BOs
+      dto-suffix: DTO
+      dto-folder: DTOs
+      service-suffix: Service
+      service-folder: Services
+
 spring:
   thymeleaf:
     mode: TEXT

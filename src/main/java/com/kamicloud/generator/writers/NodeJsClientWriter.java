@@ -12,6 +12,11 @@ public class NodeJsClientWriter extends BaseWriter {
     protected SpringTemplateEngine springTemplateEngine;
 
     @Override
+    void postConstruct() {
+
+    }
+
+    @Override
     void update(OutputStub o) {
 
 

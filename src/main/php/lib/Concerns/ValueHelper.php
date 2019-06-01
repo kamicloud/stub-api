@@ -177,11 +177,11 @@ trait ValueHelper
             return (string) $value;
         } elseif (stripos($rule, 'date') !== false) {
             if ($value instanceof Carbon) {
-                return $value->getTimestamp();
-            } elseif (is_integer($value)) {
                 return $value;
+            } elseif (is_integer($value)) {
+                return Carbon::createFromTimestamp($value);
             } elseif (is_string($value)) {
-                return strtotime($value);
+                return Carbon::createFromFormat('Y-m-d H:i:s', $value);
             }
         }
 
@@ -199,7 +199,7 @@ trait ValueHelper
             if (is_numeric($value)) {
                 return Carbon::createFromTimestamp($value);
             } else {
-                return Carbon::createFromFormat($value, $format);
+                return Carbon::createFromFormat($format, $value);
             }
         } catch (Throwable $e) {
             throw new $exception('cannot convert from date');

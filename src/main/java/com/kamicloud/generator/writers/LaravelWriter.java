@@ -20,8 +20,31 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private File generatedDir;
     private File routePath;
 
+    private String boFolder;
+    private String dtoFolder;
+    private String dtoSuffix;
+    private String serviceSuffix;
+    private String serviceFolder;
+
+
+    private HashMap<String, String> typeRuleMap = new HashMap<String, String>() {{
+        put("float", "numeric");
+        put("Float", "numeric");
+        put("double", "numeric");
+        put("Double", "numeric");
+        put("Number", "numeric");
+        put("Date", "date_format:Y-m-d H:i:s");
+        put("String", "string");
+    }};
+
     @Override
-    public void update(OutputStub output) {
+    void postConstruct() {
+        boFolder = env.getProperty("generator.writers.laravel.bo-folder", "BOs");
+        dtoFolder = env.getProperty("generator.writers.laravel.dto-folder", "DTOs");
+        dtoSuffix = env.getProperty("generator.writers.laravel.dto-suffix", "DTO");
+        serviceFolder = env.getProperty("generator.writers.laravel.service-folder", "Services");
+        serviceSuffix = env.getProperty("generator.writers.laravel.service-suffix", "Service");
+
         String laravelPath = Objects.requireNonNull(env.getProperty("generator.laravel-path"));
         outputDir = new File(laravelPath);
         if (!outputDir.exists()) {
@@ -30,6 +53,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         generatedDir = new File(outputDir.getAbsolutePath() + "/app/Generated");
         routePath = new File(outputDir.getAbsolutePath() + "/routes/generated_routes.php");
         FileUtil.deleteAllFilesOfDir(generatedDir);
+    }
+
+    @Override
+    public void update(OutputStub output) {
         output.getTemplates().forEach((version, templateStub) -> {
             try {
                 ClassCombiner.setNamespacePathTransformer(this);
@@ -45,7 +72,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             writeErrors(output);
             writeRoute(output);
 
-            writeEnums("BOs", output.getCurrentTemplate().getEnums().stream().filter(enumStub -> {
+            writeEnums(boFolder, output.getCurrentTemplate().getEnums().stream().filter(enumStub -> {
                 return enumStub.hasAnnotation(AsBO.class);
             }).collect(Collectors.toList()));
         } catch (Exception e) {
@@ -59,7 +86,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 modelStub.hasAnnotation(AsBO.class) &&
                     templateStub.isCurrent()
             ) {
-                writeModel("BOs", modelStub);
+                writeModel(boFolder, modelStub);
             }
             writeModel(version, modelStub);
         });
@@ -69,7 +96,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         try {
             String modelName = modelStub.getName();
             ClassCombiner modelClassCombiner = new ClassCombiner(
-                "App\\Generated\\" + version + "\\DTOs\\" + modelName + "DTO",
+                "App\\Generated\\" + version + "\\" + dtoFolder + "\\" + modelName + dtoSuffix,
                 "Kamicloud\\StubApi\\DTOs\\DTO"
             );
 
@@ -98,23 +125,23 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private void writeHttp(String version, TemplateStub o) {
         o.getControllers().forEach(controllerStub -> {
             try {
-                String serviceClassName = "App\\Http\\Services\\" + version + "\\" + controllerStub.getName() + "Service";
+                String serviceClassName = "App\\Http\\" + serviceFolder + "\\" + version + "\\" + controllerStub.getName() + serviceSuffix;
                 ClassCombiner controllerClassCombiner = new ClassCombiner(
                     "App\\Generated\\Controllers\\" + version + "\\" + controllerStub.getName() + "Controller",
                     "App\\Http\\Controllers\\Controller"
                 );
 
-                new ClassAttributeCombiner(controllerClassCombiner, "service", "public");
+                new ClassAttributeCombiner(controllerClassCombiner, "handler", "public");
 
                 ClassMethodCombiner constructor = ClassMethodCombiner.build(
                     controllerClassCombiner,
                     "__construct",
                     "public"
                 ).setBody(
-                    "$this->service = $service;"
+                    "$this->handler = $handler;"
                 );
 
-                new ClassMethodParameterCombiner(constructor, "service", serviceClassName);
+                new ClassMethodParameterCombiner(constructor, "handler", serviceClassName);
 
                 controllerStub.getActions().forEach((actionName, action) -> {
                     try {
@@ -140,7 +167,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         actionClassMethodCombiner.setBody(
                             "$message->validateInput();",
-                            "$this->service->" + lowerCamelActionName + "($message);",
+                            "$this->handler->" + lowerCamelActionName + "($message);",
                             "$message->validateOutput();",
                             "return $message->" + getResponseMethod + "();"
                         );
@@ -352,25 +379,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 types.add("Constants::IS_ARRAY");
             }
             if (isModel) {
-                classCombiner.addUse("App\\Generated\\" + version + "\\DTOs\\" + typeModelName + "DTO");
-                typeModelName = typeModelName + "DTO::class";
+                classCombiner.addUse("App\\Generated\\" + version + "\\" + dtoFolder + "\\" + typeModelName + dtoSuffix);
+                typeModelName = typeModelName + dtoSuffix + "::class";
                 types.add("Constants::IS_MODEL");
             } else if (isEnum) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName);
                 typeModelName = typeModelName + "::class";
                 types.add("Constants::IS_ENUM");
-            } else if (typeModelName.equals("Date")) {
-                typeModelName = "'" + typeName + "'";
             } else {
-                if (
-                    typeModelName.equals("float") ||
-                        typeModelName.equals("double") ||
-                        typeModelName.equals("Float") ||
-                        typeModelName.equals("Double") ||
-                        typeModelName.equals("Number")
-                ) {
-                    typeModelName = "numeric";
-                }
+                typeModelName = typeRuleMap.get(typeModelName);
                 // 参数校验
                 ruleList.add("bail");
 

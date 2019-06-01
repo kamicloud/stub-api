@@ -28,6 +28,11 @@ public class DocWriter extends BaseWriter {
     private String docPrefix;
 
     @Override
+    void postConstruct() {
+
+    }
+
+    @Override
     public void update(OutputStub output) {
         docPath = new File(Objects.requireNonNull(env.getProperty("generator.doc-path")) + "/resources/docs");
         docPrefix = env.getProperty("generator.doc-http-prefix", "docs");
