@@ -5,7 +5,7 @@ import definitions.official.TypeSpec;
 public class ScalarFloat extends Type {
     @Override
     public TypeSpec getSpec() {
-        return TypeSpec.NUMBER;
+        return TypeSpec.FLOAT;
     }
 
     @Override

@@ -30,9 +30,20 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         put(TypeSpec.BOOLEAN, "boolean");
         put(TypeSpec.DATE, "\\Illuminate\\Support\\Carbon");
         put(TypeSpec.INTEGER, "int");
-        put(TypeSpec.FILE, "file");
-        put(TypeSpec.NUMBER, "float");
+        put(TypeSpec.FILE, "\\Illuminate\\Http\\UploadedFile");
+        put(TypeSpec.FLOAT, "float");
         put(TypeSpec.STRING, "string");
+    }};
+
+    protected HashMap<TypeSpec, String> typeMap = new HashMap<TypeSpec, String>() {{
+        put(TypeSpec.BOOLEAN, "Constants::BOOLEAN");
+        put(TypeSpec.DATE, "Constants::DATE");
+        put(TypeSpec.INTEGER, "Constants::INTEGER");
+        put(TypeSpec.FILE, "Constants::FILE");
+        put(TypeSpec.FLOAT, "Constants::FLOAT");
+        put(TypeSpec.STRING, "Constants::STRING");
+        put(TypeSpec.MODEL, "Constants::MODEL");
+        put(TypeSpec.ENUM, "Constants::ENUM");
     }};
 
     @Override
@@ -403,7 +414,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             ArrayList<String> ruleList = new ArrayList<String>() {{
                 add("bail");
             }};
-            ArrayList<String> types = new ArrayList<>();
+            ArrayList<String> types = new ArrayList<String>(){{
+                add(typeMap.get(parameterStub.getTypeSpec()));
+            }};
             boolean isArray = parameterStub.isArray();
             boolean isModel = parameterStub.isModel();
             boolean isEnum = parameterStub.isEnum();
@@ -420,11 +433,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             if (isModel) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\" + dtoFolder + "\\" + typeName + dtoSuffix);
                 rule = typeName + dtoSuffix + "::class";
-                types.add("Constants::MODEL");
             } else if (isEnum) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeName);
                 rule = typeName + "::class";
-                types.add("Constants::ENUM");
             } else {
                 Type typeInstance = parameterStub.getType();
 

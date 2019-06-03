@@ -71,6 +71,13 @@
                   "type": "text",
                   "description": "",
                   "disabled": false
+                },
+                {
+                  "key": "file",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
                 }
               ],
               "urlencoded": [
@@ -125,6 +132,13 @@
                 },
                 {
                   "key": "ids",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "file",
                   "value": "",
                   "type": "text",
                   "description": "",

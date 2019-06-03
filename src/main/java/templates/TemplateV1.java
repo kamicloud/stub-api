@@ -1,6 +1,7 @@
 package templates;
 
 import definitions.annotations.*;
+import definitions.types.*;
 
 import java.util.Date;
 
@@ -246,6 +247,9 @@ class TemplateV1 {
                 Integer id;
                 @Request
                 Integer[] ids;
+
+                @Request
+                File file;
 
                 @Response
                 Models.User user;

@@ -4,7 +4,7 @@ public enum TypeSpec {
     DATE,
     FILE,
     INTEGER,
-    NUMBER,
+    FLOAT,
     STRING,
     ENUM,
     MODEL,

@@ -34,20 +34,7 @@ public class Parser {
         put("Boolean", new ScalarBoolean());
         put("Date", new ScalarDate());
         put("String", new ScalarString());
-    }};
-
-    private HashMap<String, String> typeRuleMap = new HashMap<String, String>() {{
-        put("int", "integer");
-        put("Integer", "integer");
-        put("long", "integer");
-        put("Long", "integer");
-        put("float", "numeric");
-        put("Float", "numeric");
-        put("double", "numeric");
-        put("Double", "numeric");
-        put("Number", "numeric");
-        put("Date", "date_format:Y-m-d H:i:s");
-        put("String", "string");
+        put("File", new File());
     }};
 
     public OutputStub parse() {

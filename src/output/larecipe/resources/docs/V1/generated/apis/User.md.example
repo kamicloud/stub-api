@@ -24,6 +24,7 @@
 |genders | |[`Enums.Gender[]`](/docs/{{version}}/generated/enums#Gender)|true|
 |id | |`Integer`|true|
 |ids | |`Integer[]`|true|
+|file | |`File`|true|
 
 ### Responses
 |Key|Description|Type|Required|

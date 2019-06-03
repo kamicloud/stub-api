@@ -34,8 +34,8 @@ class CreateArticleMessage extends Message
     public function requestRules()
     {
         return [
-            ['title', 'title', 'bail|string', null, null],
-            ['content', 'content', 'bail|string', null, null],
+            ['title', 'title', 'bail|string', Constants::STRING, null],
+            ['content', 'content', 'bail|string', Constants::STRING, null],
         ];
     }
 

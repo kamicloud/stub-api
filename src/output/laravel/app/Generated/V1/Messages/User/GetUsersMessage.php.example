@@ -64,18 +64,18 @@ class GetUsersMessage extends Message
     public function requestRules()
     {
         return [
-            ['id', 'id', 'bail|integer', null, null],
+            ['id', 'id', 'bail|integer', Constants::INTEGER, null],
             ['gender', 'gender', Gender::class, Constants::ENUM, null],
-            ['page', 'page', 'bail|nullable|integer', Constants::OPTIONAL, null],
-            ['testUser', 'testUser', UserDTO::class, Constants::OPTIONAL | Constants::MODEL, null],
-            ['testUsers', 'testUsers', UserDTO::class, Constants::OPTIONAL | Constants::ARRAY | Constants::MODEL, null],
+            ['page', 'page', 'bail|nullable|integer', Constants::INTEGER | Constants::OPTIONAL, null],
+            ['testUser', 'testUser', UserDTO::class, Constants::MODEL | Constants::OPTIONAL, null],
+            ['testUsers', 'testUsers', UserDTO::class, Constants::MODEL | Constants::OPTIONAL | Constants::ARRAY, null],
         ];
     }
 
     public function responseRules()
     {
         return [
-            ['val', 'val', 'bail|string', null, null],
+            ['val', 'val', 'bail|string', Constants::STRING, null],
             ['user', 'user', UserDTO::class, Constants::MODEL, null],
         ];
     }

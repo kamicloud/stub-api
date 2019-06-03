@@ -58,9 +58,9 @@ class UserDTO extends DTO
     public function getAttributeMap()
     {
         return [
-            ['name', 'name', 'bail|string', null, null],
-            ['id', 'id', 'bail|integer', Constants::MUTABLE, null],
-            ['avatar', 'avatar', 'bail|string', null, null],
+            ['name', 'name', 'bail|string', Constants::STRING, null],
+            ['id', 'id', 'bail|integer', Constants::INTEGER | Constants::MUTABLE, null],
+            ['avatar', 'avatar', 'bail|string', Constants::STRING, null],
         ];
     }
 
