@@ -16,21 +16,33 @@ class ArticleCommentDTO extends DTO
     protected $content;
     protected $createdAt;
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return UserDTO
+     */
     public function getUser()
     {
         return $this->user;
     }
 
+    /**
+     * @return string
+     */
     public function getContent()
     {
         return $this->content;
     }
 
+    /**
+     * @return \Illuminate\Support\Carbon
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;

@@ -7,6 +7,7 @@ import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.php.*;
 import definitions.annotations.*;
 import definitions.annotations.Optional;
+import definitions.official.TypeSpec;
 import definitions.types.Type;
 
 import java.io.File;
@@ -24,6 +25,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private String dtoSuffix;
     private String serviceSuffix;
     private String serviceFolder;
+
+    protected HashMap<TypeSpec, String> returnTypeMap = new HashMap<TypeSpec, String>() {{
+        put(TypeSpec.BOOLEAN, "boolean");
+        put(TypeSpec.DATE, "\\Illuminate\\Support\\Carbon");
+        put(TypeSpec.INTEGER, "int");
+        put(TypeSpec.FILE, "file");
+        put(TypeSpec.NUMBER, "float");
+        put(TypeSpec.STRING, "string");
+    }};
 
     @Override
     String getName() {
@@ -326,6 +336,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeParameterGetter(ParameterStub parameterStub, ClassCombiner classCombiner, String prefix) {
+        Type type = parameterStub.getType();
+
         String parameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, parameterStub.getName());
 
         parameterName = prefix + parameterName;
@@ -333,9 +345,27 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, parameterName);
         classMethodCombiner.setBody("return $this->" + parameterStub.getName() + ";");
 
-        String comment = parameterStub.getComment();
-
         classMethodCombiner.addComment(parameterStub.getComment());
+
+        String returnType;
+
+        if (type.getSpec() == TypeSpec.MODEL) {
+            returnType = parameterStub.getTypeSimpleName() + dtoSuffix;
+        } else if (type.getSpec() == TypeSpec.ENUM) {
+            returnType = parameterStub.getTypeSimpleName();
+        } else {
+            returnType = returnTypeMap.get(type.getSpec());
+        }
+
+        if (parameterStub.isArray()) {
+            returnType += "[]";
+        }
+
+        if (parameterStub.hasAnnotation(Optional.class)) {
+            returnType += "|null";
+        }
+
+        classMethodCombiner.addComment("@return " + returnType);
     }
 
     private void writeParameterSetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {

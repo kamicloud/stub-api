@@ -15,11 +15,17 @@ class CreateArticleMessage extends Message
     protected $content;
     protected $article;
 
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * @return string
+     */
     public function getContent()
     {
         return $this->content;

@@ -23,32 +23,48 @@ class CreateUserMessage extends Message
 
     /**
      * 查询的ID
+     * @return string
      */
     public function getEmail()
     {
         return $this->email;
     }
 
+    /**
+     * @return string[]
+     */
     public function getEmails()
     {
         return $this->emails;
     }
 
+    /**
+     * @return Gender
+     */
     public function getGender()
     {
         return $this->gender;
     }
 
+    /**
+     * @return Gender[]
+     */
     public function getGenders()
     {
         return $this->genders;
     }
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return int[]
+     */
     public function getIds()
     {
         return $this->ids;

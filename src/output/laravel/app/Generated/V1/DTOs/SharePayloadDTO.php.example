@@ -17,6 +17,7 @@ class SharePayloadDTO extends DTO
 
     /**
      * 分享的标题
+     * @return string
      */
     public function getTitle()
     {
@@ -25,6 +26,7 @@ class SharePayloadDTO extends DTO
 
     /**
      * 分享的描述
+     * @return string
      */
     public function getDescription()
     {
@@ -33,6 +35,7 @@ class SharePayloadDTO extends DTO
 
     /**
      * 一个缩略图
+     * @return string
      */
     public function getIcon()
     {
@@ -41,6 +44,7 @@ class SharePayloadDTO extends DTO
 
     /**
      * 点进去的链接
+     * @return string
      */
     public function getUrl()
     {

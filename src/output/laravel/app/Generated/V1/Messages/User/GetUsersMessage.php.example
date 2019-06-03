@@ -22,27 +22,40 @@ class GetUsersMessage extends Message
 
     /**
      * 查询的ID
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return Gender
+     */
     public function getGender()
     {
         return $this->gender;
     }
 
+    /**
+     * @return int|null
+     */
     public function getPage()
     {
         return $this->page;
     }
 
+    /**
+     * @return UserDTO|null
+     */
     public function getTestUser()
     {
         return $this->testUser;
     }
 
+    /**
+     * @return UserDTO[]|null
+     */
     public function getTestUsers()
     {
         return $this->testUsers;

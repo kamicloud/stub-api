@@ -15,11 +15,17 @@ class GetArticleCommentsMessage extends Message
     protected $page;
     protected $comments;
 
+    /**
+     * @return int
+     */
     public function getArticleId()
     {
         return $this->articleId;
     }
 
+    /**
+     * @return int
+     */
     public function getPage()
     {
         return $this->page;

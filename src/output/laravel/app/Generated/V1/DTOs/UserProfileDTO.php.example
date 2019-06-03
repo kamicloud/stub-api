@@ -12,6 +12,9 @@ class UserProfileDTO extends DTO
 
     protected $name;
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;

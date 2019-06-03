@@ -20,26 +20,41 @@ class ArticleDTO extends DTO
     protected $hot;
     protected $createdAt;
 
+    /**
+     * @return int|null
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getTitle()
     {
         return $this->title;
     }
 
+    /**
+     * @return string|null
+     */
     public function getContent()
     {
         return $this->content;
     }
 
+    /**
+     * @return UserDTO
+     */
     public function getUser()
     {
         return $this->user;
     }
 
+    /**
+     * @return int|null
+     */
     public function getCommentsCount()
     {
         return $this->commentsCount;
@@ -47,6 +62,7 @@ class ArticleDTO extends DTO
 
     /**
      * 需要时用于标记是否收藏
+     * @return boolean|null
      */
     public function getFavorite()
     {
@@ -55,6 +71,7 @@ class ArticleDTO extends DTO
 
     /**
      * 需要时用于标记是否收藏
+     * @return boolean|null
      */
     public function isFavorite()
     {
@@ -63,6 +80,7 @@ class ArticleDTO extends DTO
 
     /**
      * 是否是添加火热标记
+     * @return boolean|null
      */
     public function getHot()
     {
@@ -71,12 +89,16 @@ class ArticleDTO extends DTO
 
     /**
      * 是否是添加火热标记
+     * @return boolean|null
      */
     public function isHot()
     {
         return $this->hot;
     }
 
+    /**
+     * @return \Illuminate\Support\Carbon
+     */
     public function getCreatedAt()
     {
         return $this->createdAt;

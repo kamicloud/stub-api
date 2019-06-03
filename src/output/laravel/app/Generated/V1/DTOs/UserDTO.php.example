@@ -16,6 +16,7 @@ class UserDTO extends DTO
 
     /**
      * 这里只是留了一个备注
+     * @return string
      */
     public function getName()
     {
@@ -24,12 +25,16 @@ class UserDTO extends DTO
 
     /**
      * 一个注释
+     * @return int
      */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
     public function getAvatar()
     {
         return $this->avatar;
