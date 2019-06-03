@@ -9,6 +9,8 @@ import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import com.kamicloud.generator.writers.components.php.*;
 import definitions.annotations.*;
 import definitions.annotations.Optional;
+import definitions.types.CustomizeInterface;
+import definitions.types.Number;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,8 +28,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private String serviceSuffix;
     private String serviceFolder;
 
+    private HashMap<String, Class<? extends CustomizeInterface>> typeMap = new HashMap<String, Class<? extends CustomizeInterface>>() {{
+        put("int", Number.class);
+    }};
 
     private HashMap<String, String> typeRuleMap = new HashMap<String, String>() {{
+        put("int", "integer");
+        put("Integer", "integer");
+        put("long", "integer");
+        put("Long", "integer");
         put("float", "numeric");
         put("Float", "numeric");
         put("double", "numeric");
@@ -369,23 +378,23 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             boolean isModel = parameterStub.isModel();
             boolean isEnum = parameterStub.isEnum();
             if (parameterStub.hasAnnotation(Optional.class)) {
-                types.add("Constants::IS_OPTIONAL");
+                types.add("Constants::OPTIONAL");
                 ruleList.add("nullable");
             }
             if (parameterStub.hasAnnotation(Mutable.class)) {
-                types.add("Constants::IS_MUTABLE");
+                types.add("Constants::MUTABLE");
             }
             if (isArray) {
-                types.add("Constants::IS_ARRAY");
+                types.add("Constants::ARRAY");
             }
             if (isModel) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\" + dtoFolder + "\\" + typeModelName + dtoSuffix);
                 typeModelName = typeModelName + dtoSuffix + "::class";
-                types.add("Constants::IS_MODEL");
+                types.add("Constants::MODEL");
             } else if (isEnum) {
                 classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName);
                 typeModelName = typeModelName + "::class";
-                types.add("Constants::IS_ENUM");
+                types.add("Constants::ENUM");
             } else {
                 typeModelName = typeRuleMap.get(typeModelName);
                 // 参数校验

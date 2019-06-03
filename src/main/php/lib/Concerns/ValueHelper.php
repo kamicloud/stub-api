@@ -175,14 +175,6 @@ trait ValueHelper
             return (float) $value;
         } elseif (stripos($rule, 'string') !== false) {
             return (string) $value;
-        } elseif (stripos($rule, 'date') !== false) {
-            if ($value instanceof Carbon) {
-                return $value;
-            } elseif (is_integer($value)) {
-                return Carbon::createFromTimestamp($value);
-            } elseif (is_string($value)) {
-                return Carbon::createFromFormat('Y-m-d H:i:s', $value);
-            }
         }
 
         return $value;

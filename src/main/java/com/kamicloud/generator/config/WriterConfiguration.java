@@ -39,4 +39,9 @@ public class WriterConfiguration {
     public AutoTestWriter autoTestWriter() {
         return new AutoTestWriter();
     }
+
+    @Bean
+    public NodeJsClientWriter nodeJsClientWriter() {
+        return new NodeJsClientWriter();
+    }
 }

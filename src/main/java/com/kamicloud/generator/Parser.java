@@ -210,17 +210,17 @@ public class Parser {
         String typeName = parameterType.getName();
         String typeSimpleName = parameterType.getSimpleName();
 
+        ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);
         if (Arrays.asList(parameterType.getInterfaces()).contains(CustomizeInterface.class)) {
             try {
-                CustomizeInterface x = (CustomizeInterface) parameterType.newInstance();
-                typeSimpleName = x.getType();
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InstantiationException e) {
+                CustomizeInterface customizeType = (CustomizeInterface) parameterType.newInstance();
+                parameterStub.setRule(customizeType.getRule());
+                parameterStub.setParam(customizeType.getParam());
+                parameterStub.setSpec(customizeType.getSpec());
+            } catch (IllegalAccessException | InstantiationException e) {
                 e.printStackTrace();
             }
         }
-        ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);
         if (typeName.contains("$Models$")) {
             parameterStub.setModel(true);
         } else if (typeName.contains("$Enums$")) {

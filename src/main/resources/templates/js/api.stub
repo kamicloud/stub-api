@@ -1,24 +1,15 @@
-import http from '../utils/Http'
+import axios from 'axios';
 
-export default class base {
-  static baseUrl = wepy.$instance.globalData.baseUrl;
-  static get = http.get.bind(http);
-  static put = http.put.bind(http);
-  static post = http.post.bind(http);
-  static delete = http.delete.bind(http);
 
-  static urls = {
-    'wechat' : {
-        'session': base.baseUrl + '/auth/session',
-    },
-    'mechanic' :{
-        'exampleIdcardImages': base.baseUrl + '/mechanic/exampleIdcardImages',
-        'apply':base.baseUrl +'/mechanic/apply',
-        'search':base.baseUrl +'/mechanic/search',
-        'index':base.baseUrl +'/mechanic/getMechanic',
-    },
-    'oss':{
-       'uploadParams' : base.baseUrl + '/oss/getParams'
+[# th:each="template : ${output.templates}"][# th:each="controller : ${template.value.controllers}"][# th:each="action : ${controller.actions}"]'[(${action.value.fullUri})]'
+[/][/][/]
+
+export default {
+  admin: {
+    article: {
+      getArticles: async (data) => {
+        return await axios.post('/api/v1/article/get_articles', data);
+      }
     }
   }
 }

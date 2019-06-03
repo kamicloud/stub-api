@@ -52,6 +52,8 @@ public class Generator {
     protected DocWriter docWriter;
     @Autowired
     protected AutoTestWriter autoTestWriter;
+    @Autowired
+    protected NodeJsClientWriter nodeJsClientWriter;
 
     @Autowired
     public void setPostmanWriter(PostmanWriter postmanWriter) {
@@ -83,7 +85,7 @@ public class Generator {
                 output.addObserver(docWriter);
                 output.addObserver(laravelWriter);
             } else if (process.equals("client")) {
-                output.addObserver(new JavaClientWriter());
+                output.addObserver(nodeJsClientWriter);
             } else {
                 output.addObserver(autoTestWriter);
             }

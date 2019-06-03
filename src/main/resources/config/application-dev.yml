@@ -28,6 +28,8 @@ generator:
       dto-folder: DTOs
       service-suffix: Service
       service-folder: Services
+    nodejs-client:
+      output: ./src/output/nodejs-client
 
 spring:
   thymeleaf:
