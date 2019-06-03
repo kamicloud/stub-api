@@ -18,6 +18,9 @@ class CreateUserMessage extends Message
     protected $genders;
     protected $id;
     protected $ids;
+    protected $ym;
+    protected $ymarray;
+    protected $ymarrayn;
     protected $file;
     protected $user;
     protected $users;
@@ -72,6 +75,30 @@ class CreateUserMessage extends Message
     }
 
     /**
+     * @return \Illuminate\Support\Carbon
+     */
+    public function getYm()
+    {
+        return $this->ym;
+    }
+
+    /**
+     * @return \Illuminate\Support\Carbon[]
+     */
+    public function getYmarray()
+    {
+        return $this->ymarray;
+    }
+
+    /**
+     * @return \Illuminate\Support\Carbon[]
+     */
+    public function getYmarrayn()
+    {
+        return $this->ymarrayn;
+    }
+
+    /**
      * @return \Illuminate\Http\UploadedFile
      */
     public function getFile()
@@ -88,6 +115,9 @@ class CreateUserMessage extends Message
             ['genders', 'genders', Gender::class, Constants::ENUM | Constants::ARRAY, null],
             ['id', 'id', 'bail|integer', Constants::INTEGER, null],
             ['ids', 'ids', 'bail|integer', Constants::INTEGER | Constants::ARRAY, null],
+            ['ym', 'ym', 'bail|date_format:Y-m', Constants::DATE, 'Y-m'],
+            ['ymarray', 'ymarray', 'bail|date_format:Y-m', Constants::DATE | Constants::ARRAY, 'Y-m'],
+            ['ymarrayn', 'ymarrayn', 'bail|date_format:Y-m', Constants::DATE | Constants::ARRAY, 'Y-m'],
             ['file', 'file', 'bail|file', Constants::FILE, 'file'],
         ];
     }

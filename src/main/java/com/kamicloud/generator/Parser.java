@@ -225,13 +225,20 @@ public class Parser {
         try {
             // 类型+变量
             Class<?> parameterType = parameter.getType();
+
+            int depth = 0;
+
+            while (parameterType.isArray()) {
+                parameterType = parameterType.getComponentType();
+                depth++;
+            }
             String canonicalName = parameterType.getCanonicalName();
             String typeName = parameterType.getTypeName();
             String typeSimpleName = parameterType.getSimpleName();
 
-            typeSimpleName = typeSimpleName.replaceAll("\\[]", "");
 
             ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);
+            parameterStub.setArrayDepth(depth);
 
             Type type;
 
@@ -243,6 +250,9 @@ public class Parser {
                 type = (Type) parameterType.newInstance();
             } else {
                 type = typeMap.get(typeSimpleName);
+                if (type == null) {
+                    type = (Type) parameterType.newInstance();
+                }
             }
 
             if (type == null) {
@@ -251,7 +261,6 @@ public class Parser {
 
             parameterStub.setType(type);
 
-            parameterStub.setArray(parameterType.isArray());
 
 
             // 注解

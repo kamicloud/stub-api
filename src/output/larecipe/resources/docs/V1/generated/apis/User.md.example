@@ -24,6 +24,9 @@
 |genders | |[`Enums.Gender[]`](/docs/{{version}}/generated/enums#Gender)|true|
 |id | |`Integer`|true|
 |ids | |`Integer[]`|true|
+|ym | |`DateYm`|true|
+|ymarray | |`DateYm[]`|true|
+|ymarrayn | |`DateYm[]`|true|
 |file | |`File`|true|
 
 ### Responses

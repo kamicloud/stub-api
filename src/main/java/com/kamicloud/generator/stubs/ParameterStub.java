@@ -17,12 +17,12 @@ public class ParameterStub extends BaseWithAnnotationStub {
         this.typeSimpleName = type;
     }
 
-    public void setArray(boolean array) {
-        this.array = array;
+    public void setArrayDepth(int depth) {
+        this.arrayDepth = depth;
     }
 
     public boolean isArray() {
-        return array;
+        return arrayDepth > 0;
     }
 
     public boolean isModel() {

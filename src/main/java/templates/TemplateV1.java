@@ -249,6 +249,13 @@ class TemplateV1 {
                 Integer[] ids;
 
                 @Request
+                DateYm ym;
+                @Request
+                DateYm[] ymarray;
+                @Request
+                DateYm[][][][] ymarrayn;
+
+                @Request
                 File file;
 
                 @Response

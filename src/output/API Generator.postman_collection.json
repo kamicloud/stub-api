@@ -73,6 +73,27 @@
                   "disabled": false
                 },
                 {
+                  "key": "ym",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "ymarray",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "ymarrayn",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
                   "key": "file",
                   "value": "",
                   "type": "text",
@@ -132,6 +153,27 @@
                 },
                 {
                   "key": "ids",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "ym",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "ymarray",
+                  "value": "",
+                  "type": "text",
+                  "description": "",
+                  "disabled": false
+                },
+                {
+                  "key": "ymarrayn",
                   "value": "",
                   "type": "text",
                   "description": "",
