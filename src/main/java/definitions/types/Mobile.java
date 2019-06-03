@@ -1,13 +1,11 @@
 package definitions.types;
 
-public class Mobile implements CustomizeInterface {
-    @Override
-    public String getType() {
-        return "string";
-    }
+import definitions.official.SpecInterface;
+import definitions.official.TypeSpec;
 
+public class Mobile extends Type {
     @Override
-    public String getRule() {
+    public String getLaravelRule() {
         return "string";
     }
 
@@ -17,7 +15,7 @@ public class Mobile implements CustomizeInterface {
     }
 
     @Override
-    public String getParam() {
+    public String getLaravelParam() {
         return "string";
     }
 

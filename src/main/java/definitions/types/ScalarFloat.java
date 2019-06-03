@@ -2,24 +2,24 @@ package definitions.types;
 
 import definitions.official.TypeSpec;
 
-public class File extends Type {
+public class ScalarFloat extends Type {
     @Override
     public TypeSpec getSpec() {
-        return TypeSpec.FILE;
+        return TypeSpec.NUMBER;
     }
 
     @Override
     public String getComment() {
-        return "file";
+        return "数字";
     }
 
     @Override
     public String getLaravelRule() {
-        return "file";
+        return "numeric";
     }
 
     @Override
     public String getLaravelParam() {
-        return "file";
+        return "numeric";
     }
 }

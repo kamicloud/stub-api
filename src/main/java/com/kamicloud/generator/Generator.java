@@ -1,17 +1,12 @@
 package com.kamicloud.generator;
 
-import definitions.annotations.*;
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
-import definitions.types.CustomizeInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
-import templates.TemplateList;
 import com.sun.javadoc.ProgramElementDoc;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,9 +15,6 @@ import org.springframework.boot.SpringApplication;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 
 
@@ -70,30 +62,25 @@ public class Generator {
     @PostConstruct
     public void initApplication() {
         DefaultProfileUtil.setEnv(env);
-        OutputStub output = this.parser.parse();
+        OutputStub output = parser.parse();
         getComments();
         syncComments();
         syncModels();
 
         String process = env.getProperty("process", "code");
 
-        try {
-            output.setActionUrl();
-            if (process.equals("code")) {
-                output.addObserver(postmanWriter);
-                output.addObserver(testCaseWriter);
-                output.addObserver(docWriter);
-                output.addObserver(laravelWriter);
-            } else if (process.equals("client")) {
-                output.addObserver(nodeJsClientWriter);
-            } else {
-                output.addObserver(autoTestWriter);
-            }
-            output.notifyObservers();
-        } catch (Exception e) {
-            e.printStackTrace();
+        output.setActionUrl();
+        if (process.equals("code")) {
+            output.addObserver(postmanWriter);
+            output.addObserver(testCaseWriter);
+            output.addObserver(docWriter);
+            output.addObserver(laravelWriter);
+        } else if (process.equals("client")) {
+            output.addObserver(nodeJsClientWriter);
+        } else {
+            output.addObserver(autoTestWriter);
         }
-
+        output.notifyObservers();
     }
 
     public static void main(String[] args) {

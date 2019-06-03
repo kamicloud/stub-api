@@ -77,13 +77,15 @@ dependencies {
 
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
-        exclude group: 'com.vaadin.external.google', module: 'android-json'
-    }
+    compile "org.springframework.boot:spring-boot-configuration-processor"
+    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
     compile files("$jdkHome/lib/tools.jar")
 }
 compileJava.dependsOn(processResources)
 wrapper {
+
+
+
     gradleVersion = '4.10.2'
 }
 

@@ -68,8 +68,8 @@ abstract class DTO implements JsonSerializable
         foreach ($attributeMap as $attribute) {
             [$field, $dbField, $rule, $type] = $attribute;
 
-            $isModel = $type & Constants::IS_MODEL;
-            $isArray = $type & Constants::IS_ARRAY;
+            $isModel = $type & Constants::MODEL;
+            $isArray = $type & Constants::ARRAY;
 
             $value = $values[$dbField] ?? null;
 
@@ -115,7 +115,7 @@ abstract class DTO implements JsonSerializable
         return array_reduce($this->getAttributeMap(), function ($c, $attribute) use ($isTesting) {
             [$field, $dbField, $rule, $type] = $attribute;
 
-            $isMutable = $type & Constants::IS_MUTABLE;
+            $isMutable = $type & Constants::MUTABLE;
 
             // 测试模式会把非null的数据根据可测注解修改为通用数据
             $c[$field] = $isTesting && $isMutable && !is_null($this->{$field}) ? '*' : $this->{$field};

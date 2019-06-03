@@ -8,7 +8,7 @@ generator:
   env: dev
   api-prefix: api
   template-path: ./src/main/java
-  laravel-path: ./src/output/laravel
+  laravel-path:
   auto-test-path: ./src/output/tests
   auto-test-force-replace: false
   doc-path: ./src/output/larecipe
@@ -21,7 +21,12 @@ generator:
   switch:
 
   writers:
+    enabled:
+      - laravel
+      - nodejs-client
     laravel:
+      path: ./src/output/laravel
+
       bo-suffix: BO
       bo-folder: BOs
       dto-suffix: DTO

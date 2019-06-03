@@ -2,24 +2,24 @@ package definitions.types;
 
 import definitions.official.TypeSpec;
 
-public class File extends Type {
+public class ScalarDate extends Type {
     @Override
     public TypeSpec getSpec() {
-        return TypeSpec.FILE;
+        return TypeSpec.DATE;
     }
 
     @Override
     public String getComment() {
-        return "file";
+        return null;
     }
 
     @Override
     public String getLaravelRule() {
-        return "file";
+        return "date_format:Y-m-d H:i:s";
     }
 
     @Override
     public String getLaravelParam() {
-        return "file";
+        return "Y-m-d H:i:s";
     }
 }

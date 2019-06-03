@@ -3,14 +3,11 @@ package com.kamicloud.generator.writers;
 import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.generator.stubs.*;
-import com.kamicloud.generator.stubs.annotations.APIAnnotationStub;
 import com.kamicloud.generator.utils.FileUtil;
-import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import com.kamicloud.generator.writers.components.php.*;
 import definitions.annotations.*;
 import definitions.annotations.Optional;
-import definitions.types.CustomizeInterface;
-import definitions.types.Number;
+import definitions.types.Type;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,24 +25,6 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private String serviceSuffix;
     private String serviceFolder;
 
-    private HashMap<String, Class<? extends CustomizeInterface>> typeMap = new HashMap<String, Class<? extends CustomizeInterface>>() {{
-        put("int", Number.class);
-    }};
-
-    private HashMap<String, String> typeRuleMap = new HashMap<String, String>() {{
-        put("int", "integer");
-        put("Integer", "integer");
-        put("long", "integer");
-        put("Long", "integer");
-        put("float", "numeric");
-        put("Float", "numeric");
-        put("double", "numeric");
-        put("Double", "numeric");
-        put("Number", "numeric");
-        put("Date", "date_format:Y-m-d H:i:s");
-        put("String", "string");
-    }};
-
     @Override
     void postConstruct() {
         boFolder = env.getProperty("generator.writers.laravel.bo-folder", "BOs");
@@ -54,7 +33,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         serviceFolder = env.getProperty("generator.writers.laravel.service-folder", "Services");
         serviceSuffix = env.getProperty("generator.writers.laravel.service-suffix", "Service");
 
-        String laravelPath = Objects.requireNonNull(env.getProperty("generator.laravel-path"));
+        String laravelPath = Objects.requireNonNull(env.getProperty("generator.writers.laravel.path"));
         outputDir = new File(laravelPath);
         if (!outputDir.exists()) {
             outputDir.mkdirs();
@@ -324,19 +303,23 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeParameterGetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        parameters.forEach((parameterName, parameterStub) -> writeParameterGetter(parameterStub, classCombiner));
+        parameters.forEach((parameterName, parameterStub) -> writeParameterGetter(
+            parameterStub,
+            classCombiner,
+            parameterStub.isBoolean() ? "is" : "get"
+        ));
     }
 
-    private void writeParameterGetter(ParameterStub parameterStub, ClassCombiner classCombiner) {
+    private void writeParameterGetter(ParameterStub parameterStub, ClassCombiner classCombiner, String prefix) {
         String parameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, parameterStub.getName());
-        if (parameterStub.getType().equals("boolean")) {
-            parameterName = "is" + parameterName;
-        } else {
-            parameterName = "get" + parameterName;
-        }
+
+        parameterName = prefix + parameterName;
+
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, parameterName);
         classMethodCombiner.setBody("return $this->" + parameterStub.getName() + ";");
+
         String comment = parameterStub.getComment();
+
         classMethodCombiner.addComment(parameterStub.getComment());
     }
 
@@ -370,9 +353,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, methodName);
 
         parameters.forEach((parameterName, parameterStub) -> {
-            String typeName = parameterStub.getType();
-            String typeModelName = getModelNameFromType(typeName);
-            ArrayList<String> ruleList = new ArrayList<>();
+            String typeName = parameterStub.getTypeSimpleName();
+            String rule;
+            ArrayList<String> ruleList = new ArrayList<String>() {{
+                add("bail");
+            }};
             ArrayList<String> types = new ArrayList<>();
             boolean isArray = parameterStub.isArray();
             boolean isModel = parameterStub.isModel();
@@ -388,23 +373,22 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 types.add("Constants::ARRAY");
             }
             if (isModel) {
-                classCombiner.addUse("App\\Generated\\" + version + "\\" + dtoFolder + "\\" + typeModelName + dtoSuffix);
-                typeModelName = typeModelName + dtoSuffix + "::class";
+                classCombiner.addUse("App\\Generated\\" + version + "\\" + dtoFolder + "\\" + typeName + dtoSuffix);
+                rule = typeName + dtoSuffix + "::class";
                 types.add("Constants::MODEL");
             } else if (isEnum) {
-                classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeModelName);
-                typeModelName = typeModelName + "::class";
+                classCombiner.addUse("App\\Generated\\" + version + "\\Enums\\" + typeName);
+                rule = typeName + "::class";
                 types.add("Constants::ENUM");
             } else {
-                typeModelName = typeRuleMap.get(typeModelName);
-                // 参数校验
-                ruleList.add("bail");
+                Type typeInstance = parameterStub.getType();
 
-                ruleList.add(typeModelName);
-                typeModelName = "'" + String.join("|", ruleList) + "'";
+                ruleList.add(typeInstance.getLaravelRule());
+                rule = "'" + String.join("|", ruleList) + "'";
             }
 
-            String dbField = isModel ? parameterName : CaseFormat.LOWER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, parameterName); // DBField
+            String dbField = isModel ? parameterName :
+                stringUtil.lowerCamelToLowerUnderscore(parameterName);
 
             AnnotationStub annotationStub = parameterStub.getAnnotation(DBField.class);
 
@@ -416,27 +400,17 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 }
             }
 
+            String laravelParam = parameterStub.getType().getLaravelParam();
+
             ArrayList<String> params = new ArrayList<>(Arrays.asList(
                 "'" + parameterName + "'",
                 "'" + dbField + "'",
-                typeModelName,
-                types.isEmpty() ? "null" : String.join(" | ", types)
+                rule,
+                types.isEmpty() ? "null" : String.join(" | ", types),
+                laravelParam == null ? "null" : ("'" + laravelParam + "'")
             ));
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
         });
         classMethodCombiner.wrapBody("return [", "];");
-    }
-
-    private String getModelNameFromType(String type) {
-        String typeName = type
-            .replace("[]", "")
-            .replace("Models.", "")
-            .replace("Enums.", "");
-        if (type.startsWith("Models.")) {
-            typeName = typeName + "Model";
-        } else if (type.startsWith("Enums.")) {
-            typeName = typeName + "Enum";
-        }
-        return typeName;
     }
 }

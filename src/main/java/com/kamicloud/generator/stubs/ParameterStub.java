@@ -1,38 +1,24 @@
 package com.kamicloud.generator.stubs;
 
-import definitions.types.TypeSpec;
+import definitions.types.Type;
+import definitions.official.TypeSpec;
 
 public class ParameterStub extends BaseWithAnnotationStub {
-    private String type;
-//    private
-    /** 校验规则 */
-    private String rule;
-    /** 类型转化的参数 */
-    private String param;
-
-    private TypeSpec spec;
-
-    private String typeComment;
+    private String typeSimpleName;
 
     private boolean array = false;
-    private boolean model = false;
-    private boolean enumeration = false;
+
+    protected int arrayDepth = 0;
+
+    protected Type type;
 
     public ParameterStub(String name, String type) {
         super(name);
-        this.type = type;
+        this.typeSimpleName = type;
     }
 
     public void setArray(boolean array) {
         this.array = array;
-    }
-
-    public void setModel(boolean model) {
-        this.model = model;
-    }
-
-    public void setEnum(boolean enumeration) {
-        this.enumeration = enumeration;
     }
 
     public boolean isArray() {
@@ -40,38 +26,34 @@ public class ParameterStub extends BaseWithAnnotationStub {
     }
 
     public boolean isModel() {
-        return model;
+        return type.getSpec() == TypeSpec.MODEL;
     }
 
     public boolean isEnum() {
-        return enumeration;
+        return type.getSpec() == TypeSpec.ENUM;
     }
 
-    public String getType() {
+    public boolean isBoolean() {
+        return type.getSpec() == TypeSpec.BOOLEAN;
+    }
+
+    public String getTypeSimpleName() {
+        return typeSimpleName;
+    }
+
+    public TypeSpec getTypeSpec() {
+        return type.getSpec();
+    }
+
+    public String getTypeComment() {
+        return type.getComment();
+    }
+
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public Type getType() {
         return type;
-    }
-
-    public String getRule() {
-        return rule;
-    }
-
-    public void setRule(String rule) {
-        this.rule = rule;
-    }
-
-    public String getParam() {
-        return param;
-    }
-
-    public void setParam(String param) {
-        this.param = param;
-    }
-
-    public TypeSpec getSpec() {
-        return spec;
-    }
-
-    public void setSpec(TypeSpec spec) {
-        this.spec = spec;
     }
 }

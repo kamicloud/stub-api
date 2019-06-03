@@ -2,24 +2,24 @@ package definitions.types;
 
 import definitions.official.TypeSpec;
 
-public class Image extends Type {
+public class ScalarString extends Type {
     @Override
     public String getLaravelRule() {
-        return "image";
-    }
-
-    @Override
-    public TypeSpec getSpec() {
-        return TypeSpec.FILE;
+        return "string";
     }
 
     @Override
     public String getLaravelParam() {
-        return "image";
+        return null;
+    }
+
+    @Override
+    public TypeSpec getSpec() {
+        return TypeSpec.STRING;
     }
 
     @Override
     public String getComment() {
-        return "image";
+        return "字符串";
     }
 }

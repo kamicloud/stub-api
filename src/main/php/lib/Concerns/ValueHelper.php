@@ -24,45 +24,42 @@ trait ValueHelper
         }
 
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $rule, $type] = $attribute;
+            [$field, $dbField, $rule, $type, $initParam] = $attribute;
 
-            $isModel = $type & Constants::IS_MODEL;
-            $isArray = $type & Constants::IS_ARRAY;
-            $isEnum = $type & Constants::IS_ENUM;
+            $isModel = $type & Constants::MODEL;
+            $isArray = $type & Constants::ARRAY;
 
             $value = $values[$field] ?? null;
 
-            if ($isArray || $isModel) {
-                if (is_string($value)) {
-                    $value = json_decode($value, true);
-                }
+            if (is_string($value) && ($isArray || $isModel)) {
+                $value = json_decode($value, true);
             }
 
             if ($isArray) {
                 if (is_array($value)) {
-                    $this->$field = array_map(function ($value) use ($rule, $isModel, $isEnum) {
-                        return $this->fromOne($value, $rule, $isModel, $isEnum);
+                    $this->$field = array_map(function ($value) use ($rule, $type, $initParam) {
+                        return $this->fromOne($value, $type, $initParam);
                     }, $value);
                 }
             } else {
-                $this->$field = $this->fromOne($value, $rule, $isModel, $isEnum);
+                $this->$field = $this->fromOne($value, $type, $initParam);
             }
         }
     }
 
-    public function fromOne($value, $type, $isModel, $isEnum)
+    protected function fromOne($value, $type, $initParam)
     {
         if (is_null($value)) {
             return null;
         }
-        if ($isModel) {
+        if ($type & Constants::MODEL) {
             /** @var DTO $type */
             return $type::initFromModel($value);
-        } elseif ($isEnum) {
+        } elseif ($type & Constants::ENUM) {
             /** @var Enum $type */
             return $type::transform($value);
-        } elseif ($type === 'Date') {
-            return ValueHelper::convertDate($value);
+        } elseif ($type & Constants::DATE) {
+            return $this->convertDate($value, $initParam);
         } else {
             return $value;
         }
@@ -78,18 +75,20 @@ trait ValueHelper
     {
         $rules = [];
         $data = [];
+        $types = [];
         foreach ($attributeMap as $attribute) {
             [$field, $dbField, $rule, $type] = $attribute;
 
-            $isModel = $type & Constants::IS_MODEL;
-            $isArray = $type & Constants::IS_ARRAY;
-            $isEnum = $type & Constants::IS_ENUM;
+            $isModel = $type & Constants::MODEL;
+            $isArray = $type & Constants::ARRAY;
+            $isEnum = $type & Constants::ENUM;
 
             $value = $this->$field;
 
             if (!$isModel && !$isArray && !$isEnum && $rule !== 'Date') {
                 $data[$field] = $value;
                 $rules[$field] = $rule;
+                $types[$field] = $type;
             } else {
                 $this->$field = $this->validateValue($value, $field, $rule, $type, "$location > $field");
             }
@@ -102,20 +101,20 @@ trait ValueHelper
             $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
             throw new $exception($location . $messages);
         } else {
-            foreach ($rules as $key => $rule) {
-                $this->$key = $this->parseScalar($this->$key, $rule);
+            foreach ($types as $key => $type) {
+                $this->$key = $this->forceScalarType($this->$key, $type);
             }
         }
     }
 
-    public function validateValue($value, $field, $rule, $type, $location)
+    protected function validateValue($value, $field, $rule, $type, $location)
     {
         $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
 
-        $isModel = $type & Constants::IS_MODEL;
-        $isArray = $type & Constants::IS_ARRAY;
-        $isOptional = $type & Constants::IS_OPTIONAL;
-        $isEnum = $type & Constants::IS_ENUM;
+        $isModel = $type & Constants::MODEL;
+        $isArray = $type & Constants::ARRAY;
+        $isOptional = $type & Constants::OPTIONAL;
+        $isEnum = $type & Constants::ENUM;
 
         if (!$isOptional && is_null($value)) {
             throw new $exception("{$location} can not be null");
@@ -147,7 +146,7 @@ trait ValueHelper
                 }
                 $value = $rule::format($value);
             } else {
-                $value = $this->parseScalar($value, $rule);
+                $value = $this->forceScalarType($value, $type);
             }
 
         }
@@ -159,28 +158,28 @@ trait ValueHelper
      * 从标量数据类型中解析数据
      *
      * @param $value
-     * @param $rule
-     * @return int|string|null
+     * @param $type
+     * @return int|string|float|null
      */
-    public function parseScalar($value, $rule)
+    protected function forceScalarType($value, $type)
     {
         if (is_null($value)) {
             return null;
         }
-        if (stripos($rule, 'int') !== false) {
+        if ($type & Constants::INTEGER) {
             return (int) $value;
-        } elseif (stripos($rule, 'bool') !== false) {
+        } elseif ($type & Constants::BOOLEAN) {
             return (bool) $value;
-        } elseif (stripos($rule, 'numeric') !== false) {
+        } elseif ($type & Constants::FLOAT) {
             return (float) $value;
-        } elseif (stripos($rule, 'string') !== false) {
+        } elseif ($type & Constants::STRING) {
             return (string) $value;
         }
 
         return $value;
     }
 
-    public static function convertDate($value, $format = 'Y-m-d H:i:s')
+    protected function convertDate($value, $format = 'Y-m-d H:i:s')
     {
         $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
         if (is_null($value)) {
@@ -196,20 +195,5 @@ trait ValueHelper
         } catch (Throwable $e) {
             throw new $exception('cannot convert from date');
         }
-    }
-
-    public static function convertDates($values)
-    {
-        if (is_string($values)) {
-            $values = json_decode($values, true);
-        }
-
-        if (is_null($values)) {
-            return [];
-        }
-
-        return array_map(function ($value) {
-            return self::convertDate($value);
-        }, $values);
     }
 }

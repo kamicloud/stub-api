@@ -1,19 +1,55 @@
 package com.kamicloud.generator;
 
 import com.kamicloud.generator.stubs.*;
+import definitions.types.EnumType;
+import definitions.types.ModelType;
 import definitions.annotations.ErrorInterface;
 import definitions.annotations.FixedEnumValueInterface;
 import definitions.annotations.Request;
-import definitions.types.CustomizeInterface;
+import definitions.types.*;
 import templates.TemplateList;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class Parser {
+    /**
+     * 标量数据对应的类型
+     */
+    private HashMap<String, Type> typeMap = new HashMap<String, Type>() {{
+        put("int", new ScalarInteger());
+        put("Integer", new ScalarInteger());
+        put("long", new ScalarInteger());
+        put("Long", new ScalarInteger());
+        put("float", new ScalarFloat());
+        put("Float", new ScalarFloat());
+        put("double", new ScalarFloat());
+        put("Double", new ScalarFloat());
+        put("Number", new ScalarFloat());
+        put("boolean", new ScalarBoolean());
+        put("Boolean", new ScalarBoolean());
+        put("Date", new ScalarDate());
+        put("String", new ScalarString());
+    }};
+
+    private HashMap<String, String> typeRuleMap = new HashMap<String, String>() {{
+        put("int", "integer");
+        put("Integer", "integer");
+        put("long", "integer");
+        put("Long", "integer");
+        put("float", "numeric");
+        put("Float", "numeric");
+        put("double", "numeric");
+        put("Double", "numeric");
+        put("Number", "numeric");
+        put("Date", "date_format:Y-m-d H:i:s");
+        put("String", "string");
+    }};
+
     public OutputStub parse() {
         OutputStub output = new OutputStub();
 
@@ -175,11 +211,6 @@ public class Parser {
     private void parseModels(Class<?>[] models, TemplateStub templateStub) {
         Arrays.asList(models).forEach(model -> {
             ModelStub modelStub = new ModelStub(model.getSimpleName());
-//            // 继承关系
-//            NodeList extendedTypeTemplates = ((ClassOrInterfaceDeclaration) modelTemplate).getExtendedTypes();
-//            if (!extendedTypeTemplates.isEmpty()) {
-//                modelStub.setExtendsFrom(extendedTypeTemplates.get(0).toString());
-//            }
 
             templateStub.addModel(modelStub);
             Generator.modelHashMap.put(model.getCanonicalName(), modelStub);
@@ -204,35 +235,47 @@ public class Parser {
         if (parameter.getName().startsWith("this")) {
             return null;
         }
+        try {
+            // 类型+变量
+            Class<?> parameterType = parameter.getType();
+            String canonicalName = parameterType.getCanonicalName();
+            String typeName = parameterType.getTypeName();
+            String typeSimpleName = parameterType.getSimpleName();
 
-        // 类型+变量
-        Class<?> parameterType = parameter.getType();
-        String typeName = parameterType.getName();
-        String typeSimpleName = parameterType.getSimpleName();
+            typeSimpleName = typeSimpleName.replaceAll("\\[]", "");
 
-        ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);
-        if (Arrays.asList(parameterType.getInterfaces()).contains(CustomizeInterface.class)) {
-            try {
-                CustomizeInterface customizeType = (CustomizeInterface) parameterType.newInstance();
-                parameterStub.setRule(customizeType.getRule());
-                parameterStub.setParam(customizeType.getParam());
-                parameterStub.setSpec(customizeType.getSpec());
-            } catch (IllegalAccessException | InstantiationException e) {
-                e.printStackTrace();
+            ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);
+
+            Type type;
+
+            if (typeName.contains("$Models$")) {
+                type = new ModelType();
+            } else if (typeName.contains("$Enums$")) {
+                type = new EnumType();
+            } else if (parameterType.isAssignableFrom(Type.class)) {
+                type = (Type) parameterType.newInstance();
+            } else {
+                type = typeMap.get(typeSimpleName);
             }
-        }
-        if (typeName.contains("$Models$")) {
-            parameterStub.setModel(true);
-        } else if (typeName.contains("$Enums$")) {
-            parameterStub.setEnum(true);
-        }
-        parameterStub.setArray(parameterType.isArray());
 
-        // 注解
-        parseAnnotations(parameter.getAnnotations(), parameterStub);
-        parseComment(fieldBuilder(parameter), parameterStub);
+            if (type == null) {
+                String k = "";
+            }
 
-        return parameterStub;
+            parameterStub.setType(type);
+
+            parameterStub.setArray(parameterType.isArray());
+
+
+            // 注解
+            parseAnnotations(parameter.getAnnotations(), parameterStub);
+            parseComment(fieldBuilder(parameter), parameterStub);
+
+            return parameterStub;
+        } catch (IllegalAccessException | InstantiationException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private void parseComment(String name, BaseWithAnnotationStub commentStub) {
@@ -241,6 +284,8 @@ public class Parser {
     }
 
     private String fieldBuilder(Field field) {
-        return field.getDeclaringClass().getCanonicalName() + "." + field.getName();
+        String canonicalName = field.getDeclaringClass().getCanonicalName();
+        String name = field.getName();
+        return canonicalName + name;
     }
 }
