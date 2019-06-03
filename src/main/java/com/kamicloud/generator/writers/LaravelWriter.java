@@ -303,11 +303,21 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeParameterGetters(HashMap<String, ParameterStub> parameters, ClassCombiner classCombiner) {
-        parameters.forEach((parameterName, parameterStub) -> writeParameterGetter(
-            parameterStub,
-            classCombiner,
-            parameterStub.isBoolean() ? "is" : "get"
-        ));
+        parameters.forEach((parameterName, parameterStub) -> {
+            writeParameterGetter(
+                parameterStub,
+                classCombiner,
+                "get"
+            );
+
+            if (parameterStub.isBoolean()) {
+                writeParameterGetter(
+                    parameterStub,
+                    classCombiner,
+                    "is"
+                );
+            }
+        });
     }
 
     private void writeParameterGetter(ParameterStub parameterStub, ClassCombiner classCombiner, String prefix) {

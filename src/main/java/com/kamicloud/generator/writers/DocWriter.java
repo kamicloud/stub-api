@@ -283,7 +283,8 @@ public class DocWriter extends BaseWriter {
         parameters.forEach((parameterName, parameter) -> {
             file.addBlock(new MultiLinesCombiner(
                 "|" + parameter.getName() + " |" +
-                    (parameter.getComment() == null ? " " : transformLfToBr(parameter.getComment())) + writeLink(parameter) +
+                    (parameter.getComment() == null ? " " : transformLfToBr(parameter.getComment())) +
+                    writeLink(parameter) +
                     (parameter.hasAnnotation(Optional.class) ? " " : "true") + "|"
             ));
         });
@@ -292,13 +293,19 @@ public class DocWriter extends BaseWriter {
 
 
     private String writeLink(ParameterStub parameter) {
+        String arraySuffix = "";
         String type = parameter.getTypeSimpleName();
+
+        if (parameter.isArray()) {
+            arraySuffix = "[]";
+        }
+
         if (parameter.isModel()) {
-            return ("|[`Models." + type + "`](/" + docPrefix + "/{{version}}/generated/models#" + type.replace("[]", "") + ")|");
+            return ("|[`Models." + type + arraySuffix + "`](/" + docPrefix + "/{{version}}/generated/models#" + type.replace("[]", "") + ")|");
         } else if (parameter.isEnum()) {
-            return ("|[`Enums." + type + "`](/" + docPrefix + "/{{version}}/generated/enums#" + type.replace("[]", "") + ")|");
+            return ("|[`Enums." + type + arraySuffix + "`](/" + docPrefix + "/{{version}}/generated/enums#" + type.replace("[]", "") + ")|");
         } else {
-            return ("|`" + type + "`|");
+            return ("|`" + type + arraySuffix + "`|");
         }
     }
 
