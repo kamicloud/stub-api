@@ -1,0 +1,9 @@
+# __api: /api/api/v1/article/get_article
+__enabled: false
+__role:
+__user:
+__anchor:
+__params:
+  id:
+# __testcases:
+
