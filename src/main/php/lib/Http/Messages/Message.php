@@ -33,12 +33,12 @@ abstract class Message
 
     public function validateInput()
     {
-        $this->validateAttributes($this->requestRules());
+        $this->validateAttributes($this->requestRules(), "request");
     }
 
     public function validateOutput()
     {
-        $this->validateAttributes($this->responseRules());
+        $this->validateAttributes($this->responseRules(), "response", false);
     }
 
     public function setFileResponse($fileResponse)

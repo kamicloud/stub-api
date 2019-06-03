@@ -66,12 +66,17 @@ abstract class DTO implements JsonSerializable
         $attributeMap = $model->getAttributeMap();
 
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $rule, $type] = $attribute;
+            [$field, $dbField, $rule, $type, $format] = $attribute;
 
             $isModel = $type & Constants::MODEL;
             $isArray = $type & Constants::ARRAY;
+            $isDate = $type & Constants::DATE;
 
-            $value = $values[$dbField] ?? null;
+            if ($isDate) {
+                $value = date($format, strtotime($values[$dbField] ?? null));
+            } else {
+                $value = $values[$dbField] ?? null;
+            }
 
             if ($isModel) {
                 /** @var DTO $rule */
