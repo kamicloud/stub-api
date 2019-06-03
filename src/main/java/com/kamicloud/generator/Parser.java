@@ -286,6 +286,6 @@ public class Parser {
     private String fieldBuilder(Field field) {
         String canonicalName = field.getDeclaringClass().getCanonicalName();
         String name = field.getName();
-        return canonicalName + name;
+        return canonicalName + "." + name;
     }
 }
