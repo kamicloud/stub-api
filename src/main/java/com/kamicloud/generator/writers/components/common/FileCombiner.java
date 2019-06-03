@@ -1,6 +1,8 @@
 package com.kamicloud.generator.writers.components.common;
 
+import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.interfaces.CombinerInterface;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -16,6 +18,14 @@ public class FileCombiner extends Combiner implements FileWriter, CombinerInterf
     }
 
     public void toFile() throws IOException {
+        Environment environment = DefaultProfileUtil.getEnv();
+
+        String suffix = environment.getProperty("generator.writers.force-suffix");
+
+        if (suffix != null) {
+            fileName = fileName + suffix;
+        }
+
         File file = new File(fileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();

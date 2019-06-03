@@ -26,6 +26,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private String serviceFolder;
 
     @Override
+    String getName() {
+        return "laravel";
+    }
+
+    @Override
     void postConstruct() {
         boFolder = env.getProperty("generator.writers.laravel.bo-folder", "BOs");
         dtoFolder = env.getProperty("generator.writers.laravel.dto-folder", "DTOs");

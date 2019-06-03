@@ -24,14 +24,19 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     private LinkedList<TestCaseStub> rawTestCases = new LinkedList<>();
 
     @Override
+    String getName() {
+        return "laravel-auto-test";
+    }
+
+    @Override
     void postConstruct() {
 
     }
 
     @Override
     void update(OutputStub output) {
-        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.auto-test-path")));
-        root = new File(env.getProperty("generator.testcases-path", ""));
+        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.writers.laravel-auto-test.path")));
+        root = new File(env.getProperty("generator.writers.laravel-auto-test.testcases-path", ""));
         File testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
         if (DefaultProfileUtil.isAutoTestForceReplace()) {
             FileUtil.deleteAllFilesOfDir(testDir);

@@ -28,14 +28,21 @@ public class DocWriter extends BaseWriter {
     private String docPrefix;
 
     @Override
+    String getName() {
+        return "laravel-doc";
+    }
+
+    @Override
     void postConstruct() {
 
     }
 
     @Override
     public void update(OutputStub output) {
-        docPath = new File(Objects.requireNonNull(env.getProperty("generator.doc-path")) + "/resources/docs");
-        docPrefix = env.getProperty("generator.doc-http-prefix", "docs");
+        docPath = new File(Objects.requireNonNull(env.getProperty(
+            "generator.writers.laravel-doc.path"
+        )) + "/resources/docs");
+        docPrefix = env.getProperty("generator.writers.laravel-doc.http-prefix", "docs");
         output.getTemplates().forEach((version, templateStub) -> {
             outputDir = new File(docPath.getAbsolutePath() + "/" + version);
             if (outputDir.exists()) {

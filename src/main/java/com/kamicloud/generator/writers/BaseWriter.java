@@ -33,9 +33,17 @@ abstract class BaseWriter implements Observer {
 
     @Override
     public void update(Observable o, Object arg) {
+        String name = getName();
+
+        if (!env.getProperty("generator.writers." + name + ".enabled", "false").equals("true")) {
+            return;
+        }
+
         postConstruct();
         update((OutputStub) o);
     }
+
+    abstract String getName();
 
     abstract void postConstruct();
 

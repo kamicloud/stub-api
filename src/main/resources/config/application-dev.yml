@@ -8,23 +8,21 @@ generator:
   env: dev
   api-prefix: api
   template-path: ./src/main/java
-  laravel-path:
-  auto-test-path: ./src/output/tests
-  auto-test-force-replace: false
-  doc-path: ./src/output/larecipe
-  doc-http-prefix: docs
-  postman-path: ./src/output
-  testcases-path: ./src/output/testcases
+
   test-host: http://localhost
-  java-client-path: ./src/output/java-client
-  java-client-classpath:
-  switch:
 
   writers:
-    enabled:
-      - laravel
-      - nodejs-client
+    force-suffix: .example
+
+    postman:
+      enabled: true
+      path: ./src/output
+    testcases:
+      enabled: true
+      path: ./src/output/testcases
+
     laravel:
+      enabled: true
       path: ./src/output/laravel
 
       bo-suffix: BO
@@ -33,8 +31,24 @@ generator:
       dto-folder: DTOs
       service-suffix: Service
       service-folder: Services
+    laravel-doc:
+      enabled: true
+      path: ./src/output/larecipe
+      http-prefix: docs
+    laravel-auto-test:
+      enabled: true
+      path: ./src/output/tests
+      force-replace: false
+      testcases-path: ./src/output/testcases
+
+
     nodejs-client:
+      enabled: true
       output: ./src/output/nodejs-client
+    java-client:
+      enabled: true
+      path: ./src/output/java-client
+      classpath:
 
 spring:
   thymeleaf:

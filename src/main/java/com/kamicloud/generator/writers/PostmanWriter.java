@@ -25,13 +25,18 @@ public class PostmanWriter extends BaseWriter {
 
 
     @Override
+    String getName() {
+        return "postman";
+    }
+
+    @Override
     void postConstruct() {
 
     }
 
     @Override
     public void update(OutputStub output) {
-        outputPath = new File(Objects.requireNonNull(env.getProperty("generator.postman-path")) + "/API Generator.postman_collection.json");
+        outputPath = new File(Objects.requireNonNull(env.getProperty("generator.writers.postman.path")) + "/API Generator.postman_collection.json");
         output.getTemplates().forEach((version, templateStub) -> {
             try {
                 Gson gson = new GsonBuilder().setPrettyPrinting().create();

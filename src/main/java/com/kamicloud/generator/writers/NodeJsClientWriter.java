@@ -19,6 +19,11 @@ public class NodeJsClientWriter extends BaseWriter {
     protected File outputDir;
 
     @Override
+    String getName() {
+        return "nodejs-client";
+    }
+
+    @Override
     void postConstruct() {
         outputDir = new File(Objects.requireNonNull(env.getProperty("generator.writers.nodejs-client.output")));
 

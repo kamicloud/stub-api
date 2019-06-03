@@ -52,7 +52,7 @@ public class DefaultProfileUtil {
     }
 
     public static boolean isAutoTestForceReplace() {
-        String autoTestForceReplace = env.getProperty("auto-test-force-replace", "false");
+        String autoTestForceReplace = env.getProperty("generator.writers.auto-test-force-replace", "false");
 
 
         return autoTestForceReplace.equals("1") || autoTestForceReplace.equals("true") ;
