@@ -32,20 +32,6 @@ public class DocParser {
                 parseEnumDeclaration(error);
             }
         });
-//
-//        Optional<ClassOrInterfaceDeclaration> classA = compilationUnit.getClassByName("TemplateV1");
-//
-//        // Template
-//        classA.ifPresent(classX -> {
-//            // Controllers Enums Models
-//
-//            NodeList<BodyDeclaration<?>> x = classX.getMembers();
-//
-//            classX.getMembers().forEach(bodyDeclaration -> {
-//                bodyDeclaration.ifClassOrInterfaceDeclaration(this::parseClassOrInterfaceDeclaration);
-//            });
-//        });
-//        List<Comment> x = compilationUnit.getAllContainedComments();
     }
 
     public void parseClassOrInterfaceDeclaration(ClassOrInterfaceDeclaration classOrInterfaceDeclaration) {
@@ -74,7 +60,7 @@ public class DocParser {
     }
 
     public String parseComment(Comment comment) {
-        String string = null;
+        String string;
 
         if (comment.isJavadocComment()) {
             Javadoc javadoc = comment.asJavadocComment().parse();
@@ -94,9 +80,7 @@ public class DocParser {
         }
 
         classpath = enumDeclaration.getFullyQualifiedName().get();
-        if (enumComment.isPresent()) {
-            classDocHashMap.put(classpath, parseComment(enumComment.get()));
-        }
+        enumComment.ifPresent(comment -> classDocHashMap.put(classpath, parseComment(comment)));
         enumDeclaration.getEntries().forEach(enumConstantDeclaration -> {
             String name = enumConstantDeclaration.getNameAsString();
             Optional<Comment> comment = enumConstantDeclaration.getComment();
