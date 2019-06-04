@@ -57,7 +57,9 @@ class TemplateV1 {
              * 没有填写
              */
             UNKNOWN,
+            // 这样的注释
             MALE,
+            /** inline doc */
             FEMALE,
         }
     }

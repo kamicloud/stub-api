@@ -7,8 +7,8 @@
 |Key|Value|Description|
 |:-|:-|:-|
 |UNKNOWN|0|没有填写|
-|MALE|1| |
-|FEMALE|2| |
+|MALE|1|这样的注释|
+|FEMALE|2|inline doc|
 <a name="PayWay"></a>
 ## PayWay
 |Key|Value|Description|

@@ -49,14 +49,12 @@ repositories {
     maven { url "https://plugins.gradle.org/m2/" }
 }
 
-def jdkHome = System.getenv("JAVA_HOME")
-
 
 dependencies {
     // java抽象语法树
-//    compile 'com.github.javaparser:javaparser-core:3.7.1'
-//    compile 'com.github.javaparser:javaparser-symbol-solver-core:3.7.1'
-//    compile 'com.github.javaparser:javaparser-core-serialization:3.7.1'
+    compile 'com.github.javaparser:javaparser-core:3.14.3'
+    compile 'com.github.javaparser:javaparser-symbol-solver-core:3.14.3'
+    compile 'com.github.javaparser:javaparser-core-serialization:3.14.3'
     // google gson
     compile 'com.google.code.gson:gson:2.8.5'
     // 字符串处理库
@@ -79,13 +77,9 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     compile "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-    compile files("$jdkHome/lib/tools.jar")
 }
 compileJava.dependsOn(processResources)
 wrapper {
-
-
-
     gradleVersion = '4.10.2'
 }
 

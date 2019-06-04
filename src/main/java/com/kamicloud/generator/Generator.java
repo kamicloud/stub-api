@@ -7,7 +7,6 @@ import com.kamicloud.generator.writers.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.sun.javadoc.ProgramElementDoc;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.core.env.Environment;
@@ -15,6 +14,7 @@ import org.springframework.boot.SpringApplication;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 
@@ -53,6 +53,8 @@ public class Generator {
     }
 
     protected Parser parser;
+    @Autowired
+    protected DocParser docParser;
 
     @Autowired
     public void setParser(Parser parser) {
@@ -101,24 +103,31 @@ public class Generator {
             if (!templateFile.getName().contains(".java")) {
                 return;
             }
-            com.sun.tools.javadoc.Main.execute(new String[]{
-//                "-verbose",
-                "-package",
-                "-doclet", "com.kamicloud.generator.DocParser",
-                "-encoding", "utf-8",
-                templateFile.getAbsolutePath()
-            });
+
+            try {
+                docParser.parse(templateFile);
+//                com.sun.tools.javadoc.Main.execute(new String[]{
+////                "-verbose",
+//                    "-package",
+//                    "-doclet", "com.kamicloud.generator.DocParser",
+//                    "-encoding", "utf-8",
+//                    templateFile.getAbsolutePath()
+//                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         });
 
     }
 
     public static void syncComments() {
         classHashMap.forEach((commentInterface) -> {
-            ProgramElementDoc programElementDoc = DocParser.classDocHashMap.get(commentInterface.getClasspath());
-
-            if (programElementDoc != null && !programElementDoc.commentText().isEmpty()) {
-                commentInterface.setComment(programElementDoc.commentText());
-            }
+//            ProgramElementDoc programElementDoc = DocParser.classDocHashMap.get(commentInterface.getClasspath());
+//
+            String comment = DocParser.classDocHashMap.get(commentInterface.getClasspath());
+//            if (programElementDoc != null && !programElementDoc.commentText().isEmpty()) {
+                commentInterface.setComment(comment);
+//            }
         });
     }
 

@@ -38,6 +38,9 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
     }
 
     public void setComment(String comment) {
+        if (comment == null) {
+            return;
+        }
         String[] comments = comment.split("\n");
 
         for (int i = 0; i < comments.length; i++) {
