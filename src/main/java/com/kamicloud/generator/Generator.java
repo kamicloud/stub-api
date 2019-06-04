@@ -106,13 +106,6 @@ public class Generator {
 
             try {
                 docParser.parse(templateFile);
-//                com.sun.tools.javadoc.Main.execute(new String[]{
-////                "-verbose",
-//                    "-package",
-//                    "-doclet", "com.kamicloud.generator.DocParser",
-//                    "-encoding", "utf-8",
-//                    templateFile.getAbsolutePath()
-//                });
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
@@ -122,12 +115,8 @@ public class Generator {
 
     public static void syncComments() {
         classHashMap.forEach((commentInterface) -> {
-//            ProgramElementDoc programElementDoc = DocParser.classDocHashMap.get(commentInterface.getClasspath());
-//
             String comment = DocParser.classDocHashMap.get(commentInterface.getClasspath());
-//            if (programElementDoc != null && !programElementDoc.commentText().isEmpty()) {
-                commentInterface.setComment(comment);
-//            }
+            commentInterface.setComment(comment);
         });
     }
 

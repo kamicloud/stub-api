@@ -3,23 +3,13 @@ package com.kamicloud.generator;
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Node;
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.body.*;
-import com.github.javaparser.ast.comments.BlockComment;
 import com.github.javaparser.ast.comments.Comment;
-import com.github.javaparser.ast.comments.JavadocComment;
-import com.github.javaparser.ast.comments.LineComment;
 import com.github.javaparser.javadoc.Javadoc;
-import com.sun.javadoc.ClassDoc;
-import com.sun.javadoc.Doclet;
-import com.sun.javadoc.ProgramElementDoc;
-import com.sun.javadoc.RootDoc;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("unused")
@@ -125,38 +115,5 @@ public class DocParser {
 
         });
 
-    }
-
-    public static boolean start(RootDoc root) {
-
-
-
-
-
-
-
-//        ClassDoc[] classes = root.classes();
-//        for (ClassDoc cd : classes) {
-//            classDocHashMap.put(cd.qualifiedTypeName(), cd);
-////            System.out.println(cd.name() + "   " + cd.commentText());
-//            ClassDoc[] innerClasses = cd.innerClasses();
-//            for (ClassDoc innerClass : innerClasses) {
-//                Arrays.asList(innerClass.innerClasses()).forEach(classDoc -> {
-////                    System.out.println("classDoc   " + classDoc.name() + "   " + classDoc.commentText());
-//                    classDocHashMap.put(classDoc.qualifiedTypeName(), classDoc);
-//
-//                    Arrays.asList(classDoc.fields()).forEach(fieldDoc -> {
-//                        classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
-////                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
-//                    });
-//                });
-//            }
-//
-//            Arrays.asList(cd.fields()).forEach(fieldDoc -> {
-//                classDocHashMap.put(fieldDoc.qualifiedName(), fieldDoc);
-////                        System.out.println("fieldDoc   " + fieldDoc.name() + "   " + fieldDoc.commentText());
-//            });
-//        }
-        return true;
     }
 }
