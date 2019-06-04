@@ -51,6 +51,8 @@ generator:
       classpath:
 
 spring:
+  profiles:
+    active: dev
   thymeleaf:
     mode: TEXT
     suffix: .stub

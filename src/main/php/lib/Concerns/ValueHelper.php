@@ -24,7 +24,7 @@ trait ValueHelper
         }
 
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $rule, $type] = $attribute;
+            [$field, $dbField, $rule, $type, $initParam] = $attribute;
 
             $isModel = $type & Constants::MODEL;
             $isArray = $type & Constants::ARRAY;
@@ -38,16 +38,16 @@ trait ValueHelper
             if ($isArray) {
                 if (is_array($value)) {
                     $this->$field = array_map(function ($value) use ($rule, $type) {
-                        return $this->fromOne($value, $type);
+                        return $this->fromOne($value, $type, $initParam);
                     }, $value);
                 }
             } else {
-                $this->$field = $this->fromOne($value, $type);
+                $this->$field = $this->fromOne($value, $type, $initParam);
             }
         }
     }
 
-    protected function fromOne($value, $type)
+    protected function fromOne($value, $type, $initParam)
     {
         if (is_null($value)) {
             return null;
@@ -58,6 +58,11 @@ trait ValueHelper
         } elseif ($type & Constants::ENUM) {
             /** @var Enum $type */
             return $type::transform($value);
+        } elseif ($type & Constants::DATE) {
+            if (config('generator.request-date-timestamp')) {
+                return date($initParam, strtotime($value));
+            }
+            return $value;
         } else {
             return $value;
         }
@@ -192,6 +197,9 @@ trait ValueHelper
                 return Carbon::createFromTimestamp(strtotime($value));
             }
 
+            if (config('generator.response-date-timestamp')) {
+                return strtotime($value);
+            }
             return $value;
         } catch (Throwable $e) {
             throw new $exception('cannot convert from date');

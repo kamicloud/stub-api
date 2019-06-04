@@ -20,5 +20,24 @@ return [
          * 该异常*** 不应该出现 ***
          */
         'server-internal-error' => \App\Exceptions\ServerInternalErrorException::class,
+        
+        /**
+         * 维护模式的响应
+         */
+        'maintain-mode-exception' => Kamicloud\StubApi\Exceptions\MaintainModeException::class,
+
     ],
+    
+    'values' => [
+        'success-status' => 0,
+        'success-message' => 'message',
+    ],
+
+    /**
+     * 默认时间的传输格式为字符串
+     *
+     * 开启后传输格式为整型
+     */
+    'request-date-timestamp' => false,
+    'response-date-timestamp' => false,
 ];

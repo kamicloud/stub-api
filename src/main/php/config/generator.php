@@ -16,4 +16,11 @@ return [
         'success-message' => 'message',
     ],
 
+    /**
+     * 默认时间的传输格式为字符串
+     *
+     * 开启后传输格式为整型
+     */
+    'request-date-timestamp' => false,
+    'response-date-timestamp' => false,
 ];
