@@ -69,8 +69,6 @@ public class Generator {
         syncComments();
         syncModels();
 
-        String process = env.getProperty("process", "code");
-
         output.setActionUrl();
 
         output.addObserver(postmanWriter);

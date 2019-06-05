@@ -5,6 +5,10 @@
 # ===================================================================
 
 generator:
+  process:
+    default: laravel,laravel-doc,postman,testcases
+    laravel-auto-test: laravel-auto-test
+    client: nodejs-client
   env: dev
   api-prefix: api
   template-path: ./src/main/java
@@ -15,14 +19,11 @@ generator:
     force-suffix: .example
 
     postman:
-      enabled: true
       path: ./src/output
     testcases:
-      enabled: true
       path: ./src/output/testcases
 
     laravel:
-      enabled: true
       path: ./src/output/laravel
 
       bo-suffix: BO
@@ -32,21 +33,17 @@ generator:
       service-suffix: Service
       service-folder: Services
     laravel-doc:
-      enabled: true
       path: ./src/output/larecipe
       http-prefix: docs
     laravel-auto-test:
-      enabled: true
       path: ./src/output/tests
       force-replace: false
       testcases-path: ./src/output/testcases
 
 
     nodejs-client:
-      enabled: true
       output: ./src/output/nodejs-client
     java-client:
-      enabled: true
       path: ./src/output/java-client
       classpath:
 

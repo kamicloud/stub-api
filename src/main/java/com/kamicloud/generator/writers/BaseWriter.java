@@ -5,15 +5,16 @@ import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.utils.StringUtil;
 import com.kamicloud.generator.utils.UrlUtil;
+import com.sun.deploy.util.ArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.util.ArrayUtils;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.*;
 
 @Component
 abstract class BaseWriter implements Observer {
@@ -31,11 +32,24 @@ abstract class BaseWriter implements Observer {
     @Autowired
     protected StringUtil stringUtil;
 
+    protected HashMap<String, String> processes = new HashMap<>();
+
     @Override
     public void update(Observable o, Object arg) {
         String name = getName();
+        String process = env.getProperty("process", "");
 
-        if (!env.getProperty("generator.writers." + name + ".enabled", "false").equals("true")) {
+        if (process.equals("")) {
+            process = "default";
+        }
+
+        String[] writers = env.getProperty("generator.process." + process).split(",");
+
+        Arrays.asList(writers).forEach(s -> {
+            processes.put(s, s);
+        });
+
+        if (!processes.isEmpty() && !processes.containsKey(name)) {
             return;
         }
 
