@@ -57,4 +57,4 @@ spring:
     mode: TEXT
     suffix: .stub
     encoding: UTF-8
-    prefix: classpath:/templates/
+    prefix: classpath:/stubs/

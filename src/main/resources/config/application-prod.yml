@@ -39,10 +39,9 @@ generator:
       force-replace: false
       testcases-path: ./resources/generator/testcases
 
-
     nodejs-client:
-      enabled: true
-      output: ./src/output/nodejs-client
+      enabled: false
+      output: ./resources/js/apis
 
 spring:
   profiles:
@@ -51,4 +50,4 @@ spring:
     mode: TEXT
     suffix: .stub
     encoding: UTF-8
-    prefix: classpath:/templates/
+    prefix: classpath:/stubs/
