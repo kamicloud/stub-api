@@ -34,6 +34,7 @@ class GeneratorServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../../resources/config/application-prod.yml' => resource_path('generator/config/application.yml'),
+                __DIR__ . '/../../resources/stubs' => resource_path('generator/stubs'),
                 __DIR__ . '/../../java/definitions' => resource_path('generator/definitions'),
                 __DIR__ . '/../../java/templates' => resource_path('generator/templates'),
             ], 'generator-resource');
