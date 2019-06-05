@@ -199,7 +199,7 @@ trait ValueHelper
             if (is_numeric($value)) {
                 return Carbon::createFromTimestamp($value);
             } else {
-                return Carbon::createFromFormat($value, $format);
+                return Carbon::createFromFormat($format, $value);
             }
         } catch (Throwable $e) {
             throw new $exception('cannot convert from date');
