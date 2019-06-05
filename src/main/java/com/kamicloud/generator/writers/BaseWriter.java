@@ -5,7 +5,6 @@ import com.kamicloud.generator.stubs.OutputStub;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.utils.StringUtil;
 import com.kamicloud.generator.utils.UrlUtil;
-import com.sun.deploy.util.ArrayUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
