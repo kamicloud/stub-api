@@ -5,7 +5,7 @@ import definitions.official.TypeSpec;
 public class ScalarBoolean extends Type {
     @Override
     public String getLaravelRule() {
-        return null;
+        return "boolean";
     }
 
     @Override
