@@ -1,15 +1,11 @@
 import axios from 'axios';
 
-
-[# th:each="template : ${output.templates}"][# th:each="controller : ${template.value.controllers}"][# th:each="action : ${controller.actions}"]'[(${action.value.fullUri})]'
-[/][/][/]
-
 export default {
-  admin: {
-    article: {
-      getArticles: async (data) => {
-        return await axios.post('/api/v1/article/get_articles', data);
-      }
+[# th:each="controller : ${template.controllers}"]  [(${controller.name})]: {
+[# th:each="action : ${controller.actions}"]    [(${action.value.name})]: async (data) => {
+      return await axios.post('[(${action.value.fullUri})]', data);
     }
-  }
+[/]
+  },
+[/]
 }

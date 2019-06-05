@@ -72,16 +72,14 @@ public class Generator {
         String process = env.getProperty("process", "code");
 
         output.setActionUrl();
-        if (process.equals("code")) {
-            output.addObserver(postmanWriter);
-            output.addObserver(testCaseWriter);
-            output.addObserver(docWriter);
-            output.addObserver(laravelWriter);
-        } else if (process.equals("client")) {
-            output.addObserver(nodeJsClientWriter);
-        } else {
-            output.addObserver(autoTestWriter);
-        }
+
+        output.addObserver(postmanWriter);
+        output.addObserver(testCaseWriter);
+        output.addObserver(docWriter);
+        output.addObserver(laravelWriter);
+        output.addObserver(nodeJsClientWriter);
+        output.addObserver(autoTestWriter);
+
         output.notifyObservers();
     }
 

@@ -1,6 +1,7 @@
 package com.kamicloud.generator.writers;
 
 import com.kamicloud.generator.stubs.OutputStub;
+import com.kamicloud.generator.stubs.TemplateStub;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,21 @@ public class NodeJsClientWriter extends BaseWriter {
 
     @Override
     void update(OutputStub o) {
+        o.getTemplates().forEach((version, templateStub) -> {
+            writeTemplate(version, templateStub);
+        });
+
+        writeTemplate("", o.getCurrentTemplate());
+    }
+
+    void writeTemplate(String version, TemplateStub templateStub) {
         FileCombiner file = new FileCombiner();
 
-        file.setFileName(outputDir.getAbsolutePath() + "/test.js");
+        file.setFileName(outputDir.getAbsolutePath() + "/API" + version + ".js");
 
         Locale locale = Locale.forLanguageTag("cn-zh");
         Context context = new Context(locale);
-        context.setVariable("output", o);
+        context.setVariable("template", templateStub);
         String content = springTemplateEngine.process("js/api", context);
 
         file.addBlock(new MultiLinesCombiner(content));
