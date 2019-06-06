@@ -22,7 +22,7 @@ class Handler extends ExceptionHandler
             return parent::render($request, $exception);
         }
         if ($exception instanceof \Illuminate\Foundation\Http\Exceptions\MaintenanceModeException) {
-            $exception = config('maintain-mode-exception', MaintainModeException::class);
+            $exception = config('generator.exceptions.maintain-mode', MaintainModeException::class);
             $exception = new $exception('Maintaining');
         }
         if ($exception instanceof BaseException) {
@@ -31,7 +31,7 @@ class Handler extends ExceptionHandler
         if (config('app.debug', false) !== true && !$request->input('__test_mode', false)) {
             return parent::render($request, $exception);
         } else {
-            $exceptionClass = config('generator.exceptions.server-internal-exception', ServerInternalErrorException::class);
+            $exceptionClass = config('generator.exceptions.server-internal-error', ServerInternalErrorException::class);
             return self::render($request, new $exceptionClass('Something went wrong.'));
         }
     }

@@ -18,6 +18,7 @@ class GeneratorMiddleware
      */
     public function handle($request, Closure $next)
     {
+        $apiNotFoundException = config('generator.exceptions.api-not-found', );
         $testMode = $request->input('__test_mode', false);
         if ($testMode) {
             if (config('app.debug') === true) {

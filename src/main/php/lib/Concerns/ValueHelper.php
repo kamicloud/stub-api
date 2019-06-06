@@ -101,7 +101,7 @@ trait ValueHelper
 
         if ($validator->fails()) {
             $messages = $validator->messages()->toJson();
-            $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
+            $exception = config('generator.exceptions.invalid-parameter', InvalidParameterException::class);
             throw new $exception($location . $messages);
         } else {
             foreach ($types as $key => $type) {
@@ -112,7 +112,7 @@ trait ValueHelper
 
     protected function validateValue($value, $field, $rule, $type, $location, $input)
     {
-        $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
+        $exception = config('generator.exceptions.invalid-parameter', InvalidParameterException::class);
 
         $isModel = $type & Constants::MODEL;
         $isArray = $type & Constants::ARRAY;
@@ -187,7 +187,7 @@ trait ValueHelper
 
     protected function convertDate($value, $request)
     {
-        $exception = config('generator.exceptions.invalid-parameter-exception', InvalidParameterException::class);
+        $exception = config('generator.exceptions.invalid-parameter', InvalidParameterException::class);
         if (is_null($value)) {
             return null;
         }
