@@ -126,7 +126,9 @@ public class DocWriter extends BaseWriter {
                 file.addLine("");
 
                 // 菜单列表
-                controller.getActions().forEach((actionName, action) -> {
+                controller.getActions().forEach((action) -> {
+                    String actionName = action.getName();
+
                     String comment = action.getComment();
                     comment = comment != null ? CommentUtil.getTitle(comment) : "";
                     if (action.hasAnnotation(Named.class)) {
@@ -143,7 +145,9 @@ public class DocWriter extends BaseWriter {
                 });
 
                 file.addLine("");
-                controller.getActions().forEach((actionName, action) -> {
+                controller.getActions().forEach((action) -> {
+                    String actionName = action.getName();
+
                     file.addBlock(new MultiLinesCombiner(
                         "<a name=\"" + action.getName() + "\"></a>",
                         "## " + action.getName()
@@ -207,11 +211,14 @@ public class DocWriter extends BaseWriter {
             FileCombiner file = new FileCombiner();
             file.setFileName(outputDir.getAbsolutePath() + "/generated/models.md");
 
-            output.getModels().forEach((modelName, model) -> file.addLine("  - [" + modelName + "](#" + modelName + ")"));
+            output.getModels().forEach((model) -> {
+                String modelName = model.getName();
+                file.addLine("  - [" + modelName + "](#" + modelName + ")");
+            });
 
             file.addBlock(new MultiLinesCombiner(""));
 
-            output.getModels().forEach((modelName, model) -> {
+            output.getModels().forEach((model) -> {
                 file.addBlock(new MultiLinesCombiner(
                     "<a name=\"" + model.getName() + "\"></a>",
                     "## " + model.getName()

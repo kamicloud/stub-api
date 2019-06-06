@@ -82,7 +82,9 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     }
 
     private void getTestResponse(OutputStub output) {
-        output.getTemplates().forEach((version, templateStub) -> templateStub.getControllers().forEach(controllerStub -> controllerStub.getActions().forEach((actionName, actionStub) -> {
+        output.getTemplates().forEach((version, templateStub) -> templateStub.getControllers().forEach(controllerStub -> controllerStub.getActions().forEach((actionStub) -> {
+            String actionName = actionStub.getName();
+
             String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName(), actionName);
 
             AtomicReference<Integer> i = new AtomicReference<>(0);

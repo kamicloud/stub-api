@@ -64,7 +64,9 @@ public class PostmanWriter extends BaseWriter {
             PostmanItemStub postmanItemStub = new PostmanItemStub(controller.getName() + " " + (controller.getComment() == null ? "" : controller.getComment()));
             postmanStub.addItem(postmanItemStub);
 
-            controller.getActions().forEach((actionName, action) -> {
+            controller.getActions().forEach((action) -> {
+                String actionName = action.getName();
+
                 PostmanItemStub actionStub = new PostmanItemStub(actionName + " " + (action.getComment() == null ? "" : action.getComment()));
                 postmanItemStub.addItem(actionStub);
 

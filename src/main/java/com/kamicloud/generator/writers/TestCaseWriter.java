@@ -29,8 +29,9 @@ public class TestCaseWriter extends BaseWriter {
     private void writeTestCases(OutputStub outputStub) {
         outputStub.getTemplates().forEach((version, template) -> {
             template.getControllers().forEach(controllerStub -> {
-                controllerStub.getActions().forEach((actionName, actionStub) -> {
+                controllerStub.getActions().forEach((actionStub) -> {
                     try {
+                        String actionName = actionStub.getName();
                         String path = "/" + version + "/" + controllerStub.getName() + "/" + actionName;
                         String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName(), actionName);
                         File file = new File(outputDir.getAbsolutePath() + path + ".yml");

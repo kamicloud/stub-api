@@ -1,4 +1,4 @@
-package com.kamicloud.generator;
+package com.kamicloud.generator.parsers;
 
 import com.github.javaparser.StaticJavaParser;
 import com.github.javaparser.ast.CompilationUnit;
@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @SuppressWarnings("unused")
 public class DocParser {
-    static HashMap<String, String> classDocHashMap = new HashMap<>();
+    public static HashMap<String, String> classDocHashMap = new HashMap<>();
 
 
     public void parse(File file) throws FileNotFoundException {

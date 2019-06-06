@@ -95,7 +95,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     }
 
     private void writeModels(String version, TemplateStub templateStub) {
-        templateStub.getModels().forEach((modelName, modelStub) -> {
+        templateStub.getModels().forEach((modelStub) -> {
+            String modelName = modelStub.getName();
             if (
                 modelStub.hasAnnotation(AsBO.class) &&
                     templateStub.isCurrent()
@@ -157,7 +158,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                 new ClassMethodParameterCombiner(constructor, "handler", serviceClassName);
 
-                controllerStub.getActions().forEach((actionName, action) -> {
+                controllerStub.getActions().forEach((action) -> {
+                    String actionName = action.getName();
+
                     try {
                         String messageClassName = "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + actionName + "Message";
 
@@ -290,7 +293,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         fileCombiner.setFileName(routePath.getAbsolutePath());
 
         o.getTemplates().forEach((version, templateStub) -> {
-            templateStub.getControllers().forEach(controller -> controller.getActions().forEach((actionName, action) -> {
+            templateStub.getControllers().forEach(controller -> controller.getActions().forEach((action) -> {
+                String actionName = action.getName();
+
                 AnnotationStub methodsAnnotation = action.getAnnotation(Methods.class);
                 ArrayList<String> allowMethods;
                 String method;

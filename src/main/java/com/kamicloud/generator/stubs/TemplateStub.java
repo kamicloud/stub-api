@@ -3,12 +3,13 @@ package com.kamicloud.generator.stubs;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class TemplateStub extends BaseWithAnnotationStub {
     private ArrayList<String> constants = new ArrayList<>();
     private ArrayList<EnumStub> enums = new ArrayList<>();
-    private HashMap<String, ModelStub> models = new HashMap<>();
+    private LinkedList<ModelStub> models = new LinkedList<>();
     private ArrayList<ControllerStub> controllers = new ArrayList<>();
 
     private boolean current = false;
@@ -25,12 +26,12 @@ public class TemplateStub extends BaseWithAnnotationStub {
         constants.add(constant);
     }
 
-    public HashMap<String, ModelStub> getModels() {
+    public LinkedList<ModelStub> getModels() {
         return models;
     }
 
     public void addModel(ModelStub modelStub) {
-        models.put(modelStub.getName(), modelStub);
+        models.add(modelStub);
     }
 
     public void addController(ControllerStub controllerStub) {
@@ -48,18 +49,6 @@ public class TemplateStub extends BaseWithAnnotationStub {
 
     public ArrayList<EnumStub> getEnums() {
         return enums;
-    }
-
-    public ModelStub getModelByName(String name) {
-        String realname = name.replace("Models.", "");
-        AtomicReference<ModelStub> model = new AtomicReference<>();
-        models.forEach((modelName, modelStub) -> {
-            if (modelStub.getName().equals(realname)) {
-                model.set(modelStub);
-            }
-        });
-
-        return model.get();
     }
 
     public boolean isCurrent() {

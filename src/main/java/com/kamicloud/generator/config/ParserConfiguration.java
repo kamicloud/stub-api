@@ -1,7 +1,7 @@
 package com.kamicloud.generator.config;
 
-import com.kamicloud.generator.DocParser;
-import com.kamicloud.generator.Parser;
+import com.kamicloud.generator.parsers.DocParser;
+import com.kamicloud.generator.parsers.Parser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

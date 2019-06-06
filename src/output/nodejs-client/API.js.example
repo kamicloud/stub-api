@@ -1,26 +1,26 @@
 import axios from 'axios';
 
 export default {
-  User: {
-    CreateUser: async (data) => {
+  user: {
+    createUser: async (data) => {
       return await axios.post('/api/v1/user/create_user', data);
     },
-    GetUsers: async (data) => {
+    getUsers: async (data) => {
       return await axios.post('/api/v1/user/get_users', data);
     },
 
   },
-  Article: {
-    GetArticleComments: async (data) => {
+  article: {
+    getArticleComments: async (data) => {
       return await axios.post('/api/v1/article/get_article_comments', data);
     },
-    CreateArticle: async (data) => {
+    createArticle: async (data) => {
       return await axios.post('/api/v1/article/create_article', data);
     },
-    GetArticle: async (data) => {
+    getArticle: async (data) => {
       return await axios.post('/api/v1/article/get_article', data);
     },
-    GetArticles: async (data) => {
+    getArticles: async (data) => {
       return await axios.post('/api/v1/article/get_articles', data);
     },
 

@@ -152,8 +152,8 @@ class ArticleDTO extends DTO
             ['content', 'content', 'bail|nullable|string', Constants::STRING | Constants::OPTIONAL, null],
             ['user', 'user', UserDTO::class, Constants::MODEL, null],
             ['commentsCount', 'comments_count', 'bail|nullable|integer', Constants::INTEGER | Constants::OPTIONAL, null],
-            ['favorite', 'favorite', 'bail|nullable|null', Constants::BOOLEAN | Constants::OPTIONAL, null],
-            ['hot', 'hot', 'bail|nullable|null', Constants::BOOLEAN | Constants::OPTIONAL, null],
+            ['favorite', 'favorite', 'bail|nullable|boolean', Constants::BOOLEAN | Constants::OPTIONAL, null],
+            ['hot', 'hot', 'bail|nullable|boolean', Constants::BOOLEAN | Constants::OPTIONAL, null],
             ['createdAt', 'created_at', 'bail|date_format:Y-m-d H:i:s', Constants::DATE, 'Y-m-d H:i:s'],
         ];
     }

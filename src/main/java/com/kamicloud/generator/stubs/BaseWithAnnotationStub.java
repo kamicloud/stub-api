@@ -1,5 +1,6 @@
 package com.kamicloud.generator.stubs;
 
+import com.google.common.base.CaseFormat;
 import definitions.annotations.Extendable;
 
 import java.lang.annotation.Annotation;
@@ -9,18 +10,24 @@ import java.util.HashMap;
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
     private String classpath;
     private String name;
+    private String lowerCamelName;
     private BaseWithAnnotationStub parentNode;
     private HashMap<String, AnnotationStub> annotations = new HashMap<>();
     private ArrayList<String> comments = new ArrayList<>();
     private String comment;
-    private String extendsFrom;
 
     BaseWithAnnotationStub(String name) {
         this.name = name;
+
+        this.lowerCamelName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getLowerCamelName() {
+        return lowerCamelName;
     }
 
     public void addAnnotation(Annotation type, AnnotationStub annotationStub) {
@@ -56,20 +63,8 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
         return comment;
     }
 
-    public void setExtendsFrom(String extendsFrom) {
-        this.extendsFrom = extendsFrom;
-    }
-
-    public String getExtendsFrom() {
-        return extendsFrom;
-    }
-
     public void setParentNode(BaseWithAnnotationStub parentNode) {
         this.parentNode = parentNode;
-    }
-
-    public BaseWithAnnotationStub getParentNode() {
-        return parentNode;
     }
 
     public Boolean hasAnnotation(Class<?> type) {

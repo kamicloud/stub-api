@@ -29,7 +29,9 @@ public class OutputStub extends Observable {
     public void setActionUrl() {
         templates.forEach((version, templateStub) -> {
             templateStub.getControllers().forEach((controllerStub -> {
-                controllerStub.getActions().forEach((actionName, action) -> {
+                controllerStub.getActions().forEach((action) -> {
+                    String actionName = action.getName();
+
                     String uri = "/" + UrlUtil.transformVersion(version) +
                         "/" + UrlUtil.transformController(controllerStub.getName()) +
                         "/" + UrlUtil.transformAction(actionName);

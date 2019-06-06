@@ -59,8 +59,9 @@ public class JavaClientWriter extends BaseWriter {
     }
 
     private void writePojos(TemplateStub templateStub) {
-        templateStub.getModels().forEach((modelName, modelStub) -> {
+        templateStub.getModels().forEach((modelStub) -> {
             try {
+                String modelName = modelStub.getName();
                 ClassCombiner classCombiner = new ClassCombiner("models." + modelName + "POJO");
 
                 modelStub.getParameters().forEach((parameterName, parameterStub) -> {

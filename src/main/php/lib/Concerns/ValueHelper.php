@@ -37,27 +37,27 @@ trait ValueHelper
 
             if ($isArray) {
                 if (is_array($value)) {
-                    $this->$field = array_map(function ($value) use ($rule, $type) {
-                        return $this->fromOne($value, $type, $initParam);
+                    $this->$field = array_map(function ($value) use ($rule, $type, $initParam) {
+                        return $this->fromOne($value, $type, $rule, $initParam);
                     }, $value);
                 }
             } else {
-                $this->$field = $this->fromOne($value, $type, $initParam);
+                $this->$field = $this->fromOne($value, $type, $rule, $initParam);
             }
         }
     }
 
-    protected function fromOne($value, $type, $initParam)
+    protected function fromOne($value, $type, $rule, $initParam)
     {
         if (is_null($value)) {
             return null;
         }
         if ($type & Constants::MODEL) {
-            /** @var DTO $type */
-            return $type::initFromModel($value);
+            /** @var DTO $rule */
+            return $rule::initFromModel($value);
         } elseif ($type & Constants::ENUM) {
-            /** @var Enum $type */
-            return $type::transform($value);
+            /** @var Enum $rule */
+            return $rule::transform($value);
         } elseif ($type & Constants::DATE) {
             if (config('generator.request-date-timestamp')) {
                 return date($initParam, strtotime($value));

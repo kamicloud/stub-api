@@ -1,5 +1,6 @@
-package com.kamicloud.generator;
+package com.kamicloud.generator.parsers;
 
+import com.kamicloud.generator.Generator;
 import com.kamicloud.generator.stubs.*;
 import definitions.types.EnumType;
 import definitions.types.ModelType;

@@ -2,6 +2,8 @@ package com.kamicloud.generator;
 
 import com.kamicloud.generator.config.ApplicationProperties;
 import com.kamicloud.generator.config.DefaultProfileUtil;
+import com.kamicloud.generator.parsers.DocParser;
+import com.kamicloud.generator.parsers.Parser;
 import com.kamicloud.generator.stubs.*;
 import com.kamicloud.generator.writers.*;
 import org.slf4j.Logger;
