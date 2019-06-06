@@ -190,7 +190,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                         );
                         if (action.hasAnnotation(Transactional.class)) {
                             actionClassMethodCombiner.wrapBody(
-                                "return DB::transaction(function () use ($request) {",
+                                "return DB::transaction(function () use ($message) {",
                                 "});"
                             );
                         }
