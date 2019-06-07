@@ -73,7 +73,10 @@ abstract class DTO implements JsonSerializable
             $isDate = $type & Constants::DATE;
 
             if ($isDate) {
-                $value = date($format, strtotime($values[$dbField] ?? null));
+                $value = $values[$dbField] ?? null;
+                if ($value !== null) {
+                    $value = date($format, strtotime($value));
+                }
             } else {
                 $value = $values[$dbField] ?? null;
             }
