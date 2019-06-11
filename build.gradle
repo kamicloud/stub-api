@@ -98,22 +98,24 @@ jar {
     }
 }
 
-task clearJar(type: Delete) {
-    delete '../../../storage/generator/libs'
+task clearLaravel(type: Delete) {
+    delete '../../../storage/generator'
 }
 
-task copyJar(type: Copy) {
+task copyLaravel(type: Copy) {
     from configurations.runtime
-    into('../../../storage/generator/libs')
-}
-
-task copyClasses(type: Copy) {
     from 'build/classes/java/main'
-    into('../../../storage/generator/classes')
+    into('../../../storage/generator')
 }
 
-task clearClasses(type: Delete) {
-    delete '../../../storage/generator/classes'
+task clearClient(type: Delete) {
+    delete '../storage/generator'
+}
+
+task copyClient(type: Copy) {
+    from configurations.runtime
+    from 'build/classes/java/main'
+    into('../storage/generator')
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
@@ -122,6 +124,8 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 
-task release(type: Copy, dependsOn: [build, sourcesJar, clearJar, copyJar, clearClasses, copyClasses])
+task release(type: Copy, dependsOn: [build, sourcesJar, clearLaravel, copyLaravel])
+
+task releaseClient(type: Copy, dependsOn: [build, sourcesJar, clearClient, copyClient])
 
 compileJava.dependsOn processResources

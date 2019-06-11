@@ -42,7 +42,12 @@ abstract class BaseWriter implements Observer {
             process = "default";
         }
 
-        String[] writers = env.getProperty("generator.process." + process).split(",");
+        process = env.getProperty("generator.process." + process, "");
+        if (process.equals("")) {
+            return;
+        }
+
+        String[] writers = process.split(",");
 
         Arrays.asList(writers).forEach(s -> {
             processes.put(s, s);

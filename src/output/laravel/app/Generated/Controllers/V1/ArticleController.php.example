@@ -29,7 +29,7 @@ class ArticleController extends Controller
 
     public function createArticle(CreateArticleMessage $message)
     {
-        return DB::transaction(function () use ($request) {
+        return DB::transaction(function () use ($message) {
             $message->validateInput();
             $this->handler->createArticle($message);
             $message->validateOutput();

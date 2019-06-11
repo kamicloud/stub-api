@@ -149,6 +149,19 @@ class TemplateV1 {
         }
     }
 
+    class AdminControllers {
+        class Article {
+            /**
+             * 获取文章列表
+             */
+            class GetArticles {
+                @Response
+                Models.Article[] articles;
+            }
+        }
+
+    }
+
     class Controllers {
         class Article {
             /**
