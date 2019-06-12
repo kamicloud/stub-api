@@ -16,8 +16,6 @@ public class JavaClientWriter extends BaseWriter {
     private String version;
 
     private File outputDir;
-    private File generatedDir;
-    private File routePath;
 
     @Override
     String getName() {
@@ -38,9 +36,6 @@ public class JavaClientWriter extends BaseWriter {
             outputDir.mkdirs();
         }
         ClassCombiner.setRoot(javaClientPath, javaClasspath);
-        generatedDir = new File(outputDir.getAbsolutePath() + "/app/Generated");
-        routePath = new File(outputDir.getAbsolutePath() + "/routes/generated_routes.php");
-        FileUtil.deleteAllFilesOfDir(generatedDir);
         output.getTemplates().forEach((version, templateStub) -> {
             this.version = version;
 

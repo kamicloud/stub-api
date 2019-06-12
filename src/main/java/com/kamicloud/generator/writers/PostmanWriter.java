@@ -89,9 +89,8 @@ public class PostmanWriter extends BaseWriter {
                 postmanItemRequestUrlStub.addPath(UrlUtil.transformController(controller.getName()));
                 postmanItemRequestUrlStub.addPath(UrlUtil.transformAction(action.getName()));
 
-
-                postmanItemRequestBodyStub.addParameter(new PostmanParameterStub("__access_token", "{{access_token}}"));
                 postmanItemRequestBodyStub.addParameter(new PostmanParameterStub("__test_mode", "1"));
+                postmanItemRequestBodyStub.addParameter(new PostmanParameterStub("__user", ""));
 
                 action.getRequests().forEach((parameterName, parameter) -> {
                     if (parameter.hasAnnotation(Request.class)) {

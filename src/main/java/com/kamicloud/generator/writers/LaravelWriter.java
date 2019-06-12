@@ -26,7 +26,13 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private String serviceSuffix;
     private String serviceFolder;
 
-    protected HashMap<TypeSpec, String> returnTypeMap = new HashMap<TypeSpec, String>() {{
+    private String valueHelperNamespace;
+    private String baseDTONamespace;
+    private String baseMessageNamespace;
+    private String baseEnumNamespace;
+    private String baseExceptionNamespace;
+
+    private HashMap<TypeSpec, String> returnTypeMap = new HashMap<TypeSpec, String>() {{
         put(TypeSpec.BOOLEAN, "boolean");
         put(TypeSpec.DATE, "\\Illuminate\\Support\\Carbon");
         put(TypeSpec.INTEGER, "int");
@@ -35,7 +41,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         put(TypeSpec.STRING, "string");
     }};
 
-    protected HashMap<TypeSpec, String> typeMap = new HashMap<TypeSpec, String>() {{
+    private HashMap<TypeSpec, String> typeMap = new HashMap<TypeSpec, String>() {{
         put(TypeSpec.BOOLEAN, "Constants::BOOLEAN");
         put(TypeSpec.DATE, "Constants::DATE");
         put(TypeSpec.INTEGER, "Constants::INTEGER");
@@ -58,6 +64,31 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         dtoSuffix = env.getProperty("generator.writers.laravel.dto-suffix", "DTO");
         serviceFolder = env.getProperty("generator.writers.laravel.service-folder", "Services");
         serviceSuffix = env.getProperty("generator.writers.laravel.service-suffix", "Service");
+
+        valueHelperNamespace = env.getProperty(
+            "generator.writers.laravel.value-helper-namespace",
+            "Kamicloud\\StubApi\\Concerns\\ValueHelper"
+        );
+
+        baseDTONamespace = env.getProperty(
+            "generator.writers.laravel.base-dto-namespace",
+            "Kamicloud\\StubApi\\DTOs\\DTO"
+        );
+
+        baseMessageNamespace = env.getProperty(
+            "generator.writers.laravel.base-message-namespace",
+            "Kamicloud\\StubApi\\Http\\Messages\\Message"
+        );
+
+        baseEnumNamespace = env.getProperty(
+            "generator.writers.laravel.base-enum-namespace",
+            "Kamicloud\\StubApi\\BOs\\Enum"
+        );
+
+        baseExceptionNamespace = env.getProperty(
+            "generator.writers.laravel.base-exception-namespace",
+            "Kamicloud\\StubApi\\Exceptions\\BaseException"
+        );
 
         String laravelPath = Objects.requireNonNull(env.getProperty("generator.writers.laravel.path"));
         outputDir = new File(laravelPath);
@@ -112,10 +143,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             String modelName = modelStub.getName();
             ClassCombiner modelClassCombiner = new ClassCombiner(
                 "App\\Generated\\" + version + "\\" + dtoFolder + "\\" + modelName + dtoSuffix,
-                "Kamicloud\\StubApi\\DTOs\\DTO"
+                baseDTONamespace
             );
 
-            modelClassCombiner.addTrait("Kamicloud\\StubApi\\Concerns\\ValueHelper");
+            modelClassCombiner.addTrait(valueHelperNamespace);
 
             HashMap<String, ParameterStub> parameters = modelStub.getParameters();
 
@@ -166,7 +197,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         ClassCombiner messageClassCombiner = new ClassCombiner(
                             messageClassName,
-                            "Kamicloud\\StubApi\\Http\\Messages\\Message"
+                            baseMessageNamespace
                         );
 
                         String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
@@ -195,7 +226,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                             );
                         }
 
-                        messageClassCombiner.addTrait("Kamicloud\\StubApi\\Concerns\\ValueHelper");
+                        messageClassCombiner.addTrait(valueHelperNamespace);
                         // message
                         writeParameterGetters(action.getRequests(), messageClassCombiner);
                         writeParameterAttributes(action.getRequests(), messageClassCombiner);
@@ -228,7 +259,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             try {
                 ClassCombiner enumClassCombiner = new ClassCombiner(
                     "App\\Generated\\" + version + "\\Enums\\" + enumStub.getName(),
-                    "Kamicloud\\StubApi\\BOs\\Enum"
+                    baseEnumNamespace
                 );
 
                 ClassConstantCombiner mapConstant = new ClassConstantCombiner(
@@ -272,7 +303,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 String exceptionName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName());
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
                     "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
-                    "Kamicloud\\StubApi\\Exceptions\\BaseException"
+                    baseExceptionNamespace
                 );
 
                 ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner(exceptionClassCombiner, "__construct");

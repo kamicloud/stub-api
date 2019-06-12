@@ -17,15 +17,15 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -103,15 +103,15 @@
               ],
               "urlencoded": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -211,15 +211,15 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -262,15 +262,15 @@
               ],
               "urlencoded": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -340,15 +340,15 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -370,15 +370,15 @@
               ],
               "urlencoded": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -423,15 +423,15 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -453,15 +453,15 @@
               ],
               "urlencoded": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -506,15 +506,15 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -529,15 +529,15 @@
               ],
               "urlencoded": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -575,15 +575,15 @@
               "mode": "formdata",
               "formdata": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
@@ -591,15 +591,15 @@
               ],
               "urlencoded": [
                 {
-                  "key": "__access_token",
-                  "value": "{{access_token}}",
+                  "key": "__test_mode",
+                  "value": "1",
                   "type": "text",
                   "description": "",
                   "disabled": false
                 },
                 {
-                  "key": "__test_mode",
-                  "value": "1",
+                  "key": "__user",
+                  "value": "",
                   "type": "text",
                   "description": "",
                   "disabled": false
