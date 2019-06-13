@@ -12,9 +12,14 @@ public class ParameterStub extends BaseWithAnnotationStub {
 
     protected Type type;
 
-    public ParameterStub(String name, String type) {
-        super(name);
+    protected TypeStub typeStub;
+
+    protected String typeClasspath;
+
+    public ParameterStub(String name, String classpath, String type, String typeClasspath) {
+        super(name, classpath);
         this.typeSimpleName = type;
+        this.typeClasspath = typeClasspath;
     }
 
     public void setArrayDepth(int depth) {
@@ -23,6 +28,14 @@ public class ParameterStub extends BaseWithAnnotationStub {
 
     public boolean isArray() {
         return arrayDepth > 0;
+    }
+
+    public TypeStub getTypeStub() {
+        return typeStub;
+    }
+
+    public void setTypeStub(TypeStub typeStub) {
+        this.typeStub = typeStub;
     }
 
     public boolean isModel() {

@@ -6,9 +6,12 @@ import com.github.javaparser.ast.Node;
 import com.github.javaparser.ast.body.*;
 import com.github.javaparser.ast.comments.Comment;
 import com.github.javaparser.javadoc.Javadoc;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Optional;
 
@@ -16,6 +19,30 @@ import java.util.Optional;
 public class DocParser {
     public static HashMap<String, String> classDocHashMap = new HashMap<>();
 
+    @Autowired
+    Environment env;
+
+    public void parse() {
+        String codePath = env.getProperty("generator.template-path", "./src/main/java/templates");
+        File templateDir = new File(codePath + "/templates");
+        File[] templateFiles = templateDir.listFiles();
+
+        if (templateFiles == null) {
+            return;
+        }
+        Arrays.asList(templateFiles).forEach(templateFile -> {
+            if (!templateFile.getName().contains(".java")) {
+                return;
+            }
+
+            try {
+                parse(templateFile);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
 
     public void parse(File file) throws FileNotFoundException {
         CompilationUnit compilationUnit = StaticJavaParser.parse(file);

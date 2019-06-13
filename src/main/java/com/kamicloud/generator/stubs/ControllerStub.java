@@ -5,8 +5,8 @@ import java.util.LinkedList;
 public class ControllerStub extends BaseWithAnnotationStub {
     private LinkedList<ActionStub> actions = new LinkedList<>();
 
-    public ControllerStub(String name) {
-        super(name);
+    public ControllerStub(String name, String classpath) {
+        super(name, classpath);
     }
 
     public LinkedList<ActionStub> getActions() {

@@ -10,5 +10,9 @@ __params:
   genders:
   id:
   ids:
+  ym:
+  ymarray:
+  ymarrayn:
+  file:
 # __testcases:
 

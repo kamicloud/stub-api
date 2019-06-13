@@ -1,5 +1,6 @@
 package com.kamicloud.generator.parsers;
 
+import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.Generator;
 import com.kamicloud.generator.stubs.*;
 import definitions.types.EnumType;
@@ -8,6 +9,7 @@ import definitions.annotations.ErrorInterface;
 import definitions.annotations.FixedEnumValueInterface;
 import definitions.annotations.Request;
 import definitions.types.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import templates.TemplateList;
 
 import java.lang.annotation.Annotation;
@@ -18,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Parser {
+    @Autowired
+    OutputStub outputStub;
     /**
      * 标量数据对应的类型
      */
@@ -38,19 +42,20 @@ public class Parser {
         put("File", new File());
     }};
 
-    public OutputStub parse() {
-        OutputStub output = new OutputStub();
-
-        Arrays.asList(TemplateList.templates).forEach(template -> parseTemplate(template, output));
-        parseErrors(TemplateList.errorsTemplate, output);
-
-        return output;
+    public void parse() {
+        Arrays.asList(TemplateList.templates).forEach(template -> {
+            parseTemplate(template);
+        });
+        parseErrors(TemplateList.errorsTemplate);
     }
 
-    private void parseTemplate(Class<?> template, OutputStub outputStub) {
+    private void parseTemplate(Class<?> template) {
         String version = template.getSimpleName();
         version = version.replace("Template", "");
-        TemplateStub templateStub = new TemplateStub(version);
+        TemplateStub templateStub = new TemplateStub(
+            version,
+            template.getCanonicalName()
+        );
 
         Arrays.asList(template.getDeclaredClasses()).forEach(part -> {
             if (part.getSimpleName().equals("Enums")) {
@@ -71,7 +76,7 @@ public class Parser {
         }
     }
 
-    private void parseErrors(Class<? extends Enum> errorsTemplate, OutputStub templateStub) {
+    private void parseErrors(Class<? extends Enum> errorsTemplate) {
         Arrays.asList(errorsTemplate.getFields()).forEach(error -> {
             try {
                 Enum<?> value = Enum.valueOf(errorsTemplate, error.getName());
@@ -81,13 +86,14 @@ public class Parser {
 
 
                     ErrorStub errorStub = new ErrorStub(
-                        error.getName(),
+                        CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName()),
+                        fieldBuilder(error),
                         fillValue,
                         ""
                     );
                     parseAnnotations(error.getAnnotations(), errorStub);
                     parseComment(fieldBuilder(error), errorStub);
-                    templateStub.addError(errorStub);
+                    outputStub.addError(errorStub);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -97,14 +103,20 @@ public class Parser {
 
     private void parseControllers(Class<?>[] controllers, TemplateStub templateStub) {
         Arrays.asList(controllers).forEach(controller -> {
-            ControllerStub controllerStub = new ControllerStub(controller.getSimpleName());
+            ControllerStub controllerStub = new ControllerStub(
+                controller.getSimpleName(),
+                controller.getCanonicalName()
+            );
             templateStub.addController(controllerStub);
 
             parseAnnotations(controller.getAnnotations(), controllerStub);
             parseComment(controller.getCanonicalName(), controllerStub);
 
             Arrays.asList(controller.getDeclaredClasses()).forEach(action -> {
-                ActionStub actionStub = new ActionStub(action.getSimpleName());
+                ActionStub actionStub = new ActionStub(
+                    CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, action.getSimpleName()),
+                    action.getCanonicalName()
+                );
                 controllerStub.addAction(actionStub);
                 // 注解
                 parseAnnotations(action.getAnnotations(), actionStub);
@@ -128,7 +140,10 @@ public class Parser {
 
     private void parseEnums(Class<?>[] enumsTemplate, TemplateStub templateStub) {
         Arrays.asList(enumsTemplate).forEach(enumTemplate -> {
-            EnumStub enumStub = new EnumStub(enumTemplate.getSimpleName());
+            EnumStub enumStub = new EnumStub(
+                enumTemplate.getSimpleName(),
+                enumTemplate.getCanonicalName()
+            );
             templateStub.addEnum(enumStub);
 
             parseComment(enumTemplate.getCanonicalName(), enumStub);
@@ -148,7 +163,11 @@ public class Parser {
                             getValue.setAccessible(true);
                             fillValue = getValue.invoke(value).toString();
                         }
-                        EnumStub.EnumStubItem item = new EnumStub.EnumStubItem(fillValue, type);
+                        EnumStub.EnumStubItem item = new EnumStub.EnumStubItem(
+                            fillValue,
+                            fieldBuilder(entryTemplate),
+                            type
+                        );
                         enumStub.addItem(key, item);
 
                         parseComment(fieldBuilder(entryTemplate), item);
@@ -198,10 +217,13 @@ public class Parser {
 
     private void parseModels(Class<?>[] models, TemplateStub templateStub) {
         Arrays.asList(models).forEach(model -> {
-            ModelStub modelStub = new ModelStub(model.getSimpleName());
+            ModelStub modelStub = new ModelStub(
+                model.getSimpleName(),
+                model.getCanonicalName()
+            );
 
             templateStub.addModel(modelStub);
-            Generator.modelHashMap.put(model.getCanonicalName(), modelStub);
+            outputStub.modelHashMap.put(model.getCanonicalName(), modelStub);
             // 注解
             parseAnnotations(model.getAnnotations(), modelStub);
             parseComment(model.getCanonicalName(), modelStub);
@@ -233,12 +255,16 @@ public class Parser {
                 parameterType = parameterType.getComponentType();
                 depth++;
             }
-            String canonicalName = parameterType.getCanonicalName();
             String typeName = parameterType.getTypeName();
             String typeSimpleName = parameterType.getSimpleName();
 
 
-            ParameterStub parameterStub = new ParameterStub(parameter.getName(), typeSimpleName);
+            ParameterStub parameterStub = new ParameterStub(
+                parameter.getName(),
+                fieldBuilder(parameter),
+                typeSimpleName,
+                parameterType.getCanonicalName()
+            );
             parameterStub.setArrayDepth(depth);
 
             Type type;
@@ -277,7 +303,7 @@ public class Parser {
 
     private void parseComment(String name, BaseWithAnnotationStub commentStub) {
         commentStub.setClasspath(name);
-        Generator.classHashMap.add(commentStub);
+        outputStub.classHashMap.put(commentStub.getClasspath(), commentStub);
     }
 
     private String fieldBuilder(Field field) {

@@ -1,5 +1,6 @@
 package com.kamicloud.generator.writers;
 
+import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.utils.CommentUtil;
 import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
@@ -186,7 +187,11 @@ public class DocWriter extends BaseWriter {
             output.getErrors().forEach(error -> {
                 String comment = error.getComment() == null ? "" : error.getComment().replace("\n", "<br>");
                 // 输出模型每一个请求参数
-                blocks.addLine("|" + error.getCode() + "|" + error.getName() + "|" + comment + " |");
+                blocks.addLine(
+                    "|" + error.getCode() +
+                    "|" + CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, error.getName()) +
+                    "|" + comment + " |"
+                );
             });
 
             overview.addBlock(blocks);

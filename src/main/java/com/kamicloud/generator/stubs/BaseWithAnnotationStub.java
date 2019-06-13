@@ -7,27 +7,55 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+@SuppressWarnings("unused")
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
     private String classpath;
+
     private String name;
+    private String upperCamelName;
     private String lowerCamelName;
+    private String lowerUnderScoreName;
+    private String upperUnderScoreName;
+
     private BaseWithAnnotationStub parentNode;
     private HashMap<String, AnnotationStub> annotations = new HashMap<>();
     private ArrayList<String> comments = new ArrayList<>();
     private String comment;
 
-    BaseWithAnnotationStub(String name) {
+    /**
+     * @param name 类 / 变量名称 都将转成Upper camel
+     */
+    BaseWithAnnotationStub(
+        String name,
+        String classpath
+    ) {
         this.name = name;
+        this.classpath = classpath;
 
+        this.upperCamelName = name;
         this.lowerCamelName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+        this.lowerUnderScoreName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
+        this.upperUnderScoreName = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, name);
     }
 
     public String getName() {
         return name;
     }
 
+    public String getUpperCamelName() {
+        return upperCamelName;
+    }
+
     public String getLowerCamelName() {
         return lowerCamelName;
+    }
+
+    public String getLowerUnderScoreName() {
+        return lowerUnderScoreName;
+    }
+
+    public String getUpperUnderScoreName() {
+        return upperUnderScoreName;
     }
 
     public void addAnnotation(Annotation type, AnnotationStub annotationStub) {

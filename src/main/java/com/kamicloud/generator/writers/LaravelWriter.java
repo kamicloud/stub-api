@@ -297,10 +297,13 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         o.getErrors().forEach(error -> {
             try {
                 // error code
-                ClassConstantCombiner constant = new ClassConstantCombiner(error.getName(), null);
+                ClassConstantCombiner constant = new ClassConstantCombiner(
+                    CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, error.getName()),
+                    null
+                );
                 constant.addLine(error.getCode());
                 errorCodeClassCombiner.addConstant(constant);
-                String exceptionName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName());
+                String exceptionName = error.getName();
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
                     "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
                     baseExceptionNamespace
@@ -308,7 +311,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                 ClassMethodCombiner constructMethodCombiner = new ClassMethodCombiner(exceptionClassCombiner, "__construct");
                 new ClassMethodParameterCombiner(constructMethodCombiner, "message", null, "null");
-                constructMethodCombiner.addBody("parent::__construct($message, ErrorCode::" + error.getName() + ");");
+                constructMethodCombiner.addBody(
+                    "parent::__construct($message, ErrorCode::" +
+                    CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, error.getName()) +
+                    ");"
+                );
 
                 exceptionClassCombiner.toFile();
             } catch (Exception e) {
@@ -399,7 +406,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         if (type.getSpec() == TypeSpec.MODEL) {
             returnType = parameterStub.getTypeSimpleName() + dtoSuffix;
         } else if (type.getSpec() == TypeSpec.ENUM) {
-            returnType = parameterStub.getTypeSimpleName();
+            returnType = "mixed";
         } else {
             returnType = returnTypeMap.get(type.getSpec());
         }

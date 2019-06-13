@@ -7,8 +7,8 @@ public class ModelStub extends BaseWithAnnotationStub {
     private String parentKey;
     private ModelStub parent;
 
-    public ModelStub(String name) {
-        super(name);
+    public ModelStub(String name, String classpath) {
+        super(name, classpath);
     }
 
     public LinkedHashMap<String, ParameterStub> getParameters() {

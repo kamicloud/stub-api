@@ -9,10 +9,9 @@ public class ActionStub extends BaseWithAnnotationStub {
     private String uri;
     private String fullUri;
 
-    public ActionStub(String name) {
-        super(name);
+    public ActionStub(String name, String classpath) {
+        super(name, classpath);
     }
-
 
     public LinkedHashMap<String, ParameterStub> getRequests() {
         return requests;

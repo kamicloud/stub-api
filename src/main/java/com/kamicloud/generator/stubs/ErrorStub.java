@@ -5,8 +5,8 @@ public class ErrorStub extends BaseWithAnnotationStub {
     private String code;
     private String message;
 
-    public ErrorStub(String name, String code, String message) {
-        super(name);
+    public ErrorStub(String name, String classpath, String code, String message) {
+        super(name, classpath);
         this.code = code;
         this.message = message;
     }

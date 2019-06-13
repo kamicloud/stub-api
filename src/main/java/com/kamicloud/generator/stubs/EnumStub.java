@@ -6,12 +6,12 @@ import java.util.LinkedHashMap;
 public class EnumStub extends BaseWithAnnotationStub {
     private LinkedHashMap<String, EnumStubItem> items = new LinkedHashMap<>();
 
-    public EnumStub(String name) {
-        super(name);
+    public EnumStub(String name, String classpath) {
+        super(name, classpath);
     }
 
-    public void addItem(String key, String value, EnumStubItemType type) {
-        items.put(key, new EnumStubItem(value, type));
+    public void addItem(String key, String classpath, String value, EnumStubItemType type) {
+        items.put(key, new EnumStubItem(value, classpath, type));
     }
 
     public void addItem(String key, EnumStubItem enumStubItem) {
@@ -24,8 +24,8 @@ public class EnumStub extends BaseWithAnnotationStub {
 
     public static class EnumStubItem extends BaseWithAnnotationStub {
         private EnumStubItemType type;
-        public EnumStubItem(String name, EnumStubItemType type) {
-            super(name);
+        public EnumStubItem(String name, String classpath, EnumStubItemType type) {
+            super(name, classpath);
             this.type = type;
         }
 

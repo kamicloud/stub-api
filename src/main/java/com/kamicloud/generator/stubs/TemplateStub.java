@@ -14,8 +14,8 @@ public class TemplateStub extends BaseWithAnnotationStub {
 
     private boolean current = false;
 
-    public TemplateStub(String name) {
-        super(name);
+    public TemplateStub(String name, String classpath) {
+        super(name, classpath);
     }
 
     public ArrayList<String> getConstants() {

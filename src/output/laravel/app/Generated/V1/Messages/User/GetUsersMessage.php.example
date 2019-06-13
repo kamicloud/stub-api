@@ -30,7 +30,7 @@ class GetUsersMessage extends Message
     }
 
     /**
-     * @return Gender
+     * @return mixed
      */
     public function getGender()
     {
