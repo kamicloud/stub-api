@@ -12,6 +12,10 @@ abstract class DTO implements JsonSerializable
 {
     use ValueHelper;
 
+    /**
+     * @param $values
+     * @return static|null
+     */
     public static function initFromModel($values)
     {
         if (is_string($values)) {
@@ -29,6 +33,10 @@ abstract class DTO implements JsonSerializable
         return $model;
     }
 
+    /**
+     * @param $values
+     * @return static[]
+     */
     public static function initFromModels($values)
     {
         if (is_string($values)) {
@@ -46,7 +54,7 @@ abstract class DTO implements JsonSerializable
 
     /**
      * @param Model|array|null $orm
-     * @return null|static
+     * @return static|null
      */
     public static function initFromEloquent($orm)
     {
@@ -98,7 +106,7 @@ abstract class DTO implements JsonSerializable
 
     /**
      * @param Collection|array|null $orms
-     * @return array
+     * @return static[]
      */
     public static function initFromEloquents($orms)
     {
@@ -137,6 +145,9 @@ abstract class DTO implements JsonSerializable
 
     }
 
+    /**
+     * @return array
+     */
     public function toDBArray()
     {
         return array_reduce($this->getAttributeMap(), function ($c, $attribute) {

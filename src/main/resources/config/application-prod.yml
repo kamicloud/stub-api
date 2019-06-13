@@ -6,7 +6,7 @@
 
 generator:
   process:
-    default: laravel,laravel-doc,postman,testcases
+    default: laravel,laravel-doc,postman
     laravel-auto-test: laravel-auto-test
     client: nodejs-client
   env: dev
