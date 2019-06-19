@@ -1,9 +1,9 @@
 # API Generator
 
 ## 说明
-本项目为laravel项目接口生成及自动测试工具，代码简陋还有很多功能没有实现，后续会改为反射方式实现功能。
+本项目为laravel项目接口生成及自动测试工具。
 
-本项目依赖 JDK8
+本项目依赖 JDK
 
 ## 使用方法
 
@@ -17,18 +17,15 @@ DEMO
 https://github.com/Kamicloud/GeneratorDemoProject
 
 #### 引入
-添加git到composer.json，并composer require kamicloud/yet-another-generator
 
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/Ttdnts/APIGenerator.git"
-        }
-    ]
-    
-执行 php artisan generator:install 将配置、模板及脚本自动配置在项目目录
+````
+composer require kamicloud/stub-api
+````
 
-执行根目录引入的initGenerator，
+
+执行 php artisan stub-api:install 将配置、模板及脚本自动配置在项目目录
+
+执行bin目录引入的initGenerator，
 
 修改laravel项目的一些代码的基类为generator基类
 
