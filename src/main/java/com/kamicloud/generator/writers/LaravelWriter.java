@@ -405,7 +405,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
         if (type.getSpec() == TypeSpec.MODEL) {
             returnType = parameterStub.getTypeSimpleName() + dtoSuffix;
-        } else if (type.getSpec() == TypeSpec.ENUM) {
+        } else if (type.getSpec() == TypeSpec.ENUM || type.getSpec() == TypeSpec.DATE) {
             returnType = "mixed";
         } else {
             returnType = returnTypeMap.get(type.getSpec());

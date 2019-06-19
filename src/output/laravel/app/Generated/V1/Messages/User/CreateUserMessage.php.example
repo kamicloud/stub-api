@@ -75,7 +75,7 @@ class CreateUserMessage extends Message
     }
 
     /**
-     * @return \Illuminate\Support\Carbon
+     * @return mixed
      */
     public function getYm()
     {
@@ -83,7 +83,7 @@ class CreateUserMessage extends Message
     }
 
     /**
-     * @return \Illuminate\Support\Carbon[]
+     * @return mixed[]
      */
     public function getYmarray()
     {
@@ -91,7 +91,7 @@ class CreateUserMessage extends Message
     }
 
     /**
-     * @return \Illuminate\Support\Carbon[]
+     * @return mixed[]
      */
     public function getYmarrayn()
     {

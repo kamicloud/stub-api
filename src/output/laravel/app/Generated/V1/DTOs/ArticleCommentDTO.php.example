@@ -41,7 +41,7 @@ class ArticleCommentDTO extends DTO
     }
 
     /**
-     * @return \Illuminate\Support\Carbon
+     * @return mixed
      */
     public function getCreatedAt()
     {
