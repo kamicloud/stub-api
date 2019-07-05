@@ -14,6 +14,7 @@ abstract class Message
      */
     protected $request;
     protected $fileResponse;
+    protected $errorResponse;
 
     public function __construct(Request $request)
     {
@@ -38,7 +39,19 @@ abstract class Message
 
     public function validateOutput()
     {
-        $this->validateAttributes($this->responseRules(), "response", false);
+        if (!$this->errorResponse) {
+            $this->validateAttributes($this->responseRules(), "response", false);
+        }
+    }
+
+    public function setErrorResponse($errorResponse)
+    {
+        $this->errorResponse = $errorResponse;
+    }
+
+    public function getErrorResponse()
+    {
+        return $this->errorResponse;
     }
 
     public function setFileResponse($fileResponse)
@@ -53,6 +66,9 @@ abstract class Message
 
     public function getResponse()
     {
+        if ($this->errorResponse) {
+            return $this->errorResponse;
+        }
         $attributeMap = $this->responseRules();
 
         $data = [];
