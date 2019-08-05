@@ -218,7 +218,11 @@ public class DocWriter extends BaseWriter {
 
             output.getModels().forEach((model) -> {
                 String modelName = model.getName();
-                file.addLine("  - [" + modelName + "](#" + modelName + ")");
+
+                String comment = model.getComment();
+                comment = comment != null ? CommentUtil.getTitle(comment) : "";
+
+                file.addLine("  - [" + modelName + comment + "](#" + modelName + ")");
             });
 
             file.addBlock(new MultiLinesCombiner(""));
@@ -250,7 +254,11 @@ public class DocWriter extends BaseWriter {
 
             output.getEnums().forEach((enumStub) -> {
                 String enumName = enumStub.getName();
-                file.addLine("  - [" + enumName + "](#" + enumName + ")");
+
+                String comment = enumStub.getComment();
+                comment = comment != null ? CommentUtil.getTitle(comment) : "";
+
+                file.addLine("  - [" + enumName + comment + "](#" + enumName + ")");
             });
 
             file.addBlock(new MultiLinesCombiner(""));
