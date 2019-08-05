@@ -212,6 +212,8 @@ class TemplateV1 {
 
         /**
          * 用户控制器
+         *
+         * 描述
          */
         public class User {
             @Methods({MethodType.POST, MethodType.DELETE})
@@ -245,6 +247,10 @@ class TemplateV1 {
                 Models.User user;
             }
 
+            /**
+             * 创建用户
+             * 这是描述
+             */
             @Methods({MethodType.POST})
             class CreateUser {
                 /**

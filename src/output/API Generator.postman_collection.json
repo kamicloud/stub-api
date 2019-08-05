@@ -6,10 +6,10 @@
   },
   "item": [
     {
-      "name": "User 用户控制器",
+      "name": "User 用户控制器\n描述",
       "item": [
         {
-          "name": "CreateUser ",
+          "name": "CreateUser 创建用户\n这是描述",
           "request": {
             "method": "POST",
             "header": [],
@@ -199,7 +199,8 @@
                 "user",
                 "create_user"
               ]
-            }
+            },
+            "description": "创建用户\n这是描述"
           }
         },
         {

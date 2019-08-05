@@ -1,8 +1,8 @@
   - [ArticleComment](#ArticleComment)
   - [Article](#Article)
-  - [SharePayload](#SharePayload)
-  - [UserProfile](#UserProfile)
-  - [User](#User)
+  - [SharePayload一个分享场景的抽象](#SharePayload)
+  - [UserProfile用户的基本信息](#UserProfile)
+  - [User用户信息](#User)
 
 <a name="ArticleComment"></a>
 ## ArticleComment
@@ -31,7 +31,7 @@
 <a name="SharePayload"></a>
 ## SharePayload
 
-> {warning} 一个分享场景的抽象
+> {primary} 一个分享场景的抽象
 
 ### Attributes
 |Key|Description|Type|Required|
@@ -44,7 +44,7 @@
 <a name="UserProfile"></a>
 ## UserProfile
 
-> {warning} 用户的基本信息
+> {primary} 用户的基本信息
 
 ### Attributes
 |Key|Description|Type|Required|
@@ -54,7 +54,7 @@
 <a name="User"></a>
 ## User
 
-> {warning} 用户信息
+> {primary} 用户信息
 第二行
 
 ### Attributes

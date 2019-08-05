@@ -15,7 +15,7 @@
 `/api/v1/article/get_article_comments`
 
 
-> {warning} 获取文章评论
+> {primary} 获取文章评论
 
 ### Requests
 |Key|Description|Type|Required|
@@ -36,7 +36,7 @@
 `/api/v1/article/create_article`
 
 
-> {warning} 添加文章
+> {primary} 添加文章
 
 ### Requests
 |Key|Description|Type|Required|
@@ -57,7 +57,7 @@
 `/api/v1/article/get_article`
 
 
-> {warning} 取得一篇文章
+> {primary} 取得一篇文章
 
 ### Requests
 |Key|Description|Type|Required|
@@ -77,7 +77,7 @@
 `/api/v1/article/get_articles`
 
 
-> {warning} 获取文章列表
+> {primary} 获取文章列表
 
 ### Responses
 |Key|Description|Type|Required|

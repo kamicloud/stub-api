@@ -1,7 +1,11 @@
+  - [Gender性别](#Gender)
+  - [PayWay](#PayWay)
+  - [UserStatus用户状态](#UserStatus)
+
 <a name="Gender"></a>
 ## Gender
 
-> {warning} 性别
+> {primary} 性别
 这个注释是通过注释方式加的
 
 |Key|Value|Description|
@@ -18,7 +22,7 @@
 <a name="UserStatus"></a>
 ## UserStatus
 
-> {warning} 用户状态
+> {primary} 用户状态
 
 |Key|Value|Description|
 |:-|:-|:-|

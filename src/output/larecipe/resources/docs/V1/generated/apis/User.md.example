@@ -1,11 +1,11 @@
-# User
+# User用户控制器
 
-> {warning} 用户控制器
+> {primary} 用户控制器<br>描述
 
 
 ---
 
-  - [CreateUser](#CreateUser)
+  - [CreateUser创建用户](#CreateUser)
   - [GetUsers](#GetUsers)
 
 <a name="CreateUser"></a>
@@ -14,6 +14,9 @@
 `POST`
 
 `/api/v1/user/create_user`
+
+
+> {primary} 创建用户<br>这是描述
 
 ### Requests
 |Key|Description|Type|Required|
