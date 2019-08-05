@@ -248,6 +248,12 @@ public class DocWriter extends BaseWriter {
             FileCombiner file = new FileCombiner();
             file.setFileName(outputDir.getAbsolutePath() + "/generated/enums.md");
 
+            output.getEnums().forEach((enumStub) -> {
+                String enumName = enumStub.getName();
+                file.addLine("  - [" + enumName + "](#" + enumName + ")");
+            });
+
+            file.addBlock(new MultiLinesCombiner(""));
 
             output.getEnums().forEach(enumStub -> {
                 file.addBlock(new MultiLinesCombiner(
