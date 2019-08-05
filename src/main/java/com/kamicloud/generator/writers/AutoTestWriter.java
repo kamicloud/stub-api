@@ -106,7 +106,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
                             params.add("'__role' => '" + (requestStub.getRole() == null || requestStub.getRole().equals("null") ? "" : requestStub.getRole()) + "',");
                             params.add("'__user' => '" + (requestStub.getUsre() == null || requestStub.getUsre().equals("null") ? "" : requestStub.getUsre()) + "',");
                             requestStub.getParameters().forEach((key, value) -> {
-                                params.add("'" + key + "' => '" + value.replace("\\", "\\\\").replace("'", "\\'") + "',");
+                                params.add("'" + key + "' => '\n" + value.replace("\\", "\\\\").replace("'", "\\'") + "\n',");
                             });
                             classMethodCombiner.setBody(params);
                             ArrayList<String> callAndAnchor = new ArrayList<>();
@@ -124,7 +124,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
 
                             String jsonResponse = Objects.requireNonNull(response.body()).string();
 
-                            classMethodCombiner.addBody("$expect = <<<JSON\n" + jsonResponse + "\nJSON;");
+                            classMethodCombiner.addBody("$expect = '\n" + jsonResponse.replace("'", "\\'") + "\n';");
                             classMethodCombiner.addBody("$expect = json_encode(json_decode($expect));");
                             classMethodCombiner.addBody("$this->assertJsonStringEqualsJsonString($expect, $actual);");
 

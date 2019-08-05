@@ -1,6 +1,7 @@
 package com.kamicloud.generator.stubs.testcase;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kamicloud.generator.utils.UrlUtil;
 import okhttp3.Response;
 import org.yaml.snakeyaml.Yaml;
@@ -86,6 +87,8 @@ public class TestCaseStub {
     }
 
     private static LinkedList<TestCaseStub> getTestCasesFromNode(File file, LinkedHashMap<String, Object> attributes, TestCaseStub prev) {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        gson = gsonBuilder.setPrettyPrinting().create();
         if (prev == null) {
             prev = new TestCaseStub();
         }
@@ -130,9 +133,9 @@ public class TestCaseStub {
             LinkedHashMap<String, Object> params1 = (LinkedHashMap<String, Object>) params;
             params1.forEach((key, value) -> {
                 if (value instanceof List || value instanceof Map) {
-                    testCaseStub.params.put(key, gson.toJson(value));
+                    testCaseStub.params.put(key, gson.toJson(value).replaceAll("'", "\\'"));
                 } else if (value != null) {
-                    testCaseStub.params.put(key, value.toString());
+                    testCaseStub.params.put(key, value.toString().replaceAll("'", "\\'"));
                 }
             });
         }
