@@ -81,7 +81,7 @@ public class DocWriter extends BaseWriter {
                 String comment = controller.getComment();
                 index.addLine(
                     "  - [" + controller.getName() +
-                    (comment != null ? CommentUtil.getTitle(comment) : "") +
+                    CommentUtil.getTitle(comment) +
                     "](/" + docPrefix +
                     "/{{version}}/generated/apis/" +
                     controller.getName() +
@@ -119,11 +119,7 @@ public class DocWriter extends BaseWriter {
                 FileCombiner file = new FileCombiner();
                 file.setFileName(outputDir.getAbsolutePath() + "/generated/apis/" + controller.getName() + ".md");
 
-                String controllerTitle = "# " + controller.getName();
-
-                if (controller.getComment() != null) {
-                    controllerTitle = controllerTitle + CommentUtil.getTitle(controller.getComment());
-                }
+                String controllerTitle = "# " + controller.getName() + CommentUtil.getTitle(controller.getComment());
 
                 file.addLine(controllerTitle);
                 apiOverview.addLine("##" + controllerTitle);
@@ -162,7 +158,7 @@ public class DocWriter extends BaseWriter {
 
                     file.addBlock(new MultiLinesCombiner(
                         "<a name=\"" + action.getName() + "\"></a>",
-                        "## " + action.getName()
+                        "## " + action.getName() + CommentUtil.getTitle(action.getComment())
                     ));
                     file.addLine("");
                     if (action.hasAnnotation(Methods.class)) {
@@ -173,7 +169,7 @@ public class DocWriter extends BaseWriter {
                     file.addLine("");
                     file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName(), actionName) + "`");
                     file.addLine("");
-                    if (action.getComment() != null) {
+                    if (action.getComment() != null && action.getComment().split("\n").length > 1) {
                         file.addLine("\n> {primary} " + transformLfToBr(action.getComment()) + "\n");
                     }
                     writeParameters("Requests", file, action.getRequests());
@@ -247,10 +243,10 @@ public class DocWriter extends BaseWriter {
             output.getModels().forEach((model) -> {
                 file.addBlock(new MultiLinesCombiner(
                     "<a name=\"" + model.getName() + "\"></a>",
-                    "## " + model.getName()
+                    "## " + model.getName() + CommentUtil.getTitle(model.getComment())
                 ));
 
-                if (model.getComment() != null) {
+                if (model.getComment() != null && model.getComment().split("\n").length > 1) {
                     file.addBlock(new MultiLinesCombiner("\n> {primary} " + model.getComment() + "\n"));
                 }
                 writeParameters("Attributes", file, model.getParameters());
@@ -283,10 +279,10 @@ public class DocWriter extends BaseWriter {
             output.getEnums().forEach(enumStub -> {
                 file.addBlock(new MultiLinesCombiner(
                     "<a name=\"" + enumStub.getName() + "\"></a>",
-                    "## " + enumStub.getName()
+                    "## " + enumStub.getName() + CommentUtil.getTitle(enumStub.getComment())
                 ));
 
-                if (enumStub.getComment() != null) {
+                if (enumStub.getComment() != null && enumStub.getComment().split("\n").length > 1) {
                     file.addBlock(new MultiLinesCombiner(
                         "",
                         "> {primary} " + enumStub.getComment(),
@@ -360,6 +356,9 @@ public class DocWriter extends BaseWriter {
     }
 
     private String transformLfToBr(String lf) {
+        if (lf == null) {
+            return "";
+        }
         return lf.replace("\n", "<br>");
     }
 }
