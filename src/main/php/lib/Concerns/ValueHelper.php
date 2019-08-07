@@ -125,6 +125,9 @@ trait ValueHelper
 
         if ($isArray) {
             if (!is_array($value)) {
+                if ($isOptional && $value === null) {
+                    return null;
+                }
                 throw new $exception("{$location} should be array");
             }
 
