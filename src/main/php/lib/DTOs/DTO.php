@@ -84,6 +84,9 @@ abstract class DTO implements JsonSerializable
                 $value = $values[$dbField] ?? null;
                 if ($value !== null) {
                     $value = date($format, strtotime($value));
+                    if ($value === '-0001-11-30 00:00:00') {
+                        $value = null;
+                    }
                 }
             } else {
                 $value = $values[$dbField] ?? null;

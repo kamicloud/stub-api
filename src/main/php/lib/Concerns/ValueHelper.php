@@ -60,7 +60,7 @@ trait ValueHelper
             return $rule::transform($value);
         } elseif ($type & Constants::DATE) {
             if (config('generator.request-date-timestamp')) {
-                return date($initParam, strtotime($value));
+                return date($initParam, $value);
             }
             return $value;
         } else {
