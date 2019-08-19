@@ -158,11 +158,28 @@ abstract class DTO implements JsonSerializable
 
             if (is_object($this->{$field}) && $this->{$field} instanceof self) {
                 $c[$dbField] = $this->{$field}->toDBArray();
+            } elseif (is_array($this->{$field})) {
+                $c[$dbField] = $this->arrayToDBArray($this->{$field});
             } else {
                 $c[$dbField] = $this->{$field};
             }
 
             return $c;
         }, []);
+    }
+
+    protected function arrayToDBArray($items)
+    {
+        $res = [];
+        foreach ($items as $item) {
+            if (is_object($item) && $item instanceof self) {
+                $one = $item->toDBArray();
+            } else {
+                $one = $item;
+            }
+            $res[] = $one;
+        }
+
+        return $res;
     }
 }
