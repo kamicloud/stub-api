@@ -8,5 +8,6 @@ public enum TypeSpec {
     STRING,
     ENUM,
     MODEL,
-    BOOLEAN
+    BOOLEAN,
+    JSON,
 }

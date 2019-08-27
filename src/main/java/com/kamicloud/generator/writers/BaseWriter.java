@@ -23,9 +23,6 @@ abstract class BaseWriter implements Observer {
     protected Environment env;
 
     @Autowired
-    protected SpringTemplateEngine springTemplateEngine;
-
-    @Autowired
     protected UrlUtil urlUtil;
 
     @Autowired

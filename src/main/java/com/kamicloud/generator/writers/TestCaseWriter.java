@@ -39,6 +39,7 @@ public class TestCaseWriter extends BaseWriter {
                         if (file.exists()) {
                             return;
                         }
+
                         file.createNewFile();
 
                         FileOutputStream fileOutputStream = new FileOutputStream(file);
@@ -54,8 +55,9 @@ public class TestCaseWriter extends BaseWriter {
                         outputStreamWriter.write("__anchor:\n");
                         outputStreamWriter.write("__params:\n");
 
-                        actionStub.getRequests().forEach((requestName, requestStub) -> {
+                        actionStub.getRequests().forEach((requestStub) -> {
                             try {
+                                String requestName = requestStub.getName();
                                 outputStreamWriter.write("  " + requestName + ":\n");
                             } catch (Exception e) {
                                 e.printStackTrace();

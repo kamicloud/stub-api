@@ -64,11 +64,10 @@ abstract class DTO implements JsonSerializable
 
         $model = new static();
 
+        // array
+        $values = $orm;
         if ($orm instanceof Model) {
             $values = $orm->attributesToArray() + $orm->getRelations();
-        } else {
-            // array
-            $values = $orm;
         }
 
         $attributeMap = $model->getAttributeMap();
@@ -80,16 +79,14 @@ abstract class DTO implements JsonSerializable
             $isArray = $type & Constants::ARRAY;
             $isDate = $type & Constants::DATE;
 
+            $value = $values[$dbField] ?? null;
             if ($isDate) {
-                $value = $values[$dbField] ?? null;
                 if ($value !== null) {
                     $value = date($format, strtotime($value));
                     if ($value === '-0001-11-30 00:00:00') {
                         $value = null;
                     }
                 }
-            } else {
-                $value = $values[$dbField] ?? null;
             }
 
             if ($isModel) {

@@ -56,6 +56,10 @@ public class ClassCombiner implements FileWriter, CombinerInterface, AddUseInter
         return this;
     }
 
+    public ArrayList<ClassAttributeCombiner> getAttributes() {
+        return attributes;
+    }
+
     @Override
     public String addUse(String use) {
         if (!uses.contains(use)) {

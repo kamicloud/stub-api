@@ -38,4 +38,12 @@ public class FileCombiner extends Combiner implements FileWriter, CombinerInterf
         outputStreamWriter.close();
         fileOutputStream.close();
     }
+
+    public static void build(String fileName, String content) throws IOException {
+        FileCombiner fileCombiner = new FileCombiner();
+        fileCombiner.setFileName(fileName);
+        fileCombiner.addBlock(new MultiLinesCombiner(content));
+
+        fileCombiner.toFile();
+    }
 }

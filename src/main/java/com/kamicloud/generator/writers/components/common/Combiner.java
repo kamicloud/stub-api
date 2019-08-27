@@ -28,4 +28,10 @@ public class Combiner implements CombinerInterface {
 
         return stringBuilder.toString();
     }
+
+    public void addMultiLines(String... lines) {
+        for (int i = 0; i < lines.length; i++) {
+            addLine(lines[i]);
+        }
+    }
 }

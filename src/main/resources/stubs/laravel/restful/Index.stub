@@ -1,0 +1,51 @@
+<?php
+
+namespace App\Generated\V1\Messages\Marketing;
+
+use Kamicloud\StubApi\Concerns\ValueHelper;
+use Kamicloud\StubApi\Http\Messages\Message;
+use Kamicloud\StubApi\Utils\Constants;
+use App\Generated\V1\DTOs\[(${params.name})][(${params.dtoSuffix})];
+
+class IndexMessage extends Message
+{
+    use ValueHelper;
+
+    protected $page;
+    protected $totalPage;
+    protected $perPage;
+    protected $activities;
+    protected $dtoClass = [(${params.name})][(${params.dtoSuffix})]::class;
+
+    /**
+     * @return int
+     */
+    public function getPage()
+    {
+        return $this->page;
+    }
+
+    public function requestRules()
+    {
+        return [
+            ['page', 'page', 'bail|integer', Constants::INTEGER, null],
+        ];
+    }
+
+    public function responseRules()
+    {
+        return [
+            ['totalPage', 'total_page', 'bail|integer', Constants::INTEGER, null],
+            ['perPage', 'per_page', 'bail|integer', Constants::INTEGER, null],
+            ['models', 'models', $this->dtoClass, Constants::MODEL | Constants::ARRAY, null],
+        ];
+    }
+
+    public function setResponse($totalPage, $perPage, $activities)
+    {
+        $this->perPage = $perPage;
+        $this->totalPage = $totalPage;
+        $this->models = $models;
+    }
+
+}

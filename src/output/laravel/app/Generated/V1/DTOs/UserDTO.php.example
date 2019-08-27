@@ -15,7 +15,6 @@ class UserDTO extends DTO
     protected $avatar;
 
     /**
-     * 这里只是留了一个备注
      * @return string
      */
     public function getName()
@@ -30,6 +29,15 @@ class UserDTO extends DTO
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * 这里只是留了一个备注
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**
@@ -50,6 +58,11 @@ class UserDTO extends DTO
         $this->id = $id;
     }
 
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
     public function setAvatar($avatar)
     {
         $this->avatar = $avatar;
@@ -60,6 +73,7 @@ class UserDTO extends DTO
         return [
             ['name', 'name', 'bail|string', Constants::STRING, null],
             ['id', 'id', 'bail|integer', Constants::INTEGER | Constants::MUTABLE, null],
+            ['name', 'name', 'bail|string', Constants::STRING, null],
             ['avatar', 'avatar', 'bail|string', Constants::STRING, null],
         ];
     }

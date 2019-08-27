@@ -1,33 +1,34 @@
 package com.kamicloud.generator.stubs;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public class ModelStub extends BaseWithAnnotationStub {
-    private LinkedHashMap<String, ParameterStub> parameters = new LinkedHashMap<>();
-    private String parentKey;
+    private LinkedList<ParameterStub> parameters = new LinkedList<>();
+    private String parentClasspath;
     private ModelStub parent;
 
     public ModelStub(String name, String classpath) {
         super(name, classpath);
     }
 
-    public LinkedHashMap<String, ParameterStub> getParameters() {
-        LinkedHashMap<String, ParameterStub> parameters = new LinkedHashMap<>();
+    public LinkedList<ParameterStub> getParameters() {
+        LinkedList<ParameterStub> parameters = new LinkedList<>();
         if (parent != null) {
-            parameters.putAll(parent.getParameters());
+            parameters.addAll(parent.getParameters());
         }
 
-        parameters.putAll(this.parameters);
+        parameters.addAll(this.parameters);
 
         return parameters;
     }
 
-    public void setParentKey(String parentKey) {
-        this.parentKey = parentKey;
+    public void setParentClasspath(String parentClasspath) {
+        this.parentClasspath = parentClasspath;
     }
 
-    public String getParentKey() {
-        return parentKey;
+    public String getParentClasspath() {
+        return parentClasspath;
     }
 
     public void setParent(ModelStub parent) {
@@ -35,15 +36,12 @@ public class ModelStub extends BaseWithAnnotationStub {
     }
 
     public void addParameter(ParameterStub parameterStub) {
-        parameters.put(parameterStub.getName(), parameterStub);
+        parameters.add(parameterStub);
     }
 
     @Override
-    public LinkedHashMap<String, ParameterStub> clone() {
-        LinkedHashMap<String, ParameterStub> parameters = new LinkedHashMap<>();
+    public LinkedList<ParameterStub> clone() {
 
-        this.parameters.forEach(parameters::put);
-
-        return parameters;
+        return new LinkedList<>(this.parameters);
     }
 }

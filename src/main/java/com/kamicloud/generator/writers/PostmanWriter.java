@@ -92,7 +92,7 @@ public class PostmanWriter extends BaseWriter {
                 postmanItemRequestBodyStub.addParameter(new PostmanParameterStub("__test_mode", "1"));
                 postmanItemRequestBodyStub.addParameter(new PostmanParameterStub("__user", ""));
 
-                action.getRequests().forEach((parameterName, parameter) -> {
+                action.getRequests().forEach((parameter) -> {
                     if (parameter.hasAnnotation(Request.class)) {
                         PostmanParameterStub postmanParameterStub = new PostmanParameterStub(parameter.getName());
                         String comment = parameter.getComment();

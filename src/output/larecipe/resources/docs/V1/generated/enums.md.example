@@ -3,7 +3,7 @@
   - [UserStatus用户状态](#UserStatus)
 
 <a name="Gender"></a>
-## Gender
+## Gender性别
 
 > {primary} 性别
 这个注释是通过注释方式加的
@@ -20,10 +20,7 @@
 |WECHAT|WECHAT| |
 |ALIPAY|ALIPAY| |
 <a name="UserStatus"></a>
-## UserStatus
-
-> {primary} 用户状态
-
+## UserStatus用户状态
 |Key|Value|Description|
 |:-|:-|:-|
 |INIT|0| |

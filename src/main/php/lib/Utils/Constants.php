@@ -12,6 +12,7 @@ class Constants
     const FLOAT    = 0b100000;
     const STRING   = 0b1000000;
     const DATE     = 0b10000000;
+    const JSON     = 0b100000000;
     const MODEL    = 0b10000000000;
     const ENUM     = 0b100000000000;
 }

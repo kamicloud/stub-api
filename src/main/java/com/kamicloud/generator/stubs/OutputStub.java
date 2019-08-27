@@ -44,7 +44,7 @@ public class OutputStub extends Observable {
             commentInterface.setComment(comment);
         });
         modelHashMap.forEach((classpath, modelStub) -> {
-            modelStub.setParent(modelHashMap.get(modelStub.getParentKey()));
+            modelStub.setParent(modelHashMap.get(modelStub.getParentClasspath()));
         });
         templates.forEach((version, templateStub) -> {
             templateStub.getControllers().forEach((controllerStub -> {

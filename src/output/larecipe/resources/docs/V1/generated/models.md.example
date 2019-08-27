@@ -29,10 +29,7 @@
 |createdAt | |`Date`|true|
 
 <a name="SharePayload"></a>
-## SharePayload
-
-> {primary} 一个分享场景的抽象
-
+## SharePayload一个分享场景的抽象
 ### Attributes
 |Key|Description|Type|Required|
 |:-|:-|:-|:-|
@@ -42,17 +39,14 @@
 |url |点进去的链接|`String`|true|
 
 <a name="UserProfile"></a>
-## UserProfile
-
-> {primary} 用户的基本信息
-
+## UserProfile用户的基本信息
 ### Attributes
 |Key|Description|Type|Required|
 |:-|:-|:-|:-|
 |name | |`String`|true|
 
 <a name="User"></a>
-## User
+## User用户信息
 
 > {primary} 用户信息
 第二行
@@ -60,7 +54,8 @@
 ### Attributes
 |Key|Description|Type|Required|
 |:-|:-|:-|:-|
-|name |这里只是留了一个备注|`String`|true|
+|name | |`String`|true|
 |id |一个注释|`Integer`|true|
+|name |这里只是留了一个备注|`String`|true|
 |avatar | |`String`|true|
 

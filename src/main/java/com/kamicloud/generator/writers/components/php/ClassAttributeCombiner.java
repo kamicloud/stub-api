@@ -13,7 +13,9 @@ public class ClassAttributeCombiner implements CombinerInterface {
         this.access = access == null ? "public" : access;
         this.name = name;
 
-        classCombiner.addAttribute(this);
+        if (!classCombiner.getAttributes().contains(this)) {
+            classCombiner.addAttribute(this);
+        }
     }
 
     @Override
@@ -23,5 +25,10 @@ public class ClassAttributeCombiner implements CombinerInterface {
 
     public ClassCombiner getClassCombiner() {
         return classCombiner;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((ClassAttributeCombiner) obj).name.equals(this.name);
     }
 }

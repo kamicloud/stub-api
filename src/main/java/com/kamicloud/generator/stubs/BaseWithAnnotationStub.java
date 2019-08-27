@@ -1,6 +1,9 @@
 package com.kamicloud.generator.stubs;
 
 import com.google.common.base.CaseFormat;
+import com.kamicloud.generator.config.DefaultProfileUtil;
+import com.kamicloud.generator.utils.CommentUtil;
+import com.kamicloud.generator.utils.StringUtil;
 import definitions.annotations.Extendable;
 
 import java.lang.annotation.Annotation;
@@ -22,6 +25,9 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
     private ArrayList<String> comments = new ArrayList<>();
     private String comment;
 
+    private String dtoFolder = DefaultProfileUtil.getEnv().getProperty("generator.writers.laravel.dto-folder", "DTOs");
+    private String dtoSuffix = DefaultProfileUtil.getEnv().getProperty("generator.writers.laravel.dto-suffix", "DTO");
+
     /**
      * @param name 类 / 变量名称 都将转成Upper camel
      */
@@ -36,6 +42,7 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
         this.lowerCamelName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
         this.lowerUnderScoreName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
         this.upperUnderScoreName = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, name);
+
     }
 
     public String getName() {
@@ -91,6 +98,40 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
         return comment;
     }
 
+    public String getCommentTitle() {
+        return CommentUtil.getTitle(comment);
+    }
+
+    public int getCommentLength() {
+        if (comment == null) {
+            return 0;
+        }
+
+        return comment.split("\n").length;
+    }
+
+    public boolean hasCommentBody() {
+        return getCommentLength() > 1;
+    }
+
+    /**
+     * 获取 注释体
+     *
+     * @return String
+     */
+    public String getCommentBody() {
+        return comment;
+    }
+
+    /**
+     * 注释体 lf to br
+     *
+     * @return String
+     */
+    public String getBrCommentBody() {
+        return StringUtil.transformLfToBr(getCommentBody());
+    }
+
     public void setParentNode(BaseWithAnnotationStub parentNode) {
         this.parentNode = parentNode;
     }
@@ -109,5 +150,13 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
             annotationStub = parentNode.getAnnotation(type);
         }
         return annotationStub;
+    }
+
+    public String getDtoFolder() {
+        return dtoFolder;
+    }
+
+    public String getDtoSuffix() {
+        return dtoSuffix;
     }
 }

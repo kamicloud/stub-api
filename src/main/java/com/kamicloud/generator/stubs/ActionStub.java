@@ -1,10 +1,11 @@
 package com.kamicloud.generator.stubs;
 
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public class ActionStub extends BaseWithAnnotationStub {
-    private LinkedHashMap<String, ParameterStub> requests = new LinkedHashMap<>();
-    private LinkedHashMap<String, ParameterStub> responses = new LinkedHashMap<>();
+    private LinkedList<ParameterStub> requests = new LinkedList<>();
+    private LinkedList<ParameterStub> responses = new LinkedList<>();
 
     private String uri;
     private String fullUri;
@@ -13,20 +14,20 @@ public class ActionStub extends BaseWithAnnotationStub {
         super(name, classpath);
     }
 
-    public LinkedHashMap<String, ParameterStub> getRequests() {
+    public LinkedList<ParameterStub> getRequests() {
         return requests;
     }
 
-    public LinkedHashMap<String, ParameterStub> getResponses() {
+    public LinkedList<ParameterStub> getResponses() {
         return responses;
     }
 
     public void addRequest(ParameterStub parameterStub) {
-        requests.put(parameterStub.getName(), parameterStub);
+        requests.add(parameterStub);
     }
 
     public void addResponse(ParameterStub parameterStub) {
-        responses.put(parameterStub.getName(), parameterStub);
+        responses.add(parameterStub);
     }
 
     public String getUri() {

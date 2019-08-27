@@ -9,7 +9,7 @@
   - [GetUsers](#GetUsers)
 
 <a name="CreateUser"></a>
-## CreateUser
+## CreateUser创建用户
 
 `POST`
 

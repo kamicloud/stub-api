@@ -19,10 +19,7 @@ import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Observable;
+import java.util.*;
 
 public class DocWriter extends BaseWriter {
     private File docPath;
@@ -124,16 +121,19 @@ public class DocWriter extends BaseWriter {
                 file.addLine(controllerTitle);
                 apiOverview.addLine("##" + controllerTitle);
 
-                String controllerComment = controller.getComment();
-
-                if (controllerComment != null && controllerComment.split("\n").length > 1) {
-                    file.addLine();
-                    file.addLine("> {primary} " + transformLfToBr(controllerComment));
-                    file.addLine();
+                if (controller.hasCommentBody()) {
+                    file.addMultiLines(
+                        "",
+                        "> {primary} " + controller.getBrCommentBody(),
+                        ""
+                    );
                 }
-                file.addLine("");
-                file.addLine("---");
-                file.addLine("");
+
+                file.addMultiLines(
+                    "",
+                    "---",
+                    ""
+                );
 
                 // 菜单列表
                 controller.getActions().forEach((action) -> {
@@ -169,7 +169,7 @@ public class DocWriter extends BaseWriter {
                     file.addLine("");
                     file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName(), actionName) + "`");
                     file.addLine("");
-                    if (action.getComment() != null && action.getComment().split("\n").length > 1) {
+                    if (action.hasCommentBody()) {
                         file.addLine("\n> {primary} " + transformLfToBr(action.getComment()) + "\n");
                     }
                     writeParameters("Requests", file, action.getRequests());
@@ -246,7 +246,7 @@ public class DocWriter extends BaseWriter {
                     "## " + model.getName() + CommentUtil.getTitle(model.getComment())
                 ));
 
-                if (model.getComment() != null && model.getComment().split("\n").length > 1) {
+                if (model.hasCommentBody()) {
                     file.addBlock(new MultiLinesCombiner("\n> {primary} " + model.getComment() + "\n"));
                 }
                 writeParameters("Attributes", file, model.getParameters());
@@ -282,7 +282,7 @@ public class DocWriter extends BaseWriter {
                     "## " + enumStub.getName() + CommentUtil.getTitle(enumStub.getComment())
                 ));
 
-                if (enumStub.getComment() != null && enumStub.getComment().split("\n").length > 1) {
+                if (enumStub.hasCommentBody()) {
                     file.addBlock(new MultiLinesCombiner(
                         "",
                         "> {primary} " + enumStub.getComment(),
@@ -317,7 +317,7 @@ public class DocWriter extends BaseWriter {
      * @param file 输出流
      * @param parameters 参数
      */
-    private void writeParameters(String title, FileCombiner file, HashMap<String, ParameterStub> parameters) {
+    private void writeParameters(String title, FileCombiner file, LinkedList<ParameterStub> parameters) {
         if (parameters.isEmpty()) {
             return;
         }
@@ -326,7 +326,7 @@ public class DocWriter extends BaseWriter {
             "|Key|Description|Type|Required|",
             "|:-|:-|:-|:-|"
         ));
-        parameters.forEach((parameterName, parameter) -> {
+        parameters.forEach((parameter) -> {
             file.addBlock(new MultiLinesCombiner(
                 "|" + parameter.getName() + " |" +
                     (parameter.getComment() == null ? " " : transformLfToBr(parameter.getComment())) +

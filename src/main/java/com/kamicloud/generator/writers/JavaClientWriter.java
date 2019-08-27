@@ -59,7 +59,8 @@ public class JavaClientWriter extends BaseWriter {
                 String modelName = modelStub.getName();
                 ClassCombiner classCombiner = new ClassCombiner("models." + modelName + "POJO");
 
-                modelStub.getParameters().forEach((parameterName, parameterStub) -> {
+                modelStub.getParameters().forEach((parameterStub) -> {
+                    String parameterName = parameterStub.getName();
                     new ClassAttributeCombiner(classCombiner, parameterName, "public");
                     new ClassMethodCombiner(classCombiner, "get" + parameterName);
                     new ClassMethodCombiner(classCombiner, "set" + parameterName);

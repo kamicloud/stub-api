@@ -1,7 +1,6 @@
 package com.kamicloud.generator.parsers;
 
 import com.google.common.base.CaseFormat;
-import com.kamicloud.generator.Generator;
 import com.kamicloud.generator.stubs.*;
 import definitions.types.EnumType;
 import definitions.types.ModelType;
@@ -229,7 +228,7 @@ public class Parser {
             parseComment(model.getCanonicalName(), modelStub);
 
             parseComment(model.getCanonicalName(), modelStub);
-            modelStub.setParentKey(model.getSuperclass().getCanonicalName());
+            modelStub.setParentClasspath(model.getSuperclass().getCanonicalName());
             // 遍历每一个参数，注解+类型+变量
             Arrays.asList(model.getDeclaredFields()).forEach(parameter -> {
                 ParameterStub parameterStub = parseParameter(parameter);
