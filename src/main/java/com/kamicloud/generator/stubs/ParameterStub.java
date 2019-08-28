@@ -69,4 +69,9 @@ public class ParameterStub extends BaseWithAnnotationStub {
     public Type getType() {
         return type;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return ((ParameterStub) obj).getName().equals(this.getName());
+    }
 }

@@ -15,14 +15,14 @@ public class ModelStub extends BaseWithAnnotationStub {
     public LinkedList<ParameterStub> getParameters() {
         LinkedList<ParameterStub> parameters = new LinkedList<>();
         if (parent != null) {
-            parent.getParameters().forEach(parameterStub -> {
-                if (!parameters.contains(parameterStub)) {
-                    parameters.add(parameterStub);
-                }
-            });
+            parameters.addAll(parent.getParameters());
         }
 
-        parameters.addAll(this.parameters);
+        this.parameters.forEach(parameterStub -> {
+            parameters.remove(parameterStub);
+            parameters.add(parameterStub);
+        });
+
 
         return parameters;
     }
