@@ -3,7 +3,9 @@
 namespace Kamicloud\StubApi\DTOs;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use JsonSerializable;
 use Kamicloud\StubApi\Utils\Constants;
 use Kamicloud\StubApi\Concerns\ValueHelper;
@@ -79,7 +81,7 @@ abstract class DTO implements JsonSerializable
             $isArray = $type & Constants::ARRAY;
             $isDate = $type & Constants::DATE;
 
-            $value = $values[$dbField] ?? null;
+            $value = $values[$dbField] ?? $values[Str::snake($dbField)] ?? null;
             if ($isDate) {
                 if ($value !== null) {
                     $value = date($format, strtotime($value));
