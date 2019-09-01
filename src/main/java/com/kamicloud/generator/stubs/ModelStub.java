@@ -8,8 +8,12 @@ public class ModelStub extends BaseWithAnnotationStub {
     private String parentClasspath;
     private ModelStub parent;
 
-    public ModelStub(String name, String classpath) {
+    private TemplateStub template;
+
+    public ModelStub(String name, String classpath, TemplateStub template) {
         super(name, classpath);
+
+        this.template = template;
     }
 
     public LinkedList<ParameterStub> getParameters() {
@@ -47,5 +51,9 @@ public class ModelStub extends BaseWithAnnotationStub {
     public LinkedList<ParameterStub> clone() {
 
         return new LinkedList<>(this.parameters);
+    }
+
+    public TemplateStub getTemplate() {
+        return template;
     }
 }

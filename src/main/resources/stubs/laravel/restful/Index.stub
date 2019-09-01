@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Generated\V1\Messages\RESTFul;
+namespace App\Generated\[(${params.template.name})]\Messages\RESTFul;
 
 use Kamicloud\StubApi\Concerns\ValueHelper;
 use Kamicloud\StubApi\Http\Messages\Message;
 use Kamicloud\StubApi\Utils\Constants;
-use App\Generated\V1\DTOs\[(${params.name})][(${params.dtoSuffix})];
+use App\Generated\[(${params.template.name})]\DTOs\[(${params.name})][(${params.dtoSuffix})];
 
 class IndexMessage extends Message
 {

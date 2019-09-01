@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Generated\Controllers\V1\RESTFul;
+namespace App\Generated\Controllers\[(${params.template.name})]\RESTFul;
 
 use App\Http\Controllers\Controller;
-use App\Generated\V1\Messages\RESTFul\[(${params.name})]\IndexMessage;
-use App\Generated\V1\Messages\RESTFul\[(${params.name})]\ShowMessage;
-use App\Generated\V1\Messages\RESTFul\[(${params.name})]\StoreMessage;
-use App\Generated\V1\Messages\RESTFul\[(${params.name})]\UpdateMessage;
-use App\Generated\V1\Messages\RESTFul\[(${params.name})]\DestroyMessage;
-use App\Http\Services\V1\[(${params.name})]Service;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\IndexMessage;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\ShowMessage;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\StoreMessage;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\UpdateMessage;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\DestroyMessage;
+use App\Http\Services\[(${params.template.name})]\[(${params.name})]Service;
 use DB;
 
 class [(${params.name})]Controller extends Controller

@@ -1,0 +1,38 @@
+<?php
+
+namespace App\Http\Services\V1\RESTFul;
+
+use App\Generated\V1\Messages\RESTFul\User\IndexMessage;
+use App\Generated\V1\Messages\RESTFul\User\ShowMessage;
+use App\Generated\V1\Messages\RESTFul\User\StoreMessage;
+use App\Generated\V1\Messages\RESTFul\User\UpdateMessage;
+use App\Generated\V1\Messages\RESTFul\User\DestroyMessage;
+
+class UserService
+{
+    public function index(IndexMessage $message)
+    {
+
+    }
+
+    public function show(ShowMessage $message)
+    {
+
+    }
+
+    public function store(StoreMessage $message)
+    {
+
+    }
+
+    public function update(UpdateMessage $message)
+    {
+
+    }
+
+    public function destroy(DestroyMessage $message)
+    {
+
+    }
+}
+

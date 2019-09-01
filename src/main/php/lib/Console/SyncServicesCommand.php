@@ -42,6 +42,10 @@ class SyncServicesCommand extends Command
 
                 $this->checkServiceExists($servicePath, $version, str_replace('.php', '', $serviceName));
 
+                if (is_dir($controllerPath)) {
+                    continue;
+                }
+
                 // 解析需测试文件
                 $controllerActions = $this->getActionsFromFile($controllerPath);
                 $serviceActions = $this->getActionsFromFile($servicePath);

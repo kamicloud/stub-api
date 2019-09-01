@@ -194,6 +194,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 outputDir.getAbsolutePath() + "/app/Generated/Controllers/" + version + "/RESTFul/" + modelName + "Controller.php",
                 stringUtil.renderTemplate("laravel/restful/controller", modelStub)
             );
+            FileCombiner.build(
+                outputDir.getAbsolutePath() + "/app/Http/Services/" + version + "/RESTFul/" + modelName + "Service.php",
+                stringUtil.renderTemplate("laravel/restful/service", modelStub)
+            );
         } catch (IOException e) {
             e.printStackTrace();
         }

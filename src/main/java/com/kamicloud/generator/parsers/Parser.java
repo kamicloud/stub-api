@@ -218,7 +218,8 @@ public class Parser {
         Arrays.asList(models).forEach(model -> {
             ModelStub modelStub = new ModelStub(
                 model.getSimpleName(),
-                model.getCanonicalName()
+                model.getCanonicalName(),
+                templateStub
             );
 
             templateStub.addModel(modelStub);
