@@ -54,7 +54,6 @@
 ### Attributes
 |Key|Description|Type|Required|
 |:-|:-|:-|:-|
-|name | |`String`|true|
 |id |一个注释|`Integer`|true|
 |name |这里只是留了一个备注|`String`|true|
 |avatar | |`String`|true|

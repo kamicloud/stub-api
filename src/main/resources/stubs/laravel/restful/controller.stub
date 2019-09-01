@@ -1,0 +1,69 @@
+<?php
+
+namespace App\Generated\Controllers\V1\RESTFul;
+
+use App\Http\Controllers\Controller;
+use App\Generated\V1\Messages\RESTFul\[(${params.name})]\IndexMessage;
+use App\Generated\V1\Messages\RESTFul\[(${params.name})]\ShowMessage;
+use App\Generated\V1\Messages\RESTFul\[(${params.name})]\StoreMessage;
+use App\Generated\V1\Messages\RESTFul\[(${params.name})]\UpdateMessage;
+use App\Generated\V1\Messages\RESTFul\[(${params.name})]\DestroyMessage;
+use App\Http\Services\V1\[(${params.name})]Service;
+use DB;
+
+class [(${params.name})]Controller extends Controller
+{
+    public $handler;
+
+    public function __construct([(${params.name})]Service $handler)
+    {
+        $this->handler = $handler;
+    }
+
+    public function index(IndexMessage $message)
+    {
+        $message->validateInput();
+        $this->handler->index($message);
+        $message->validateOutput();
+        return $message->getResponse();
+    }
+
+    public function show(ShowMessage $message)
+    {
+        $message->validateInput();
+        $this->handler->show($message);
+        $message->validateOutput();
+        return $message->getResponse();
+    }
+
+    public function store(StoreMessage $message)
+    {
+        return DB::transaction(function () use ($message) {
+            $message->validateInput();
+            $this->handler->store($message);
+            $message->validateOutput();
+            return $message->getResponse();
+        });
+    }
+
+    public function update(UpdateMessage $message)
+    {
+        return DB::transaction(function () use ($message) {
+            $message->validateInput();
+            $this->handler->update($message);
+            $message->validateOutput();
+            return $message->getResponse();
+        });
+    }
+
+    public function destroy(DestroyMessage $message)
+    {
+        return DB::transaction(function () use ($message) {
+            $message->validateInput();
+            $this->handler->destroy($message);
+            $message->validateOutput();
+            return $message->getResponse();
+        });
+    }
+
+}

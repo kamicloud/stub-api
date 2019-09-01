@@ -17,6 +17,7 @@ class TemplateV1 {
         /**
          * 用户状态
          */
+        @RESTFul
         enum UserStatus implements FixedEnumValueInterface {
             INIT(0),
             DISABLED(2),
