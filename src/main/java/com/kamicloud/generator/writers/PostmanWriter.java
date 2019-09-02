@@ -37,29 +37,68 @@ public class PostmanWriter extends BaseWriter {
     @Override
     public void update(OutputStub output) {
         outputPath = new File(Objects.requireNonNull(env.getProperty("generator.writers.postman.path")) + "/API Generator.postman_collection.json");
-        output.getTemplates().forEach((version, templateStub) -> {
-            try {
-                Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-                PostmanStub postmanStub = postmanOutput(version, templateStub);
+        try {
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-                String jsonString = gson.toJson(postmanStub);
+            PostmanStub postmanStub = postmanOutput(output);
 
-                FileOutputStream fileOutputStream = new FileOutputStream(outputPath.getAbsolutePath());
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
-                outputStreamWriter.write(jsonString);
+            output.getTemplates().forEach((version, templateStub) -> {
+            });
 
-                outputStreamWriter.close();
-                fileOutputStream.close();
+            String jsonString = gson.toJson(postmanStub);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
+            FileOutputStream fileOutputStream = new FileOutputStream(outputPath.getAbsolutePath());
+            OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream, StandardCharsets.UTF_8);
+            outputStreamWriter.write(jsonString);
+
+            outputStreamWriter.close();
+            fileOutputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    private PostmanStub postmanOutput(String version, TemplateStub templateStub) {
+    private PostmanStub postmanOutput(OutputStub outputStub) {
         PostmanStub postmanStub = new PostmanStub();
+
+        outputStub.getTemplates().forEach((version, templateStub) -> {
+            PostmanItemStub templateOutput = new PostmanItemStub(version);
+            postmanStub.addItem(templateOutput);
+
+            templateOutput(templateOutput, version, templateStub);
+        });
+
+        return postmanStub;
+    }
+
+    private void templateOutput(PostmanItemStub postmanStub, String version, TemplateStub templateStub) {
+        PostmanItemStub restfulItemStub = new PostmanItemStub("RESTFul");
+
+        templateStub.getModels().forEach(modelStub -> {
+            if (modelStub.isResource()) {
+                PostmanItemStub restfulOne = new PostmanItemStub(modelStub.getName() + " " + (modelStub.getComment() == null ? "" : modelStub.getComment()));
+
+                restfulItemStub.addItem(restfulOne);
+
+                PostmanItemStub indexStub = new PostmanItemStub("Index");
+                PostmanItemStub storeStub = new PostmanItemStub("Store");
+                PostmanItemStub updateStub = new PostmanItemStub("Update");
+                PostmanItemStub showStub = new PostmanItemStub("Show");
+                PostmanItemStub destroyStub = new PostmanItemStub("Destroy");
+
+                restfulOne.addItem(indexStub);
+                restfulOne.addItem(storeStub);
+                restfulOne.addItem(updateStub);
+                restfulOne.addItem(showStub);
+                restfulOne.addItem(destroyStub);
+
+
+
+            }
+        });
+
         templateStub.getControllers().forEach(controller -> {
             PostmanItemStub postmanItemStub = new PostmanItemStub(controller.getName() + " " + (controller.getComment() == null ? "" : controller.getComment()));
             postmanStub.addItem(postmanItemStub);
@@ -104,7 +143,5 @@ public class PostmanWriter extends BaseWriter {
                 });
             });
         });
-
-        return postmanStub;
     }
 }

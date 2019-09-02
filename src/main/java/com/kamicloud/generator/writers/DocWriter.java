@@ -2,6 +2,7 @@ package com.kamicloud.generator.writers;
 
 import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.utils.CommentUtil;
+import com.kamicloud.generator.utils.StringUtil;
 import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
@@ -145,7 +146,7 @@ public class DocWriter extends BaseWriter {
                         actionName = action.getAnnotation(Named.class).getValue() + "@" + actionName;
                     }
                     String menu = "  - [" + actionName + comment + "](#" + action.getName() + ")";
-                    String overviewMenu = "[" + actionName + comment + "](/docs/{{version}}/generated/apis/" + controller.getName() + "#" + action.getName() + ")";
+                    String overviewMenu = "[`" + actionName + comment + "`](/docs/{{version}}/generated/apis/" + controller.getName() + "#" + action.getName() + ")";
                     file.addLine(menu);
 
                     apiOverview.addLine(overviewMenu);
@@ -235,7 +236,7 @@ public class DocWriter extends BaseWriter {
                 String comment = model.getComment();
                 comment = comment != null ? CommentUtil.getTitle(comment) : "";
 
-                file.addLine("  - [" + modelName + comment + "](#" + modelName + ")");
+                file.addLine("  - [" + (model.isResource() ? "`REST`" : "") + modelName + comment + "](#" + modelName + ")");
             });
 
             file.addBlock(new MultiLinesCombiner(""));
@@ -243,8 +244,14 @@ public class DocWriter extends BaseWriter {
             output.getModels().forEach((model) -> {
                 file.addBlock(new MultiLinesCombiner(
                     "<a name=\"" + model.getName() + "\"></a>",
-                    "## " + model.getName() + CommentUtil.getTitle(model.getComment())
+                    "## " + (model.isResource() ? "`REST`" : "") + model.getName() + CommentUtil.getTitle(model.getComment())
                 ));
+
+                if (model.isResource()) {
+                    file.addBlock(new MultiLinesCombiner(
+                        "[`/api/v1/restful/" + model.getLowerUnderScoreName() + "`](#https://laravel.com/docs/master/controllers#resource-controllers)"
+                    ));
+                }
 
                 if (model.hasCommentBody()) {
                     file.addBlock(new MultiLinesCombiner("\n> {primary} " + model.getComment() + "\n"));

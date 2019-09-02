@@ -32,6 +32,7 @@
     },
     "suggest": {
         "binarytorch/larecipe": "Docs support",
+        "kamicloud/laravel-stub-api-larecipe": "Some optimize based on larecipe",
         "laravel/telescope": ""
     }
 }

@@ -2,7 +2,7 @@
   - [Article](#Article)
   - [SharePayload一个分享场景的抽象](#SharePayload)
   - [UserProfile用户的基本信息](#UserProfile)
-  - [User用户信息](#User)
+  - [`REST`User用户信息](#User)
 
 <a name="ArticleComment"></a>
 ## ArticleComment
@@ -46,7 +46,8 @@
 |name | |`String`|true|
 
 <a name="User"></a>
-## User用户信息
+## `REST`User用户信息
+[`/api/v1/restful/user`](#https://laravel.com/docs/master/controllers#resource-controllers)
 
 > {primary} 用户信息
 第二行
