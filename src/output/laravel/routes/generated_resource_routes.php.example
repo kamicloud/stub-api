@@ -1,0 +1,5 @@
+<?php
+
+
+Route::resource('/v1/restful/User', 'V1\RESTFul\UserController');
+

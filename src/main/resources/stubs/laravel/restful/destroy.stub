@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})];
+
+use Kamicloud\StubApi\Concerns\ValueHelper;
+use Kamicloud\StubApi\Http\Messages\Message;
+use Kamicloud\StubApi\Utils\Constants;
+use App\Generated\[(${params.template.name})]\DTOs\[(${params.name})][(${params.dtoSuffix})];
+
+class ShowMessage extends Message
+{
+    use ValueHelper;
+
+    protected $id;
+    protected $dtoClass = [(${params.name})][(${params.dtoSuffix})]::class;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function requestRules()
+    {
+        return [
+            ['id', 'id', 'bail|integer', Constants::INTEGER, null],
+        ];
+    }
+
+    public function responseRules()
+    {
+        return [
+        ];
+    }
+
+    public function setResponse()
+    {
+    }
+
+}

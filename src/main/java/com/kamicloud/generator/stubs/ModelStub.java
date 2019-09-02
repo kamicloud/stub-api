@@ -1,5 +1,7 @@
 package com.kamicloud.generator.stubs;
 
+import definitions.annotations.RESTFul;
+
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
@@ -45,6 +47,10 @@ public class ModelStub extends BaseWithAnnotationStub {
 
     public void addParameter(ParameterStub parameterStub) {
         parameters.add(parameterStub);
+    }
+
+    public boolean isResource() {
+        return hasAnnotation(RESTFul.class);
     }
 
     @Override

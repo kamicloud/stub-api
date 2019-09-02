@@ -12,27 +12,27 @@ class UserService
 {
     public function index(IndexMessage $message)
     {
-
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }
 
     public function show(ShowMessage $message)
     {
-
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }
 
     public function store(StoreMessage $message)
     {
-
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }
 
     public function update(UpdateMessage $message)
     {
-
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }
 
     public function destroy(DestroyMessage $message)
     {
-
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }
 }
 

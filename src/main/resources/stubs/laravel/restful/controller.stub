@@ -8,7 +8,7 @@ use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})
 use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\StoreMessage;
 use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\UpdateMessage;
 use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\DestroyMessage;
-use App\Http\Services\[(${params.template.name})]\[(${params.name})]Service;
+use App\Http\Services\[(${params.template.name})]\RESTFul\[(${params.name})]Service;
 use DB;
 
 class [(${params.name})]Controller extends Controller

@@ -40,6 +40,13 @@ public class FileCombiner extends Combiner implements FileWriter, CombinerInterf
     }
 
     public static void build(String fileName, String content) throws IOException {
+        build(fileName, content, false);
+    }
+
+    public static void build(String fileName, String content, boolean replace) throws IOException {
+        if (new File(fileName).exists() && !replace) {
+            return;
+        }
         FileCombiner fileCombiner = new FileCombiner();
         fileCombiner.setFileName(fileName);
         fileCombiner.addBlock(new MultiLinesCombiner(content));

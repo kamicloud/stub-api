@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Generated\V1\Messages\RESTFul;
+namespace App\Generated\V1\Messages\RESTFul\User;
 
 use Kamicloud\StubApi\Concerns\ValueHelper;
 use Kamicloud\StubApi\Http\Messages\Message;
@@ -28,7 +28,7 @@ class IndexMessage extends Message
     public function requestRules()
     {
         return [
-            ['page', 'page', 'bail|integer', Constants::INTEGER, null],
+            ['page', 'page', 'bail|integer', Constants::INTEGER | Constants::OPTIONAL, null],
         ];
     }
 

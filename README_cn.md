@@ -1,17 +1,19 @@
 # Stub Api
 
-## Intro
+## 说明
 
 Stub Api is an API toolkit for laravel projects, including parameter validation, version control, document generating and regression testing.
 
 
-## Dependence
+## 依赖
 
 JDK 8-12
 
-Laravel 5.*
+本项目为laravel项目接口生成及自动测试工具。
 
-## Get Start
+本项目依赖 JDK
+
+## 使用方法
 
 接口部分使用说明
 https://learnku.com/articles/25288
@@ -22,7 +24,7 @@ https://learnku.com/articles/26733
 DEMO
 https://github.com/Kamicloud/GeneratorDemoProject
 
-#### Install
+#### 引入
 
 ````
 composer require kamicloud/stub-api

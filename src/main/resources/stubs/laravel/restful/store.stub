@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})];
+
+use Kamicloud\StubApi\Concerns\ValueHelper;
+use Kamicloud\StubApi\Http\Messages\Message;
+use Kamicloud\StubApi\Utils\Constants;
+use App\Generated\[(${params.template.name})]\DTOs\[(${params.name})][(${params.dtoSuffix})];
+
+class StoreMessage extends Message
+{
+    use ValueHelper;
+
+    protected $data;
+    protected $model;
+    protected $dtoClass = [(${params.name})][(${params.dtoSuffix})]::class;
+
+    /**
+     * @return int
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    public function requestRules()
+    {
+        return [
+            ['data', 'data', $this->dtoClass, Constants::MODEL, null],
+        ];
+    }
+
+    public function responseRules()
+    {
+        return [
+            ['model', 'model', $this->dtoClass, Constants::MODEL, null],
+        ];
+    }
+
+    public function setResponse($model)
+    {
+        $this->model = $model;
+    }
+
+}

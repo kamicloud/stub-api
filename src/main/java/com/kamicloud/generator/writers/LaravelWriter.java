@@ -113,6 +113,11 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
         });
         try {
+
+            FileCombiner.build(
+                outputDir.getAbsolutePath() + "/routes/generated_resource_routes.php",
+                stringUtil.renderTemplate("laravel/restful/routes", output)
+            );
             writeErrors(output);
             writeRoute(output);
 
@@ -157,7 +162,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             modelClassCombiner.toFile();
 
 
-            if (modelStub.hasAnnotation(RESTFul.class)) {
+            if (modelStub.isResource()) {
                 writeRESTFul(version, modelStub);
             }
 
@@ -172,27 +177,33 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
         try {
             FileCombiner.build(
                 outputDir.getAbsolutePath() + "/app/Generated/" + version + "/Messages/RESTFul/" + modelName + "/IndexMessage.php",
-                stringUtil.renderTemplate("laravel/restful/index", modelStub)
+                stringUtil.renderTemplate("laravel/restful/index", modelStub),
+                true
             );
             FileCombiner.build(
                 outputDir.getAbsolutePath() + "/app/Generated/" + version + "/Messages/RESTFul/" + modelName + "/UpdateMessage.php",
-                stringUtil.renderTemplate("laravel/restful/update", modelStub)
+                stringUtil.renderTemplate("laravel/restful/update", modelStub),
+                true
             );
             FileCombiner.build(
                 outputDir.getAbsolutePath() + "/app/Generated/" + version + "/Messages/RESTFul/" + modelName + "/ShowMessage.php",
-                stringUtil.renderTemplate("laravel/restful/show", modelStub)
+                stringUtil.renderTemplate("laravel/restful/show", modelStub),
+                true
             );
             FileCombiner.build(
                 outputDir.getAbsolutePath() + "/app/Generated/" + version + "/Messages/RESTFul/" + modelName + "/StoreMessage.php",
-                stringUtil.renderTemplate("laravel/restful/store", modelStub)
+                stringUtil.renderTemplate("laravel/restful/store", modelStub),
+                true
             );
             FileCombiner.build(
                 outputDir.getAbsolutePath() + "/app/Generated/" + version + "/Messages/RESTFul/" + modelName + "/DestroyMessage.php",
-                stringUtil.renderTemplate("laravel/restful/destroy", modelStub)
+                stringUtil.renderTemplate("laravel/restful/destroy", modelStub),
+                true
             );
             FileCombiner.build(
                 outputDir.getAbsolutePath() + "/app/Generated/Controllers/" + version + "/RESTFul/" + modelName + "Controller.php",
-                stringUtil.renderTemplate("laravel/restful/controller", modelStub)
+                stringUtil.renderTemplate("laravel/restful/controller", modelStub),
+                true
             );
             FileCombiner.build(
                 outputDir.getAbsolutePath() + "/app/Http/Services/" + version + "/RESTFul/" + modelName + "Service.php",

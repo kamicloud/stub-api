@@ -8,7 +8,7 @@ use App\Generated\V1\Messages\RESTFul\User\ShowMessage;
 use App\Generated\V1\Messages\RESTFul\User\StoreMessage;
 use App\Generated\V1\Messages\RESTFul\User\UpdateMessage;
 use App\Generated\V1\Messages\RESTFul\User\DestroyMessage;
-use App\Http\Services\V1\UserService;
+use App\Http\Services\V1\RESTFul\UserService;
 use DB;
 
 class UserController extends Controller

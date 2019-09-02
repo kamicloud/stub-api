@@ -1,1 +1,43 @@
+<?php
+
+namespace App\Generated\V1\Messages\RESTFul\User;
+
+use Kamicloud\StubApi\Concerns\ValueHelper;
+use Kamicloud\StubApi\Http\Messages\Message;
+use Kamicloud\StubApi\Utils\Constants;
+use App\Generated\V1\DTOs\UserDTO;
+
+class ShowMessage extends Message
+{
+    use ValueHelper;
+
+    protected $id;
+    protected $dtoClass = UserDTO::class;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function requestRules()
+    {
+        return [
+            ['id', 'id', 'bail|integer', Constants::INTEGER, null],
+        ];
+    }
+
+    public function responseRules()
+    {
+        return [
+        ];
+    }
+
+    public function setResponse()
+    {
+    }
+
+}
 
