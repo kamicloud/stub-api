@@ -16,7 +16,7 @@ class UpdateMessage extends Message
     protected $dtoClass = UserDTO::class;
 
     /**
-     * @return int
+     * @return UserDTO
      */
     public function getData()
     {

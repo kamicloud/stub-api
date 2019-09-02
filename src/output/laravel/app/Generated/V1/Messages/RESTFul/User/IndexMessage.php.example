@@ -28,7 +28,7 @@ class IndexMessage extends Message
     public function requestRules()
     {
         return [
-            ['page', 'page', 'bail|integer', Constants::INTEGER | Constants::OPTIONAL, null],
+            ['page', 'page', 'bail|integer|nullable', Constants::INTEGER | Constants::OPTIONAL, null],
         ];
     }
 

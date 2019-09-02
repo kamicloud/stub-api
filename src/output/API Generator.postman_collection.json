@@ -6,11 +6,62 @@
   },
   "item": [
     {
-      "name": "V1_1"
+      "name": "V1_1",
+      "item": [
+        {
+          "name": "RESTFul"
+        }
+      ]
     },
     {
       "name": "V1",
       "item": [
+        {
+          "name": "RESTFul",
+          "item": [
+            {
+              "name": "User 用户信息\n第二行",
+              "item": [
+                {
+                  "name": "Index",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "name": "Store"
+                },
+                {
+                  "name": "Update"
+                },
+                {
+                  "name": "Show"
+                },
+                {
+                  "name": "Destroy"
+                }
+              ]
+            }
+          ]
+        },
         {
           "name": "User 用户控制器\n描述",
           "item": [

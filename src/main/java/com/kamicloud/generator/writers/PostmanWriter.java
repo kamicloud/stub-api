@@ -94,10 +94,43 @@ public class PostmanWriter extends BaseWriter {
                 restfulOne.addItem(showStub);
                 restfulOne.addItem(destroyStub);
 
+                PostmanItemRequestStub indexRequest = new PostmanItemRequestStub();
+                PostmanItemRequestStub storeRequest = new PostmanItemRequestStub();
+                PostmanItemRequestStub updateRequest = new PostmanItemRequestStub();
+                PostmanItemRequestStub showRequest = new PostmanItemRequestStub();
+                PostmanItemRequestStub destroyRequest = new PostmanItemRequestStub();
+
+                indexStub.setRequest(indexRequest);
+                storeStub.setRequest(storeRequest);
+                updateStub.setRequest(updateRequest);
+                showStub.setRequest(showRequest);
+                destroyStub.setRequest(destroyRequest);
+
+                indexRequest.setMethod("GET");
+                indexRequest.setUrl(new PostmanItemRequestUrlStub(new String[]{
+                    "{{host}}"
+                }, new String[]{
+                    UrlUtil.getUrlPrefix(true),
+                    UrlUtil.transformVersion(version),
+                    "restful",
+                    UrlUtil.transformAction(modelStub.getName())
+                }));
+
+                storeRequest.setMethod("PUT");
+                storeRequest.setUrl(new PostmanItemRequestUrlStub(new String[]{
+                    "{{host}}"
+                }, new String[]{
+                    UrlUtil.getUrlPrefix(true),
+                    UrlUtil.transformVersion(version),
+                    "restful",
+                    UrlUtil.transformAction(modelStub.getName())
+                }));
 
 
             }
         });
+
+        postmanStub.addItem(restfulItemStub);
 
         templateStub.getControllers().forEach(controller -> {
             PostmanItemStub postmanItemStub = new PostmanItemStub(controller.getName() + " " + (controller.getComment() == null ? "" : controller.getComment()));

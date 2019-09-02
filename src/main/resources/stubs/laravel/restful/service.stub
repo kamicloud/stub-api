@@ -25,12 +25,12 @@ class [(${params.name})]Service
         throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }
 
-    public function update(UpdateMessage $message)
+    public function update(UpdateMessage $message, int $id)
     {
         throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }
 
-    public function destroy(DestroyMessage $message)
+    public function destroy(DestroyMessage $message, int $id)
     {
         throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }

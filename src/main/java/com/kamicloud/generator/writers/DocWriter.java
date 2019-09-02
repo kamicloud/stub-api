@@ -249,7 +249,7 @@ public class DocWriter extends BaseWriter {
 
                 if (model.isResource()) {
                     file.addBlock(new MultiLinesCombiner(
-                        "[`/api/v1/restful/" + model.getLowerUnderScoreName() + "`](#https://laravel.com/docs/master/controllers#resource-controllers)"
+                        "`/api/v1/restful/" + model.getLowerUnderScoreName() + "`[DOC](https://laravel.com/docs/master/controllers#resource-controllers)"
                     ));
                 }
 

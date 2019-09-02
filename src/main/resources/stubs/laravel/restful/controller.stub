@@ -46,21 +46,21 @@ class [(${params.name})]Controller extends Controller
         });
     }
 
-    public function update(UpdateMessage $message)
+    public function update(UpdateMessage $message, $id)
     {
-        return DB::transaction(function () use ($message) {
+        return DB::transaction(function () use ($message, $id) {
             $message->validateInput();
-            $this->handler->update($message);
+            $this->handler->update($message, $id);
             $message->validateOutput();
             return $message->getResponse();
         });
     }
 
-    public function destroy(DestroyMessage $message)
+    public function destroy(DestroyMessage $message, $id)
     {
-        return DB::transaction(function () use ($message) {
+        return DB::transaction(function () use ($message, $id) {
             $message->validateInput();
-            $this->handler->destroy($message);
+            $this->handler->destroy($message, $id);
             $message->validateOutput();
             return $message->getResponse();
         });

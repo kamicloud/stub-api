@@ -47,7 +47,7 @@
 
 <a name="User"></a>
 ## `REST`User用户信息
-[`/api/v1/restful/user`](#https://laravel.com/docs/master/controllers#resource-controllers)
+`/api/v1/restful/user`[DOC](https://laravel.com/docs/master/controllers#resource-controllers)
 
 > {primary} 用户信息
 第二行

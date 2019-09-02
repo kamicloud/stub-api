@@ -16,7 +16,7 @@ class UpdateMessage extends Message
     protected $dtoClass = [(${params.name})][(${params.dtoSuffix})]::class;
 
     /**
-     * @return int
+     * @return [(${params.name})][(${params.dtoSuffix})]
      */
     public function getData()
     {
