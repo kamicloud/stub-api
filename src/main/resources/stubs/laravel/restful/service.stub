@@ -15,7 +15,7 @@ class [(${params.name})]Service
         throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }
 
-    public function show(ShowMessage $message)
+    public function show(ShowMessage $message, int $id)
     {
         throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
     }

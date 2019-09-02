@@ -28,10 +28,10 @@ class UserController extends Controller
         return $message->getResponse();
     }
 
-    public function show(ShowMessage $message)
+    public function show(ShowMessage $message, $id)
     {
         $message->validateInput();
-        $this->handler->show($message);
+        $this->handler->show($message, $id);
         $message->validateOutput();
         return $message->getResponse();
     }

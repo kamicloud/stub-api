@@ -116,7 +116,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
             FileCombiner.build(
                 outputDir.getAbsolutePath() + "/routes/generated_resource_routes.php",
-                stringUtil.renderTemplate("laravel/restful/routes", output)
+                stringUtil.renderTemplate("laravel/restful/routes", output),
+                true
             );
             writeErrors(output);
             writeRoute(output);

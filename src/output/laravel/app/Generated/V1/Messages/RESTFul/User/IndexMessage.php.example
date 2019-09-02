@@ -14,7 +14,7 @@ class IndexMessage extends Message
     protected $page;
     protected $totalPage;
     protected $perPage;
-    protected $activities;
+    protected $models;
     protected $dtoClass = UserDTO::class;
 
     /**
@@ -41,7 +41,7 @@ class IndexMessage extends Message
         ];
     }
 
-    public function setResponse($totalPage, $perPage, $activities)
+    public function setResponse($totalPage, $perPage, $models)
     {
         $this->perPage = $perPage;
         $this->totalPage = $totalPage;

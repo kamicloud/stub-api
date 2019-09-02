@@ -7,7 +7,7 @@ use Kamicloud\StubApi\Http\Messages\Message;
 use Kamicloud\StubApi\Utils\Constants;
 use App\Generated\V1\DTOs\UserDTO;
 
-class ShowMessage extends Message
+class DestroyMessage extends Message
 {
     use ValueHelper;
 

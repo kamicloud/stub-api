@@ -1,4 +1,4 @@
 <?php
 
 [# th:each="template : ${params.templates}"][# th:each="model : ${template.value.models}"][# th:if="${model.isResource()}"]
-Route::resource('/[(${#strings.toLowerCase(model.template.name)})]/restful/[(${model.name})]', '[(${model.template.name})]\RESTFul\[(${model.name})]Controller');[/][/][/]
+Route::resource('/[(${#strings.toLowerCase(model.template.name)})]/restful/[(${model.lowerCamelName})]', '[(${model.template.name})]\RESTFul\[(${model.name})]Controller');[/][/][/]

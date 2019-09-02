@@ -1,5 +1,5 @@
 <?php
 
 
-Route::resource('/v1/restful/User', 'V1\RESTFul\UserController');
+Route::resource('/v1/restful/user', 'V1\RESTFul\UserController');
 

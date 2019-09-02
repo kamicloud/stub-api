@@ -1,5 +1,6 @@
 package com.kamicloud.generator.stubs;
 
+import com.github.plural4j.Plural;
 import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.utils.CommentUtil;
