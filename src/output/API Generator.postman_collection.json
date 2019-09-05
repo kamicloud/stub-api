@@ -47,16 +47,79 @@
                   }
                 },
                 {
-                  "name": "Store"
+                  "name": "Store",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user"
+                      ]
+                    }
+                  }
                 },
                 {
-                  "name": "Update"
+                  "name": "Update",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [],
+                      "path": []
+                    }
+                  }
                 },
                 {
-                  "name": "Show"
+                  "name": "Show",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [],
+                      "path": []
+                    }
+                  }
                 },
                 {
-                  "name": "Destroy"
+                  "name": "Destroy",
+                  "request": {
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [],
+                      "path": []
+                    }
+                  }
                 }
               ]
             }

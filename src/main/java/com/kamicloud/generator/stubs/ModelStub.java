@@ -1,11 +1,12 @@
 package com.kamicloud.generator.stubs;
 
+import com.kamicloud.generator.interfaces.ResourceInterface;
 import definitions.annotations.RESTFul;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-public class ModelStub extends BaseWithAnnotationStub {
+public class ModelStub extends BaseWithAnnotationStub implements ResourceInterface {
     private LinkedList<ParameterStub> parameters = new LinkedList<>();
     private String parentClasspath;
     private ModelStub parent;

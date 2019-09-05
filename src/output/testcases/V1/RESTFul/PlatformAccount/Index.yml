@@ -1,0 +1,11 @@
+#__api: /api/api/v1/restful/platform_account/1
+__enabled: true
+__role:
+__user:
+__anchor:
+__model: PlatformAccount
+__id: 1
+__params:
+  page: 1
+# __testcases:
+

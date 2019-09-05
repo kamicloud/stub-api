@@ -2,6 +2,7 @@ package com.kamicloud.generator.stubs.testcase;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.kamicloud.generator.interfaces.ResourceInterface;
 import com.kamicloud.generator.utils.UrlUtil;
 import okhttp3.Response;
 import org.yaml.snakeyaml.Yaml;
@@ -12,7 +13,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class TestCaseStub {
+public class TestCaseStub implements ResourceInterface {
     private Boolean enabled;
     private String api;
     private String version;
@@ -21,6 +22,9 @@ public class TestCaseStub {
     private String role;
     private String user;
     private String anchor;
+    private String method;
+    private String model;
+    private String id;
     private LinkedHashMap<String, String> params = new LinkedHashMap<>();
 
     private Response response;
@@ -104,6 +108,9 @@ public class TestCaseStub {
         Object user = attributes.get("__user");
         Object anchor = attributes.get("__anchor");
         Object params = attributes.get("__params");
+        Object method = attributes.get("__method");
+        Object model = attributes.get("__model");
+        Object id = attributes.get("__id");
 
         TestCaseStub testCaseStub = new TestCaseStub();
 
@@ -115,6 +122,9 @@ public class TestCaseStub {
         testCaseStub.role = getString(role, prev.role);
         testCaseStub.user = getString(user, prev.user);
         testCaseStub.anchor = anchor == null ? null : anchor.toString();
+        testCaseStub.method = getString(method, prev.method);
+        testCaseStub.model = getString(model, prev.model);
+        testCaseStub.id = getString(id, prev.id);
 
         if (testCaseStub.api == null) {
             // 对于手动指定请求的接口，不使用默认的目录映射
@@ -123,9 +133,13 @@ public class TestCaseStub {
             } else {
                 List<String> paths = Arrays.asList(file.getAbsolutePath().split("[\\\\/]"));
                 int size = paths.size();
-                testCaseStub.action = paths.get(size - 1).replace(".yml", "");
-                testCaseStub.controller = paths.get(size - 2);
-                testCaseStub.version = paths.get(size - 3);
+                if (testCaseStub.isResource()) {
+                    testCaseStub.version = paths.get(size - 4);
+                } else {
+                    testCaseStub.action = paths.get(size - 1).replace(".yml", "");
+                    testCaseStub.controller = paths.get(size - 2);
+                    testCaseStub.version = paths.get(size - 3);
+                }
             }
         }
 
@@ -155,6 +169,10 @@ public class TestCaseStub {
         return collection;
     }
 
+    public boolean isResource() {
+        return this.model != null;
+    }
+
     private static String getString(Object string, String defaultString) {
         if (string == null || string.toString().equals("null")) {
             return defaultString;
@@ -168,6 +186,9 @@ public class TestCaseStub {
     }
 
     public String getApi() {
+        if (isResource()) {
+            return api == null ? UrlUtil.getResourceUrlWithPrefix(version, model, id).get(method) : api;
+        }
         return api == null ? UrlUtil.getUrlWithPrefix(version, controller, action) : api;
     }
 
@@ -195,7 +216,19 @@ public class TestCaseStub {
         return role;
     }
 
-    public String getUsre() {
+    public String getUser() {
         return user;
+    }
+
+    public String getMethod() {
+        return method == null ? "post" : method;
+    }
+
+    public String getModel() {
+        return model;
+    }
+
+    public String getId() {
+        return id;
     }
 }

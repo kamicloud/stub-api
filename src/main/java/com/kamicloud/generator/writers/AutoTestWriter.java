@@ -83,79 +83,85 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     }
 
     private void getTestResponse(OutputStub output) {
-        output.getTemplates().forEach((version, templateStub) -> templateStub.getControllers().forEach(controllerStub -> controllerStub.getActions().forEach((actionStub) -> {
-            String actionName = actionStub.getName();
-
-            String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName(), actionName);
-
-            AtomicReference<Integer> i = new AtomicReference<>(0);
-            LinkedList<TestCaseStub> requests = apiMap.get(url);
-            try {
-                ClassCombiner classCombiner = new ClassCombiner(
-                    "Tests\\Generated\\" + version + "\\" + controllerStub.getName() + "\\" + actionStub.getName() + "Test",
-                    "Tests\\TestCase"
-                );
-                classCombiner.addTrait("Illuminate\\Foundation\\Testing\\DatabaseTransactions");
-
-                if (requests != null && !classCombiner.exists()) {
-                    requests.forEach(requestStub -> {
-                        try {
-                            requestApi(requestStub);
-                            Response response = requestStub.getResponse();
-                            ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, "testCase" + i);
-                            ArrayList<String> params = new ArrayList<>();
-                            params.add("'__role' => '" + (requestStub.getRole() == null || requestStub.getRole().equals("null") ? "" : requestStub.getRole()) + "',");
-                            params.add("'__user' => '" + (requestStub.getUsre() == null || requestStub.getUsre().equals("null") ? "" : requestStub.getUsre()) + "',");
-                            requestStub.getParameters().forEach((key, value) -> {
-                                value = value.replace("\\", "\\\\").replace("'", "\\'");
-
-                                List valueArr = Arrays.asList(value.split("\n"));
-
-                                if (valueArr.isEmpty() || valueArr.size() == 1) {
-                                    params.add("'" + key + "' => '" + value + "',");
-                                } else {
-                                    params.add("'" + key + "' => '");
-                                    valueArr.forEach(s -> {
-                                        params.add("    " + s);
-                                    });
-                                    params.add("',");
-                                }
-
-
-                            });
-                            classMethodCombiner.setBody(params);
-                            ArrayList<String> callAndAnchor = new ArrayList<>();
-                            if (requestStub.getAnchor() != null && requestStub.getAnchor().equals("null")) {
-                                callAndAnchor.add("# " + requestStub.getAnchor());
-                            }
-                            callAndAnchor.add("$response = $this->post('" + url + "', [");
-                            classMethodCombiner.wrapBody(
-                                callAndAnchor,
-                                new ArrayList<>(Arrays.asList(
-                                    "]);",
-                                    "$actual = $response->getContent();"
-                                ))
-                            );
-
-                            String jsonResponse = Objects.requireNonNull(response.body()).string();
-
-                            classMethodCombiner.addBody("$expect = '\n" + jsonResponse.replace("'", "\\'") + "\n';");
-                            classMethodCombiner.addBody("$expect = json_encode(json_decode($expect));");
-                            classMethodCombiner.addBody("$this->assertJsonStringEqualsJsonString($expect, $actual);");
-
-                            i.getAndSet(i.get() + 1);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    classCombiner.toFile();
+        output.getTemplates().forEach((version, templateStub) -> {
+            templateStub.getModels().forEach(modelStub -> {
+                if (modelStub.isResource()) {
                 }
+            });
+            templateStub.getControllers().forEach(controllerStub -> controllerStub.getActions().forEach((actionStub) -> {
+                String actionName = actionStub.getName();
+
+                String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName(), actionName);
+
+                AtomicReference<Integer> i = new AtomicReference<>(0);
+                LinkedList<TestCaseStub> requests = apiMap.get(url);
+                try {
+                    ClassCombiner classCombiner = new ClassCombiner(
+                        "Tests\\Generated\\" + version + "\\" + controllerStub.getName() + "\\" + actionStub.getName() + "Test",
+                        "Tests\\TestCase"
+                    );
+                    classCombiner.addTrait("Illuminate\\Foundation\\Testing\\DatabaseTransactions");
+
+                    if (requests != null && !classCombiner.exists()) {
+                        requests.forEach(requestStub -> {
+                            try {
+                                requestApi(requestStub);
+                                Response response = requestStub.getResponse();
+                                ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, "testCase" + i);
+                                ArrayList<String> params = new ArrayList<>();
+                                params.add("'__role' => '" + (requestStub.getRole() == null || requestStub.getRole().equals("null") ? "" : requestStub.getRole()) + "',");
+                                params.add("'__user' => '" + (requestStub.getUser() == null || requestStub.getUser().equals("null") ? "" : requestStub.getUser()) + "',");
+                                requestStub.getParameters().forEach((key, value) -> {
+                                    value = value.replace("\\", "\\\\").replace("'", "\\'");
+
+                                    List valueArr = Arrays.asList(value.split("\n"));
+
+                                    if (valueArr.isEmpty() || valueArr.size() == 1) {
+                                        params.add("'" + key + "' => '" + value + "',");
+                                    } else {
+                                        params.add("'" + key + "' => '");
+                                        valueArr.forEach(s -> {
+                                            params.add("    " + s);
+                                        });
+                                        params.add("',");
+                                    }
 
 
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        })));
+                                });
+                                classMethodCombiner.setBody(params);
+                                ArrayList<String> callAndAnchor = new ArrayList<>();
+                                if (requestStub.getAnchor() != null && requestStub.getAnchor().equals("null")) {
+                                    callAndAnchor.add("# " + requestStub.getAnchor());
+                                }
+                                callAndAnchor.add("$response = $this->" + requestStub.getMethod() + "('" + url + "', [");
+                                classMethodCombiner.wrapBody(
+                                    callAndAnchor,
+                                    new ArrayList<>(Arrays.asList(
+                                        "]);",
+                                        "$actual = $response->getContent();"
+                                    ))
+                                );
+
+                                String jsonResponse = Objects.requireNonNull(response.body()).string();
+
+                                classMethodCombiner.addBody("$expect = '\n" + jsonResponse.replace("'", "\\'") + "\n';");
+                                classMethodCombiner.addBody("$expect = json_encode(json_decode($expect));");
+                                classMethodCombiner.addBody("$this->assertJsonStringEqualsJsonString($expect, $actual);");
+
+                                i.getAndSet(i.get() + 1);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
+                        classCombiner.toFile();
+                    }
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }));
+        });
     }
 
     private void requestApi(TestCaseStub requestStub) throws IOException {
@@ -168,14 +174,15 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         if (requestStub.getRole() != null) {
             builder.addFormDataPart("__role", requestStub.getRole());
         }
-        if (requestStub.getUsre() != null) {
-            builder.addFormDataPart("__user", requestStub.getUsre());
+        if (requestStub.getUser() != null) {
+            builder.addFormDataPart("__user", requestStub.getUser());
         }
         RequestBody requestBody = builder.build();
         String testHost = env.getProperty("test-host", "http://localhost");
+
         Request request = new Request.Builder()
             .url(testHost + requestStub.getApi())
-            .post(requestBody)
+            .method(requestStub.getMethod(), requestBody)
             .build();
 
         Response response = client.newCall(request).execute();

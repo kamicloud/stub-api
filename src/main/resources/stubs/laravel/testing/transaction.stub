@@ -1,0 +1,31 @@
+<?php
+
+namespace Tests\Generated\V1\Marketing;
+
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+
+class ActivityPushingSwitchTest extends TestCase
+{
+    use DatabaseTransactions;
+
+    public function testCase0()
+    {
+        $response = $this->post('/api/v1/marketing/activity_pushing_switch', [
+            '__role' => '',
+            '__user' => '',
+            'activityId' => '1',
+            'enabled' => '1',
+        ]);
+        $actual = $response->getContent();
+        $expect = '
+{
+    "status": -10000,
+    "message": "未找到营销推送配置"
+}
+';
+        $expect = json_encode(json_decode($expect));
+        $this->assertJsonStringEqualsJsonString($expect, $actual);
+    }
+
+}
