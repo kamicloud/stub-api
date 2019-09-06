@@ -126,6 +126,39 @@ public class PostmanWriter extends BaseWriter {
                     UrlUtil.transformAction(modelStub.getName())
                 }));
 
+                showRequest.setMethod("GET");
+                showRequest.setUrl(new PostmanItemRequestUrlStub(new String[]{
+                    "{{host}}"
+                }, new String[]{
+                    UrlUtil.getUrlPrefix(true),
+                    UrlUtil.transformVersion(version),
+                    "restful",
+                    UrlUtil.transformAction(modelStub.getName()),
+                    "1"
+                }));
+
+                updateRequest.setMethod("PATCH");
+                updateRequest.setUrl(new PostmanItemRequestUrlStub(new String[]{
+                    "{{host}}"
+                }, new String[]{
+                    UrlUtil.getUrlPrefix(true),
+                    UrlUtil.transformVersion(version),
+                    "restful",
+                    UrlUtil.transformAction(modelStub.getName()),
+                    "1"
+                }));
+
+                destroyRequest.setMethod("DELETE");
+                destroyRequest.setUrl(new PostmanItemRequestUrlStub(new String[]{
+                    "{{host}}"
+                }, new String[]{
+                    UrlUtil.getUrlPrefix(true),
+                    UrlUtil.transformVersion(version),
+                    "restful",
+                    UrlUtil.transformAction(modelStub.getName()),
+                    "1"
+                }));
+
 
             }
         });
