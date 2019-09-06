@@ -11,21 +11,11 @@ class DestroyMessage extends Message
 {
     use ValueHelper;
 
-    protected $id;
     protected $dtoClass = UserDTO::class;
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
 
     public function requestRules()
     {
         return [
-            ['id', 'id', 'bail|integer', Constants::INTEGER, null],
         ];
     }
 

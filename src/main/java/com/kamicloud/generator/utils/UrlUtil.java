@@ -41,7 +41,14 @@ public class UrlUtil {
 
     public static HashMap<String, String> getResourceUrlWithPrefix(String version, String model, String id) {
         return new HashMap<String, String>() {{
-            String base = getUrlPrefix() + String.join("/", transformVersion(version), "restful", transformModel(model));
+            String base = String.join(
+                "/",
+                getUrlPrefix(),
+                transformVersion(version),
+                "restful",
+                transformModel(model)
+            );
+
             put("get", base);
             put("update", base + "/" + id);
             put("store", base + "/" + id);

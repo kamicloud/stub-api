@@ -10,6 +10,7 @@ import org.yaml.snakeyaml.Yaml;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
@@ -70,10 +71,6 @@ public class TestCaseStub implements ResourceInterface {
 //        }
 //
 //        return user;
-//    }
-//
-//    public LinkedHashMap<String, Object> getParams() {
-//        return params;
 //    }
 
     public static LinkedList<TestCaseStub> getTestCasesFromFile(File file) throws FileNotFoundException {
@@ -192,8 +189,25 @@ public class TestCaseStub implements ResourceInterface {
         return api == null ? UrlUtil.getUrlWithPrefix(version, controller, action) : api;
     }
 
+    public String getPath() {
+        if (isResource()) {
+            return version + "/RESTFul/" + model + "Test.php";
+        }
+
+        return version + "/" + controller + "/" + action + "Test.php";
+    }
+
     public Response getResponse() {
         return response;
+    }
+
+    public String getResponseContent() {
+        try {
+            return response.body().string();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     public void setResponse(Response response) {
@@ -230,5 +244,13 @@ public class TestCaseStub implements ResourceInterface {
 
     public String getId() {
         return id;
+    }
+
+    public String getController() {
+        return controller;
+    }
+
+    public String getAction() {
+        return action;
     }
 }
