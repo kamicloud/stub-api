@@ -189,6 +189,24 @@ public class TestCaseStub implements ResourceInterface {
         return api == null ? UrlUtil.getUrlWithPrefix(version, controller, action) : api;
     }
 
+    public String getHttpMethod() {
+        if (method == null) {
+            return "post";
+        }
+        switch (method) {
+            case "update":
+                return "patch";
+            case "destroy":
+                return "delete";
+            case "index":
+            case "show":
+                return "get";
+            case "store":
+            default:
+                return "post";
+        }
+    }
+
     public String getPath() {
         if (isResource()) {
             return version + "/RESTFul/" + model + "Test.php";

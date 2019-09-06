@@ -49,9 +49,9 @@ public class UrlUtil {
                 transformModel(model)
             );
 
-            put("get", base);
+            put("index", base);
             put("update", base + "/" + id);
-            put("store", base + "/" + id);
+            put("store", base);
             put("show", base + "/" + id);
             put("destroy", base + "/" + id);
         }};

@@ -11,7 +11,7 @@ class [(${params.first.model})]Test extends TestCase
 [# th:each="request, iterStat : ${params}"]
     public function testCase[(${iterStat.index})]()
     {
-        $response = $this->[(${request.method})]('[(${request.api})]', [
+        $response = $this->[(${request.httpMethod})]('[(${request.api})]', [
             '__role' => '',
             '__user' => '',[# th:each="parameter : ${request.parameters}"]
             '[(${parameter.key})]' => '[(${parameter.value})]',

@@ -201,25 +201,33 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
     }
 
     private void requestApi(TestCaseStub requestStub) throws IOException {
-        String method = requestStub.getMethod();
+        String method = requestStub.getHttpMethod();
+        String api = requestStub.getApi();
         MultipartBody.Builder builder = new MultipartBody
             .Builder()
             .setType(MultipartBody.FORM);
 
+        FormBody.Builder formBuilder = new FormBody.Builder();
+
         builder.addFormDataPart("__test_mode", "1");
+        formBuilder.add("__test_mode", "1");
         requestStub.getParameters().forEach(builder::addFormDataPart);
+        requestStub.getParameters().forEach(formBuilder::add);
         if (requestStub.getRole() != null) {
             builder.addFormDataPart("__role", requestStub.getRole());
+            formBuilder.add("__role", requestStub.getRole());
         }
         if (requestStub.getUser() != null) {
             builder.addFormDataPart("__user", requestStub.getUser());
+            formBuilder.add("__user", requestStub.getUser());
         }
         RequestBody requestBody = builder.build();
+        RequestBody formBody = formBuilder.build();
         String testHost = env.getProperty("test-host", "http://localhost");
 
         Request request = new Request.Builder()
-            .url(testHost + requestStub.getApi())
-            .method(method.toUpperCase(), method.equals("get") ? null : requestBody)
+            .url(testHost + api)
+            .method(method.toUpperCase(), method.equals("get") ? null : (method.equals("patch") ? formBody : requestBody))
             .build();
 
         Response response = client.newCall(request).execute();
