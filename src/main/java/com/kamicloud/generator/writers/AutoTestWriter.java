@@ -226,7 +226,7 @@ public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransf
         String testHost = env.getProperty("test-host", "http://localhost");
 
         Request request = new Request.Builder()
-            .url(testHost + api)
+            .url(testHost + api + "?__test_mode=1")
             .method(method.toUpperCase(), method.equals("get") ? null : (method.equals("patch") ? formBody : requestBody))
             .build();
 

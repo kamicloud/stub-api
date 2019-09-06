@@ -11,7 +11,7 @@ public class Json extends Type {
 
     @Override
     public String getLaravelRule() {
-        return "any";
+        return null;
     }
 
     @Override

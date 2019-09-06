@@ -536,8 +536,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 rule = typeName + "::class";
             } else {
                 Type typeInstance = parameterStub.getType();
-
-                ruleList.add(typeInstance.getLaravelRule());
+                String laravelRule = typeInstance.getLaravelRule();
+                if (laravelRule != null) {
+                    ruleList.add(laravelRule);
+                }
                 rule = "'" + String.join("|", ruleList) + "'";
             }
 
