@@ -5,6 +5,7 @@ namespace App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.
 use Kamicloud\StubApi\Concerns\ValueHelper;
 use Kamicloud\StubApi\Http\Messages\Message;
 use Kamicloud\StubApi\Utils\Constants;
+use App\Generated\BOs\Enums\QuerySort;
 use App\Generated\[(${params.template.name})]\DTOs\[(${params.name})][(${params.dtoSuffix})];
 
 class IndexMessage extends Message
@@ -12,7 +13,9 @@ class IndexMessage extends Message
     use ValueHelper;
 
     protected $page;
-    protected $totalPage;
+    protected $sort;
+    protected $limit;
+    protected $totalCount;
     protected $perPage;
     protected $models;
     protected $dtoClass = [(${params.name})][(${params.dtoSuffix})]::class;
@@ -25,26 +28,46 @@ class IndexMessage extends Message
         return $this->page;
     }
 
+    /**
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * 排序，注意要转下snake_case
+     *
+     * @return string
+     */
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
     public function requestRules()
     {
         return [
             ['page', 'page', 'bail|integer|nullable', Constants::INTEGER | Constants::OPTIONAL, null],
+            ['sort', 'sort', QuerySort::class, Constants::ENUM | Constants::OPTIONAL, null],
+            ['limit', 'limit', 'bail|integer|nullable', Constants::INTEGER | Constants::OPTIONAL, null],
         ];
     }
 
     public function responseRules()
     {
         return [
-            ['totalPage', 'total_page', 'bail|integer', Constants::INTEGER, null],
+            ['totalCount', 'total_count', 'bail|integer', Constants::INTEGER, null],
             ['perPage', 'per_page', 'bail|integer', Constants::INTEGER, null],
             ['models', 'models', $this->dtoClass, Constants::MODEL | Constants::ARRAY, null],
         ];
     }
 
-    public function setResponse($totalPage, $perPage, $models)
+    public function setResponse($totalCount, $perPage, $models)
     {
         $this->perPage = $perPage;
-        $this->totalPage = $totalPage;
+        $this->totalCount = $totalCount;
         $this->models = $models;
     }
 
