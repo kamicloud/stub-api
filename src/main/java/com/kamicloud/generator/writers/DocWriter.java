@@ -45,8 +45,9 @@ public class DocWriter extends BaseWriter {
         docPrefix = env.getProperty("generator.writers.laravel-doc.http-prefix", "docs");
         output.getTemplates().forEach((version, templateStub) -> {
             outputDir = new File(docPath.getAbsolutePath() + "/" + version);
-            if (outputDir.exists()) {
-                FileUtil.deleteAllFilesOfDir(outputDir);
+            File generatedDir = new File(outputDir.getAbsolutePath() + "/generated");
+            if (generatedDir.exists()) {
+                FileUtil.deleteAllFilesOfDir(generatedDir);
             }
 //            (new File(outputDir.getAbsolutePath() + "/generated/apis")).mkdirs();
 
@@ -63,6 +64,10 @@ public class DocWriter extends BaseWriter {
         try {
             FileCombiner index = new FileCombiner();
             index.setFileName(outputDir.getAbsolutePath() + "/index.md");
+
+            if (index.exists()) {
+                return;
+            }
 
             index.addBlock(new MultiLinesCombiner(
                 "- ## Get Started",
@@ -96,14 +101,11 @@ public class DocWriter extends BaseWriter {
 
     private void writeOverview(String version, TemplateStub templateStub) {
         try {
-            FileCombiner file = new FileCombiner();
-            file.setFileName(outputDir.getAbsolutePath() + "/generated/overview.md");
-
-            if (templateStub.getComment() != null) {
-                file.addLine(templateStub.getComment());
-            }
-
-            file.toFile();
+            FileCombiner.build(
+                outputDir.getAbsolutePath() + "/overview.md",
+                templateStub.getComment(),
+                false
+            );
         } catch (IOException e) {
             e.printStackTrace();
         }
