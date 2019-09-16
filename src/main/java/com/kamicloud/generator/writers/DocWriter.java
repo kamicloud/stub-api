@@ -148,7 +148,7 @@ public class DocWriter extends BaseWriter {
                         actionName = action.getAnnotation(Named.class).getValue() + "@" + actionName;
                     }
                     String menu = "  - [" + actionName + comment + "](#" + action.getName() + ")";
-                    String overviewMenu = "[`" + actionName + comment + "`](/docs/{{version}}/generated/apis/" + controller.getName() + "#" + action.getName() + ")";
+                    String overviewMenu = "[`" + actionName + comment + "`](/" + docPrefix + "/{{version}}/generated/apis/" + controller.getName() + "#" + action.getName() + ")";
                     file.addLine(menu);
 
                     apiOverview.addLine(overviewMenu);
