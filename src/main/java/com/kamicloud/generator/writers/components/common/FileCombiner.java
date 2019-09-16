@@ -15,17 +15,26 @@ public class FileCombiner extends Combiner implements FileWriter, CombinerInterf
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
-    }
-
-    public void toFile() throws IOException {
         Environment environment = DefaultProfileUtil.getEnv();
 
         String suffix = environment.getProperty("generator.writers.force-suffix");
 
         if (suffix != null) {
-            fileName = fileName + suffix;
+            this.fileName = fileName + suffix;
         }
+    }
 
+    public String getOutputFilename() {
+
+        return fileName;
+    }
+
+    public boolean exists() {
+        return new File(getOutputFilename()).exists();
+    }
+
+    public void toFile() throws IOException {
+        String fileName = getOutputFilename();
         File file = new File(fileName);
         if (!file.getParentFile().exists()) {
             file.getParentFile().mkdirs();
