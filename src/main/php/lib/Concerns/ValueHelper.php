@@ -15,15 +15,9 @@ trait ValueHelper
 {
     public function mutableAttributes($attributeMap)
     {
-        $data = [];
-
-        foreach ($attributeMap as $attribute) {
-            [$field] = $attribute;
-            $data[$field] = $this->$field;
-        }
         $isTesting = config('app.env') === 'testing';
 
-        $data = array_reduce($this->responseRules(), function ($c, $attribute) use ($isTesting) {
+        $data = array_reduce($attributeMap, function ($c, $attribute) use ($isTesting) {
             [$field, $dbField, $rule, $type] = $attribute;
 
             $isMutable = $type & Constants::MUTABLE;
