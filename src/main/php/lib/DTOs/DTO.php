@@ -128,18 +128,7 @@ abstract class DTO implements JsonSerializable
 
     public function jsonSerialize()
     {
-        $isTesting = config('app.env') === 'testing';
-
-        return array_reduce($this->getAttributeMap(), function ($c, $attribute) use ($isTesting) {
-            [$field, $dbField, $rule, $type] = $attribute;
-
-            $isMutable = $type & Constants::MUTABLE;
-
-            // 测试模式会把非null的数据根据可测注解修改为通用数据
-            $c[$field] = $isTesting && $isMutable && !is_null($this->{$field}) ? '*' : $this->{$field};
-
-            return $c;
-        }, []);
+        return $this->mutableAttributes($this->getAttributeMap());
     }
 
     public function mock()

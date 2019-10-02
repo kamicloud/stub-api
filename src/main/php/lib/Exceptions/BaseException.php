@@ -27,6 +27,7 @@ class BaseException extends Exception implements Responsable
         return [
             config('generator.keys.status', 'status') => $this->getStatus(),
             config('generator.keys.message', 'message') => $this->getMessage(),
+            config('generator.keys.data', 'data') => null,
         ];
     }
 }

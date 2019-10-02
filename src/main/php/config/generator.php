@@ -34,7 +34,7 @@ return [
 
     'values' => [
         'success-status' => 0,
-        'success-message' => 'message',
+        'success-message' => 'success',
     ],
 
     /**

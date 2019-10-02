@@ -13,6 +13,30 @@ use Kamicloud\StubApi\Utils\Constants;
 
 trait ValueHelper
 {
+    public function mutableAttributes($attributeMap)
+    {
+        $data = [];
+
+        foreach ($attributeMap as $attribute) {
+            [$field] = $attribute;
+            $data[$field] = $this->$field;
+        }
+        $isTesting = config('app.env') === 'testing';
+
+        $data = array_reduce($this->responseRules(), function ($c, $attribute) use ($isTesting) {
+            [$field, $dbField, $rule, $type] = $attribute;
+
+            $isMutable = $type & Constants::MUTABLE;
+
+            // 测试模式会把非null的数据根据可测注解修改为通用数据
+            $c[$field] = $isTesting && $isMutable && !is_null($this->{$field}) ? '*' : $this->{$field};
+
+            return $c;
+        }, []);
+
+        return $data;
+    }
+
     public function fromJson($values, $attributeMap)
     {
         if (is_string($values)) {

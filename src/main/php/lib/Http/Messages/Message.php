@@ -71,17 +71,12 @@ abstract class Message
         }
         $attributeMap = $this->responseRules();
 
-        $data = [];
-
-        foreach ($attributeMap as $attribute) {
-            [$field] = $attribute;
-            $data[$field] = $this->$field;
-        }
+        $data = $this->mutableAttributes($attributeMap);
 
         $response = [
             config('generator.keys.status', 'status') => config('generator.values.success-status', 0),
             config('generator.keys.message', 'message') => config('generator.values.success-message', 'success'),
-            config('generator.keys.data', 'data') => $data,
+            config('generator.keys.data', 'data') => $data ?: null,
         ];
 
         return $response;
