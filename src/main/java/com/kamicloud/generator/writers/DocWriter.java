@@ -214,14 +214,16 @@ public class DocWriter extends BaseWriter {
 
             FileCombiner index = new FileCombiner();
             index.setFileName(docPath.getAbsolutePath() + "/ErrorCodes/index.md");
-            index.addBlock(new MultiLinesCombiner(
-                "- ## Get Started",
-                "  - [Overview](/" + docPrefix + "/{{version}}/overview)\n"
-            ));
+            if (index.exists()) {
+                index.addBlock(new MultiLinesCombiner(
+                    "- ## Get Started",
+                    "  - [Overview](/" + docPrefix + "/{{version}}/overview)\n"
+                ));
+                index.toFile();
+            }
 
 
             overview.toFile();
-            index.toFile();
         } catch (IOException e) {
             e.printStackTrace();
         }

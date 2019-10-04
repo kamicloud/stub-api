@@ -8,13 +8,12 @@ use Tests\TestCase;
 class [(${params.first.action})]Test extends TestCase
 {
     use DatabaseTransactions;
-
 [# th:each="request, iterStat : ${params}"]
-    public function testCase0()
+    public function testCase[(${iterStat.index})]()
     {
         $response = $this->post('[(${request.api})]', [
             '__role' => '',
-            '__user' => '',[# th:each="parameter : ${request.parameters}"]
+            '__user' => '[(${request.user})]',[# th:each="parameter : ${request.parameters}"]
             '[(${parameter.key})]' => '[(${parameter.value})]',
 [/]
         ]);
