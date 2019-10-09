@@ -2,16 +2,14 @@ package com.kamicloud.generator.writers;
 
 import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
-import com.kamicloud.generator.stubs.*;
+import com.kamicloud.generator.stubs.core.*;
 import com.kamicloud.generator.utils.FileUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
-import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import com.kamicloud.generator.writers.components.php.*;
 import definitions.annotations.*;
 import definitions.annotations.Optional;
 import definitions.official.TypeSpec;
 import definitions.types.Type;
-import org.thymeleaf.context.Context;
 
 import java.io.File;
 import java.io.IOException;
@@ -133,9 +131,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
     private void writeModels(String version, TemplateStub templateStub) {
         templateStub.getModels().forEach((modelStub) -> {
             String modelName = modelStub.getName();
-            if (
-                modelStub.hasAnnotation(AsBO.class) &&
-                    templateStub.isCurrent()
+            if (modelStub.hasAnnotation(AsBO.class) &&
+                templateStub.isCurrent()
             ) {
                 writeModel(boFolder, modelStub);
             }
@@ -367,8 +364,8 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 new ClassMethodParameterCombiner(constructMethodCombiner, "message", null, "null");
                 constructMethodCombiner.addBody(
                     "parent::__construct($message, ErrorCode::" +
-                    CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, error.getName()) +
-                    ");"
+                        CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, error.getName()) +
+                        ");"
                 );
 
                 exceptionClassCombiner.toFile();
@@ -512,12 +509,15 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             ArrayList<String> ruleList = new ArrayList<String>() {{
                 add("bail");
             }};
-            ArrayList<String> types = new ArrayList<String>(){{
+            ArrayList<String> types = new ArrayList<String>() {{
                 add(typeMap.get(parameterStub.getTypeSpec()));
             }};
             boolean isArray = parameterStub.isArray();
             boolean isModel = parameterStub.isModel();
             boolean isEnum = parameterStub.isEnum();
+            if (parameterStub.hasAnnotation(LaravelValidateRule.class)) {
+                ruleList.addAll(parameterStub.getAnnotation(LaravelValidateRule.class).getValues());
+            }
             if (parameterStub.hasAnnotation(Optional.class)) {
                 types.add("Constants::OPTIONAL");
                 ruleList.add("nullable");

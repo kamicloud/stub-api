@@ -1,4 +1,4 @@
-package com.kamicloud.generator.stubs;
+package com.kamicloud.generator.stubs.core;
 
 import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.config.DefaultProfileUtil;
@@ -8,7 +8,9 @@ import definitions.annotations.Extendable;
 
 import java.lang.annotation.Annotation;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
@@ -79,18 +81,19 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
         this.classpath = classpath;
     }
 
-    public void setComment(String comment) {
-        if (comment == null) {
+    public void setComment(String commentContent) {
+        if (commentContent == null) {
             return;
         }
-        String[] comments = comment.split("\n");
+        String[] comments = commentContent.split("\n");
 
-        for (int i = 0; i < comments.length; i++) {
-            comments[i] = comments[i].trim();
-            if (!comments[i].isEmpty()) {
-                this.comments.add(comments[i]);
+        Arrays.asList(comments).forEach(comment -> {
+            comment = comment.trim();
+            if (!comment.isEmpty()) {
+                this.comments.add(comment);
             }
-        }
+        });
+
         this.comment = String.join("\n", this.comments);
     }
 

@@ -1,4 +1,4 @@
-package com.kamicloud.generator.stubs;
+package com.kamicloud.generator.stubs.core;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

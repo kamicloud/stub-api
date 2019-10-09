@@ -1,9 +1,8 @@
-package com.kamicloud.generator.stubs;
+package com.kamicloud.generator.stubs.core;
 
 import com.kamicloud.generator.interfaces.ResourceInterface;
 import definitions.annotations.RESTFul;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class ModelStub extends BaseWithAnnotationStub implements ResourceInterface {

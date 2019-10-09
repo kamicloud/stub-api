@@ -1,7 +1,7 @@
 package com.kamicloud.generator.parsers;
 
 import com.google.common.base.CaseFormat;
-import com.kamicloud.generator.stubs.*;
+import com.kamicloud.generator.stubs.core.*;
 import definitions.types.EnumType;
 import definitions.types.ModelType;
 import definitions.annotations.ErrorInterface;
@@ -18,9 +18,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+@SuppressWarnings("unchecked")
 public class Parser {
     @Autowired
     OutputStub outputStub;
+
     /**
      * 标量数据对应的类型
      */
@@ -42,9 +44,8 @@ public class Parser {
     }};
 
     public void parse() {
-        Arrays.asList(TemplateList.templates).forEach(template -> {
-            parseTemplate(template);
-        });
+        Arrays.asList(TemplateList.templates).forEach(this::parseTemplate);
+
         parseErrors(TemplateList.errorsTemplate);
     }
 
@@ -139,15 +140,16 @@ public class Parser {
 
     private void parseEnums(Class<?>[] enumsTemplate, TemplateStub templateStub) {
         Arrays.asList(enumsTemplate).forEach(enumTemplate -> {
-            EnumStub enumStub = new EnumStub(
-                enumTemplate.getSimpleName(),
-                enumTemplate.getCanonicalName()
-            );
-            templateStub.addEnum(enumStub);
-
-            parseComment(enumTemplate.getCanonicalName(), enumStub);
-            parseAnnotations(enumTemplate.getAnnotations(), enumStub);
             try {
+                EnumStub enumStub = new EnumStub(
+                    enumTemplate.getSimpleName(),
+                    enumTemplate.getCanonicalName()
+                );
+                templateStub.addEnum(enumStub);
+
+                parseComment(enumTemplate.getCanonicalName(), enumStub);
+                parseAnnotations(enumTemplate.getAnnotations(), enumStub);
+
                 Class clazz = Class.forName(enumTemplate.getName());
 
                 Arrays.asList(enumTemplate.getFields()).forEach(entryTemplate -> {
@@ -199,9 +201,7 @@ public class Parser {
 
                     if (valueClass.isArray()) {
                         values = (Object[]) value;
-                        Arrays.asList(values).forEach(subValue -> {
-                            annotationStub.addValue(subValue.toString());
-                        });
+                        Arrays.asList(values).forEach(subValue -> annotationStub.addValue(subValue.toString()));
                     } else {
                         annotationStub.setValue(value.toString());
                     }
@@ -226,7 +226,6 @@ public class Parser {
             outputStub.modelHashMap.put(model.getCanonicalName(), modelStub);
             // 注解
             parseAnnotations(model.getAnnotations(), modelStub);
-            parseComment(model.getCanonicalName(), modelStub);
 
             parseComment(model.getCanonicalName(), modelStub);
             modelStub.setParentClasspath(model.getSuperclass().getCanonicalName());
@@ -282,13 +281,7 @@ public class Parser {
                 }
             }
 
-            if (type == null) {
-                String k = "";
-            }
-
             parameterStub.setType(type);
-
-
 
             // 注解
             parseAnnotations(parameter.getAnnotations(), parameterStub);

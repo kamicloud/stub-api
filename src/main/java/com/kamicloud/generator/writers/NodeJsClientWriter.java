@@ -1,12 +1,10 @@
 package com.kamicloud.generator.writers;
 
-import com.kamicloud.generator.stubs.OutputStub;
-import com.kamicloud.generator.stubs.TemplateStub;
+import com.kamicloud.generator.stubs.core.OutputStub;
+import com.kamicloud.generator.stubs.core.TemplateStub;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +12,6 @@ import java.util.Locale;
 import java.util.Objects;
 
 public class NodeJsClientWriter extends BaseWriter {
-    @Autowired
-    protected SpringTemplateEngine springTemplateEngine;
 
     protected File outputDir;
 
@@ -33,9 +29,7 @@ public class NodeJsClientWriter extends BaseWriter {
 
     @Override
     void update(OutputStub o) {
-        o.getTemplates().forEach((version, templateStub) -> {
-            writeTemplate(version, templateStub);
-        });
+        o.getTemplates().forEach(this::writeTemplate);
 
         writeTemplate("", o.getCurrentTemplate());
     }

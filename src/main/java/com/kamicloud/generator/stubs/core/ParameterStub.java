@@ -1,4 +1,4 @@
-package com.kamicloud.generator.stubs;
+package com.kamicloud.generator.stubs.core;
 
 import definitions.types.Type;
 import definitions.official.TypeSpec;

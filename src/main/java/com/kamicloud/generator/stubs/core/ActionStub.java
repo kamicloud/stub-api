@@ -1,6 +1,5 @@
-package com.kamicloud.generator.stubs;
+package com.kamicloud.generator.stubs.core;
 
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 public class ActionStub extends BaseWithAnnotationStub {

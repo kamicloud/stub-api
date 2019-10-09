@@ -2,10 +2,9 @@ package com.kamicloud.generator.writers;
 
 import com.kamicloud.generator.config.DefaultProfileUtil;
 import com.kamicloud.generator.interfaces.PHPNamespacePathTransformerInterface;
-import com.kamicloud.generator.stubs.OutputStub;
+import com.kamicloud.generator.stubs.core.OutputStub;
 import com.kamicloud.generator.stubs.testcase.TestCaseStub;
 import com.kamicloud.generator.utils.FileUtil;
-import com.kamicloud.generator.utils.StringUtil;
 import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.php.ClassCombiner;
@@ -16,7 +15,6 @@ import java.io.*;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class AutoTestWriter extends BaseWriter implements PHPNamespacePathTransformerInterface {

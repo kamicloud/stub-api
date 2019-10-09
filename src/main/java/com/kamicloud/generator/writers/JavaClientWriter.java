@@ -1,16 +1,13 @@
 package com.kamicloud.generator.writers;
 
-import com.kamicloud.generator.stubs.OutputStub;
-import com.kamicloud.generator.stubs.TemplateStub;
-import com.kamicloud.generator.utils.FileUtil;
+import com.kamicloud.generator.stubs.core.OutputStub;
+import com.kamicloud.generator.stubs.core.TemplateStub;
 import com.kamicloud.generator.writers.components.java.ClassAttributeCombiner;
 import com.kamicloud.generator.writers.components.java.ClassCombiner;
 import com.kamicloud.generator.writers.components.java.ClassMethodCombiner;
-import org.springframework.core.env.Environment;
 
 import java.io.File;
 import java.util.Objects;
-import java.util.Observable;
 
 public class JavaClientWriter extends BaseWriter {
     private String version;

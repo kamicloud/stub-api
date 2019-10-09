@@ -31,6 +31,7 @@ public class DocParser {
             return;
         }
         Arrays.asList(templateFiles).forEach(templateFile -> {
+            // 跳过非java文件
             if (!templateFile.getName().contains(".java")) {
                 return;
             }
@@ -44,7 +45,7 @@ public class DocParser {
 
     }
 
-    public void parse(File file) throws FileNotFoundException {
+    private void parse(File file) throws FileNotFoundException {
         CompilationUnit compilationUnit = StaticJavaParser.parse(file);
 
         compilationUnit.getChildNodes().forEach(node -> {
@@ -61,7 +62,7 @@ public class DocParser {
         });
     }
 
-    public void parseClassOrInterfaceDeclaration(ClassOrInterfaceDeclaration classOrInterfaceDeclaration) {
+    private void parseClassOrInterfaceDeclaration(ClassOrInterfaceDeclaration classOrInterfaceDeclaration) {
         Optional<String> classpath = classOrInterfaceDeclaration.getFullyQualifiedName();
 
         Optional<Comment> classComment = classOrInterfaceDeclaration.getComment();
@@ -86,7 +87,7 @@ public class DocParser {
         });
     }
 
-    public String parseComment(Comment comment) {
+    private String parseComment(Comment comment) {
         String string;
 
         if (comment.isJavadocComment()) {
@@ -99,7 +100,7 @@ public class DocParser {
         return string;
     }
 
-    public void parseEnumDeclaration(EnumDeclaration enumDeclaration) {
+    private void parseEnumDeclaration(EnumDeclaration enumDeclaration) {
         Optional<Comment> enumComment = enumDeclaration.getComment();
         String classpath;
         if (!enumDeclaration.getFullyQualifiedName().isPresent()) {

@@ -1,10 +1,7 @@
-package com.kamicloud.generator.stubs;
+package com.kamicloud.generator.stubs.core;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class TemplateStub extends BaseWithAnnotationStub {
     private ArrayList<String> constants = new ArrayList<>();

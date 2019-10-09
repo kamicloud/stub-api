@@ -1,8 +1,7 @@
 package com.kamicloud.generator.writers;
 
-import com.kamicloud.generator.stubs.OutputStub;
+import com.kamicloud.generator.stubs.core.OutputStub;
 import com.kamicloud.generator.utils.UrlUtil;
-import org.springframework.core.env.Environment;
 
 import java.io.*;
 

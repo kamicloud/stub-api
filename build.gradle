@@ -56,7 +56,7 @@ dependencies {
     compile 'com.github.javaparser:javaparser-symbol-solver-core:3.14.3'
     compile 'com.github.javaparser:javaparser-core-serialization:3.14.3'
     // google gson
-    compile 'com.google.code.gson:gson:2.8.5'
+    compile 'com.google.code.gson:gson:2.8.6'
     // 字符串处理库
     compile 'com.google.guava:guava:26.0-jre'
 //    compile 'org.dom4j:dom4j:2.1.1'
@@ -84,7 +84,6 @@ wrapper {
 }
 
 jar {
-    baseName = 'gradle-demo'
     version = '0.0.1'
     from {
         //添加依懒到打包文件
@@ -99,7 +98,7 @@ jar {
 }
 
 task clearLaravel(type: Delete) {
-    delete '../../../storage/generator'
+    setDelete '../../../storage/generator'
 }
 
 task copyLaravel(type: Copy) {
@@ -109,7 +108,7 @@ task copyLaravel(type: Copy) {
 }
 
 task clearClient(type: Delete) {
-    delete '../storage/generator'
+    setDelete '../storage/generator'
 }
 
 task copyClient(type: Copy) {
@@ -119,7 +118,6 @@ task copyClient(type: Copy) {
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
-    classifier = 'sources'
     from sourceSets.main.allSource
 }
 

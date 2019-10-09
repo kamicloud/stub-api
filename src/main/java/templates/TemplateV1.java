@@ -6,7 +6,7 @@ import definitions.types.*;
 import java.util.Date;
 
 /**
- * skdjflsd
+ * 接口模板
  */
 @SuppressWarnings("unused")
 class TemplateV1 {
@@ -257,6 +257,7 @@ class TemplateV1 {
                  * 查询的ID
                  */
                 @Request
+                @LaravelValidateRule({"xxxxx"})
                 String email;
                 @Request
                 String[] emails;

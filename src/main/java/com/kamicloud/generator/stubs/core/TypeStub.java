@@ -1,4 +1,4 @@
-package com.kamicloud.generator.stubs;
+package com.kamicloud.generator.stubs.core;
 
 public class TypeStub {
     protected String comment;

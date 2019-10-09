@@ -2,8 +2,8 @@
 .idea
 .settings
 classes/
-out/
-build
+/out
+/build
 /bin/
 /vendor/
 .classpath

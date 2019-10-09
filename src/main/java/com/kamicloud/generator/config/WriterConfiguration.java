@@ -44,4 +44,9 @@ public class WriterConfiguration {
     public NodeJsClientWriter nodeJsClientWriter() {
         return new NodeJsClientWriter();
     }
+
+    @Bean
+    public OpenAPIWriter openAPIWriter() {
+        return new OpenAPIWriter();
+    }
 }

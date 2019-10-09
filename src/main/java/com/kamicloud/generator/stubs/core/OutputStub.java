@@ -1,4 +1,4 @@
-package com.kamicloud.generator.stubs;
+package com.kamicloud.generator.stubs.core;
 
 import com.kamicloud.generator.parsers.DocParser;
 import com.kamicloud.generator.utils.UrlUtil;

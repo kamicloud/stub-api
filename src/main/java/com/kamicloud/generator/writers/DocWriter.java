@@ -2,24 +2,20 @@ package com.kamicloud.generator.writers;
 
 import com.google.common.base.CaseFormat;
 import com.kamicloud.generator.utils.CommentUtil;
-import com.kamicloud.generator.utils.StringUtil;
 import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
 import definitions.annotations.Methods;
 import definitions.annotations.Named;
 import definitions.annotations.Optional;
-import com.kamicloud.generator.stubs.EnumStub;
-import com.kamicloud.generator.stubs.OutputStub;
-import com.kamicloud.generator.stubs.TemplateStub;
-import com.kamicloud.generator.stubs.ParameterStub;
+import com.kamicloud.generator.stubs.core.EnumStub;
+import com.kamicloud.generator.stubs.core.OutputStub;
+import com.kamicloud.generator.stubs.core.TemplateStub;
+import com.kamicloud.generator.stubs.core.ParameterStub;
 import com.kamicloud.generator.utils.FileUtil;
 import definitions.annotations.StringEnum;
-import org.springframework.core.env.Environment;
-import org.springframework.util.FileCopyUtils;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class DocWriter extends BaseWriter {
