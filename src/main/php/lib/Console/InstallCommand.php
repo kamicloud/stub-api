@@ -55,7 +55,7 @@ class InstallCommand extends Command
      */
     protected function registerGeneratorServiceProvider()
     {
-        $namespace = str_replace_last('\\', '', $this->getAppNamespace());
+        $namespace = Str::replaceLast('\\', '', $this->getAppNamespace());
 
         $appConfig = file_get_contents(config_path('app.php'));
 

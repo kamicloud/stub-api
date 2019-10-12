@@ -22,6 +22,8 @@ abstract class Message
 
         $data = $request->all();
 
+        $data = array_merge($data, $request->json()->all());
+
         $attributeMap = $this->requestRules();
 
         $this->fromJson($data, $attributeMap);
