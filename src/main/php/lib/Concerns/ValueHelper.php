@@ -118,9 +118,10 @@ trait ValueHelper
         $validator = Validator::make($data, $rules);
 
         if ($validator->fails()) {
-            $messages = $validator->messages()->toJson();
+            /** @var \Illuminate\Validation\Validator $validator */
+            $message = $validator->messages()->first();
             $exception = config('generator.exceptions.invalid-parameter', InvalidParameterException::class);
-            throw new $exception($location . $messages);
+            throw new $exception("location: $location > $message.");
         } else {
             foreach ($types as $key => $type) {
                 $this->$key = $this->forceScalarType($this->$key, $type, $input);
