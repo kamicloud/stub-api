@@ -109,7 +109,7 @@ class CreateUserMessage extends Message
     public function requestRules()
     {
         return [
-            ['email', 'email', 'bail|string', Constants::STRING, null],
+            ['email', 'email', 'bail|xxxxx|string', Constants::STRING, null],
             ['emails', 'emails', 'bail|string', Constants::STRING | Constants::ARRAY, null],
             ['gender', 'gender', Gender::class, Constants::ENUM, null],
             ['genders', 'genders', Gender::class, Constants::ENUM | Constants::ARRAY, null],

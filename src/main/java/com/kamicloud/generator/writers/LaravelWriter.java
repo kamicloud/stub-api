@@ -104,7 +104,9 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 ClassCombiner.setNamespacePathTransformer(this);
                 writeHttp(version, templateStub);
                 writeModels(version, templateStub);
-                writeEnums(version, templateStub.getEnums());
+                writeEnums(version, templateStub.getEnums().stream().filter(enumStub -> {
+                    return !enumStub.hasAnnotation(Versionless.class);
+                }).collect(Collectors.toList()));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -121,7 +123,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
             writeRoute(output);
 
             writeEnums(boFolder, output.getCurrentTemplate().getEnums().stream().filter(enumStub -> {
-                return enumStub.hasAnnotation(AsBO.class);
+                return enumStub.hasAnnotation(AsBO.class) || enumStub.hasAnnotation(Versionless.class);
             }).collect(Collectors.toList()));
         } catch (Exception e) {
             e.printStackTrace();

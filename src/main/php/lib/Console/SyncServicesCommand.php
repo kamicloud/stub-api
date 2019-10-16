@@ -17,6 +17,9 @@ class SyncServicesCommand extends Command
 
     protected $description = 'Command description';
 
+    /**
+     * @throws Exception
+     */
     public function handle()
     {
         $controllersPath = app_path('Generated/Controllers');
@@ -73,6 +76,11 @@ class SyncServicesCommand extends Command
         }
     }
 
+    /**
+     * @param string $path
+     * @return array
+     * @throws Exception
+     */
     protected function getActionsFromFile($path)
     {
         $code = file_get_contents($path);

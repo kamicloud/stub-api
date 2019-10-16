@@ -6,14 +6,6 @@
   },
   "item": [
     {
-      "name": "V1_1",
-      "item": [
-        {
-          "name": "RESTFul"
-        }
-      ]
-    },
-    {
       "name": "V1",
       "item": [
         {
@@ -73,7 +65,7 @@
                 {
                   "name": "Update",
                   "request": {
-                    "method": "POST",
+                    "method": "PATCH",
                     "header": [],
                     "body": {
                       "mode": "formdata",
@@ -82,15 +74,23 @@
                     },
                     "url": {
                       "protocol": "http",
-                      "host": [],
-                      "path": []
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user",
+                        "1"
+                      ]
                     }
                   }
                 },
                 {
                   "name": "Show",
                   "request": {
-                    "method": "POST",
+                    "method": "GET",
                     "header": [],
                     "body": {
                       "mode": "formdata",
@@ -99,15 +99,23 @@
                     },
                     "url": {
                       "protocol": "http",
-                      "host": [],
-                      "path": []
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user",
+                        "1"
+                      ]
                     }
                   }
                 },
                 {
                   "name": "Destroy",
                   "request": {
-                    "method": "POST",
+                    "method": "DELETE",
                     "header": [],
                     "body": {
                       "mode": "formdata",
@@ -116,8 +124,16 @@
                     },
                     "url": {
                       "protocol": "http",
-                      "host": [],
-                      "path": []
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user",
+                        "1"
+                      ]
                     }
                   }
                 }

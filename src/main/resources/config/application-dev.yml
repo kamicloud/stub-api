@@ -6,9 +6,16 @@
 
 generator:
   process:
-    default: laravel,laravel-doc,postman,testcases
-    laravel-auto-test: laravel-auto-test
-    client: nodejs-client
+    defaults:
+      - laravel
+      - laravel-doc
+      - postman
+      - testcases
+      - openapi
+    laravel-auto-test:
+      - laravel-auto-test
+    client:
+      - nodejs-client
   env: dev
   api-prefix: api
   template-path: ./src/main/java

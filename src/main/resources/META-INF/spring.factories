@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.kamicloud.generator.config.ApplicationProperties,\
+  com.kamicloud.generator.config.GeneratorProperties

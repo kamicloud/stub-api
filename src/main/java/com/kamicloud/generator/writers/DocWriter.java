@@ -5,15 +5,13 @@ import com.kamicloud.generator.utils.CommentUtil;
 import com.kamicloud.generator.utils.UrlUtil;
 import com.kamicloud.generator.writers.components.common.FileCombiner;
 import com.kamicloud.generator.writers.components.common.MultiLinesCombiner;
-import definitions.annotations.Methods;
-import definitions.annotations.Named;
-import definitions.annotations.Optional;
+import definitions.annotations.*;
 import com.kamicloud.generator.stubs.core.EnumStub;
 import com.kamicloud.generator.stubs.core.OutputStub;
 import com.kamicloud.generator.stubs.core.TemplateStub;
 import com.kamicloud.generator.stubs.core.ParameterStub;
 import com.kamicloud.generator.utils.FileUtil;
-import definitions.annotations.StringEnum;
+import definitions.annotations.Optional;
 
 import java.io.*;
 import java.util.*;
@@ -283,7 +281,9 @@ public class DocWriter extends BaseWriter {
 
             file.addBlock(new MultiLinesCombiner(""));
 
-            output.getEnums().forEach(enumStub -> {
+            output.getEnums().stream().filter(enumStub -> {
+                return !enumStub.hasAnnotation(Versionless.class);
+            }).forEach(enumStub -> {
                 file.addBlock(new MultiLinesCombiner(
                     "<a name=\"" + enumStub.getName() + "\"></a>",
                     "## " + enumStub.getName() + CommentUtil.getTitle(enumStub.getComment())

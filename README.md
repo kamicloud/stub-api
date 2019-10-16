@@ -9,7 +9,7 @@ Stub Api is an API toolkit for laravel projects, including parameter validation,
 
 JDK 8-12
 
-Laravel 5.*
+Laravel 5.5 - 6.0
 
 ## Get Start
 

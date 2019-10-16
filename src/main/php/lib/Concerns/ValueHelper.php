@@ -87,10 +87,11 @@ trait ValueHelper
     }
 
     /**
-     *
+     * Validate attributes
      *
      * @param array $attributeMap
      * @param string $location
+     * @param bool $input
      */
     public function validateAttributes(array $attributeMap, $location = 'root', $input = true)
     {
@@ -193,15 +194,15 @@ trait ValueHelper
             return null;
         }
         if ($type & Constants::INTEGER) {
-            return (int) $value;
+            return (int)$value;
         } elseif ($type & Constants::BOOLEAN) {
-            return (bool) $value;
+            return (bool)$value;
         } elseif ($type & Constants::FLOAT) {
-            return (float) $value;
+            return (float)$value;
         } elseif ($type & Constants::DATE) {
             return $this->convertDate($value, $request);
         } elseif ($type & Constants::STRING) {
-            return (string) $value;
+            return (string)$value;
         }
 
         return $value;

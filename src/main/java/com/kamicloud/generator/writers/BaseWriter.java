@@ -1,5 +1,6 @@
 package com.kamicloud.generator.writers;
 
+import com.kamicloud.generator.config.GeneratorProperties;
 import com.kamicloud.generator.stubs.core.OutputStub;
 import com.kamicloud.generator.utils.StringUtil;
 import com.kamicloud.generator.utils.UrlUtil;
@@ -26,29 +27,24 @@ abstract class BaseWriter implements Observer {
     @Autowired
     protected StringUtil stringUtil;
 
+    @Autowired
+    GeneratorProperties generatorProperties;
+
     protected HashMap<String, String> processes = new HashMap<>();
 
     @Override
     public void update(Observable o, Object arg) {
         String name = getName();
-        String process = env.getProperty("process", "");
+        ArrayList<String> writers;
+        GeneratorProperties.Process process = generatorProperties.getProcess();
 
-        if (process.equals("")) {
-            process = "default";
+        if (env.getProperty("process", "").equals("laravel-auto-test")) {
+            writers = process.getLaravelAutoTest();
+        } else {
+            writers = process.getDefaults();
         }
 
-        process = env.getProperty("generator.process." + process, "");
-        if (process.equals("")) {
-            return;
-        }
-
-        String[] writers = process.split(",");
-
-        Arrays.asList(writers).forEach(s -> {
-            processes.put(s, s);
-        });
-
-        if (!processes.isEmpty() && !processes.containsKey(name)) {
+        if (writers == null || !writers.contains(name)) {
             return;
         }
 

@@ -4,6 +4,7 @@ namespace Kamicloud\StubApi\Exceptions;
 
 use Exception;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Support\Str;
 
 class Handler extends ExceptionHandler
 {
@@ -18,7 +19,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if (!starts_with($request->getRequestUri(), '/api')) {
+        if (!Str::startsWith($request->getRequestUri(), '/api')) {
             return parent::render($request, $exception);
         }
         if ($exception instanceof \Illuminate\Foundation\Http\Exceptions\MaintenanceModeException) {

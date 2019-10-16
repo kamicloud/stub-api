@@ -6,9 +6,14 @@
 
 generator:
   process:
-    default: laravel,laravel-doc,postman
-    laravel-auto-test: laravel-auto-test
-    client: nodejs-client
+    defaults:
+      - laravel
+      - laravel-doc
+      - postman
+    laravel-auto-test:
+      - laravel-auto-test
+    client:
+      - nodejs-client
   env: dev
   api-prefix: api
   template-path: ./resources/generator

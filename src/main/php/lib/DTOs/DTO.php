@@ -2,15 +2,17 @@
 
 namespace Kamicloud\StubApi\DTOs;
 
+use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use JsonSerializable;
+use Kamicloud\StubApi\Exceptions\InvalidParameterException;
 use Kamicloud\StubApi\Utils\Constants;
 use Kamicloud\StubApi\Concerns\ValueHelper;
 
-abstract class DTO implements JsonSerializable
+abstract class DTO implements JsonSerializable, Rule
 {
     use ValueHelper;
 
@@ -124,7 +126,10 @@ abstract class DTO implements JsonSerializable
         }, $orms);
     }
 
-    abstract public function getAttributeMap();
+    /**
+     * @return array
+     */
+    abstract public function getAttributeMap(): array;
 
     public function jsonSerialize()
     {
@@ -169,5 +174,39 @@ abstract class DTO implements JsonSerializable
         }
 
         return $res;
+    }
+
+    /**
+     * Determine if the validation rule passes.
+     *
+     * TODO: Change parameters validation to native laravel code.
+     *
+     * @param  string $attribute
+     * @param  mixed $value
+     * @return bool
+     */
+    public function passes($attribute, $value)
+    {
+        $attributeMap = $this->getAttributeMap();
+        $validator = Validator::make($value, array_combine(array_column($attributeMap, 0), array_column($attributeMap, 2)));
+
+        if ($validator->fails()) {
+            /** @var \Illuminate\Validation\Validator $validator */
+            $message = $validator->messages()->first();
+            $exception = config('generator.exceptions.invalid-parameter', InvalidParameterException::class);
+            throw new $exception("location: $message.");
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the validation error message.
+     *
+     * @return string|array
+     */
+    public function message()
+    {
+        return '参数不匹配';
     }
 }
