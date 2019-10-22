@@ -81,7 +81,7 @@ abstract class Message
             config('generator.keys.data', 'data') => $data ?: null,
         ];
 
-        return $response;
+        return response()->json($response);
     }
 
     abstract public function requestRules();
