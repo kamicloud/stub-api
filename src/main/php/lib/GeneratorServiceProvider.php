@@ -3,13 +3,36 @@
 namespace Kamicloud\StubApi;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Validator;
+use Kamicloud\StubApi\BOs\Enum;
+use Kamicloud\StubApi\DTOs\DTO;
 
 class GeneratorServiceProvider extends ServiceProvider
 {
     public function boot()
     {
         $this->registerPublishing();
+
+        Validator::extend('Models', function ($key, $value, $classes) {
+            $class = $classes[0];
+            if ($value === null) {
+                return true;
+            }
+            if (!($value instanceof $class)) {
+                return false;
+            }
+            /** @var DTO $value */
+            $value->validateAttributes($value->getAttributeMap(), $key);
+            return true;
+        });
+        Validator::extend('Enums', function ($key, $value, $classes) {
+            $class = $classes[0];
+            if ($value === null) {
+                return true;
+            }
+            /** @var Enum $class */
+            return $class::verify($value);
+        });
     }
 
     /**

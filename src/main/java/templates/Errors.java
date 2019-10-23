@@ -16,6 +16,8 @@ public enum Errors implements ErrorInterface {
     MAINTAIN_MODE(-20),
     /** 用户未登录 */
     AUTH_FAILED(-100),
+    /** 没有权限 */
+    NO_PERMISSION(-200),
     /** 自定义的ERROR信息 */
     CUSTOM_ERROR_MESSAGE(-10000),
 

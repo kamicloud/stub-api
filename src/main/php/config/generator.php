@@ -13,6 +13,10 @@ return [
          */
         'invalid-parameter' => \Kamicloud\StubApi\Exceptions\InvalidParameterException::class,
 
+        'auth-failed' => \Kamicloud\StubApi\Exceptions\AuthFailedException::class,
+
+        'no-permission' => \Kamicloud\StubApi\Exceptions\NoPermissionException::class,
+
         /**
          * 服务器内部错误时返回的异常
          *

@@ -104,15 +104,21 @@ trait ValueHelper
             $isModel = $type & Constants::MODEL;
             $isArray = $type & Constants::ARRAY;
             $isEnum = $type & Constants::ENUM;
+            $isOptional = $type & Constants::OPTIONAL;
 
             $value = $this->$field;
 
-            if (!$isModel && !$isArray && !$isEnum) {
-                $data[$field] = $value;
-                $rules[$field] = $rule;
-                $types[$field] = $type;
+            $data[$field] = $value;
+            $types[$field] = $type;
+            if ($isArray) {
+                $field = $field . '.*';
+            }
+            if ($isModel) {
+                $rules[$field] = 'Models:' . $rule;
+            } elseif ($isEnum) {
+                $rules[$field] = 'Enums:' . $rule;
             } else {
-                $this->$field = $this->validateValue($value, $field, $rule, $type, "$location > $field", $input);
+                $rules[$field] = $rule;
             }
         }
 

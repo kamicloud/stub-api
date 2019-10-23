@@ -16,6 +16,8 @@ class ErrorCode
 
     public const AUTH_FAILED = -100;
 
+    public const NO_PERMISSION = -200;
+
     public const CUSTOM_ERROR_MESSAGE = -10000;
 
     public const OBJECT_NOT_FOUND = 10002;
