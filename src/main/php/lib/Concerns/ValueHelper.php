@@ -42,7 +42,7 @@ trait ValueHelper
         }
 
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $rule, $type, $initParam] = $attribute;
+            [$field, $dbField, $rule, $type] = $attribute;
 
             $isModel = $type & Constants::MODEL;
             $isArray = $type & Constants::ARRAY;
@@ -55,17 +55,17 @@ trait ValueHelper
 
             if ($isArray) {
                 if (is_array($value)) {
-                    $this->$field = array_map(function ($value) use ($rule, $type, $initParam) {
-                        return $this->fromOne($value, $type, $rule, $initParam);
+                    $this->$field = array_map(function ($value) use ($rule, $type) {
+                        return $this->fromOne($value, $type, $rule);
                     }, $value);
                 }
             } else {
-                $this->$field = $this->fromOne($value, $type, $rule, $initParam);
+                $this->$field = $this->fromOne($value, $type, $rule);
             }
         }
     }
 
-    protected function fromOne($value, $type, $rule, $initParam)
+    protected function fromOne($value, $type, $rule)
     {
         if (is_null($value)) {
             return null;
@@ -76,11 +76,6 @@ trait ValueHelper
         } elseif ($type & Constants::ENUM) {
             /** @var Enum $rule */
             return $rule::transform($value);
-        } elseif ($type & Constants::DATE) {
-            if (config('generator.request-date-timestamp')) {
-                return date($initParam, $value);
-            }
-            return $value;
         } else {
             return $value;
         }
@@ -110,16 +105,19 @@ trait ValueHelper
 
             $data[$field] = $value;
             $types[$field] = $type;
+
             if ($isArray) {
+                // 这里是为了检验是否是数组
+                $rules[$field] = 'bail|array' . ($isOptional ? '|nullable' : '');
+
                 $field = $field . '.*';
             }
             if ($isModel) {
-                $rules[$field] = 'Models:' . $rule;
+                $rule = "bail|Models:{$rule}" . ($isOptional ? '|nullable' : '');
             } elseif ($isEnum) {
-                $rules[$field] = 'Enums:' . $rule;
-            } else {
-                $rules[$field] = $rule;
+                $rule = "bail|Enums:{$rule}" . ($isOptional ? '|nullable' : '');
             }
+            $rules[$field] = $rule;
         }
 
         $validator = Validator::make($data, $rules);
@@ -129,61 +127,27 @@ trait ValueHelper
             $message = $validator->messages()->first();
             $exception = config('generator.exceptions.invalid-parameter', InvalidParameterException::class);
             throw new $exception("location: $location > $message.");
-        } else {
-            foreach ($types as $key => $type) {
-                $this->$key = $this->forceScalarType($this->$key, $type, $input);
-            }
         }
     }
 
-    protected function validateValue($value, $field, $rule, $type, $location, $input)
+    public function forceScalarTypes($attributeMap)
     {
-        $exception = config('generator.exceptions.invalid-parameter', InvalidParameterException::class);
+        foreach ($attributeMap as $attribute) {
+            [$field, $dbField, $rule, $type] = $attribute;
 
-        $isModel = $type & Constants::MODEL;
-        $isArray = $type & Constants::ARRAY;
-        $isOptional = $type & Constants::OPTIONAL;
-        $isEnum = $type & Constants::ENUM;
-
-        if (!$isOptional && is_null($value)) {
-            throw new $exception("{$location} can not be null");
-        }
-
-        if ($isArray) {
-            if (!is_array($value)) {
-                if ($isOptional && $value === null) {
-                    return null;
-                }
-                throw new $exception("{$location} should be array");
+            if (!$this->$field) {
+                continue;
             }
 
-            foreach ($value as $index => &$item) {
-                $item = $this->validateValue($item, $field, $rule, $isModel | $isOptional | $isEnum, "$location(array) > $index", $input);
-            }
-            return $value;
-        }
-
-        if (!is_null($value)) {
-            if ($isModel) {
-                /** @var DTO $rule */
-                if (!is_object($value) || !($value instanceof DTO) || get_class($value) !== $rule) {
-                    throw new $exception("{$location} must be instance of {$rule}");
-                }
-
-                $value->validateAttributes($value->getAttributeMap(), $location, $input);
-            } elseif ($isEnum) {
+            if ($this->$field instanceof Model) {
+                $this->$field->forceDTOScalarTypes();
+            } elseif ($type & Constants::ENUM) {
                 /** @var Enum $rule */
-                if ($rule::verify($value) === false) {
-                    throw new $exception("{$location} should match enum");
-                }
-                $value = $rule::format($value);
+                $this->$field = $rule::transform($this->$field);
             } else {
-                $value = $this->forceScalarType($value, $type, $input);
+                $this->$field = $this->forceScalarType($this->$field, $type);
             }
-
         }
-
-        return $value;
     }
 
     /**
@@ -194,7 +158,7 @@ trait ValueHelper
      * @param $request
      * @return int|string|float|null
      */
-    protected function forceScalarType($value, $type, $request = false)
+    protected function forceScalarType($value, $type)
     {
         if (is_null($value)) {
             return null;
@@ -206,7 +170,7 @@ trait ValueHelper
         } elseif ($type & Constants::FLOAT) {
             return (float)$value;
         } elseif ($type & Constants::DATE) {
-            return $this->convertDate($value, $request);
+            return $this->convertDate($value);
         } elseif ($type & Constants::STRING) {
             return (string)$value;
         }
@@ -214,7 +178,7 @@ trait ValueHelper
         return $value;
     }
 
-    protected function convertDate($value, $request)
+    protected function convertDate($value)
     {
         $exception = config('generator.exceptions.invalid-parameter', InvalidParameterException::class);
         if (is_null($value)) {
@@ -222,10 +186,6 @@ trait ValueHelper
         }
 
         try {
-            if ($request) {
-                return Carbon::createFromTimestamp(strtotime($value));
-            }
-
             if (config('generator.response-date-timestamp')) {
                 return strtotime($value);
             }

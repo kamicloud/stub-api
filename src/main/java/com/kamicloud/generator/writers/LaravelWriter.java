@@ -268,8 +268,10 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
 
                         actionClassMethodCombiner.setBody(
                             "$message->validateInput();",
+                            "$message->forceRequestScalarTypes();",
                             "$this->handler->" + lowerCamelActionName + "($message);",
                             "$message->validateOutput();",
+                            "$message->forceResponseScalarTypes();",
                             "return $message->" + getResponseMethod + "();"
                         );
                         if (action.hasAnnotation(Transactional.class)) {
@@ -564,8 +566,7 @@ public class LaravelWriter extends BaseWriter implements PHPNamespacePathTransfo
                 "'" + parameterName + "'",
                 "'" + dbField + "'",
                 rule,
-                types.isEmpty() ? "null" : String.join(" | ", types),
-                laravelParam == null ? "null" : ("'" + laravelParam + "'")
+                types.isEmpty() ? "null" : String.join(" | ", types)
             ));
             classMethodCombiner.addBody("[" + String.join(", ", params) + "],");
         });

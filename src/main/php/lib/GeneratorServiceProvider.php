@@ -21,17 +21,16 @@ class GeneratorServiceProvider extends ServiceProvider
             if (!($value instanceof $class)) {
                 return false;
             }
+
             /** @var DTO $value */
             $value->validateAttributes($value->getAttributeMap(), $key);
             return true;
         });
         Validator::extend('Enums', function ($key, $value, $classes) {
             $class = $classes[0];
-            if ($value === null) {
-                return true;
-            }
+
             /** @var Enum $class */
-            return $class::verify($value);
+            return $value === null || $class::verify($value);
         });
     }
 

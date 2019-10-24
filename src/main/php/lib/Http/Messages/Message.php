@@ -88,4 +88,13 @@ abstract class Message
 
     abstract public function responseRules();
 
+    public function forceRequestScalarTypes()
+    {
+        $this->forceScalarTypes($this->requestRules());
+    }
+
+    public function forceResponseScalarTypes()
+    {
+        $this->forceScalarTypes($this->responseRules());
+    }
 }

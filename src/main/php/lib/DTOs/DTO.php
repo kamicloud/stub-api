@@ -77,21 +77,13 @@ abstract class DTO implements JsonSerializable, Rule
         $attributeMap = $model->getAttributeMap();
 
         foreach ($attributeMap as $attribute) {
-            [$field, $dbField, $rule, $type, $format] = $attribute;
+            [$field, $dbField, $rule, $type] = $attribute;
 
             $isModel = $type & Constants::MODEL;
             $isArray = $type & Constants::ARRAY;
             $isDate = $type & Constants::DATE;
 
             $value = $values[$dbField] ?? $values[Str::snake($dbField)] ?? null;
-            if ($isDate) {
-                if ($value !== null) {
-                    $value = date($format, strtotime($value));
-                    if ($value === '-0001-11-30 00:00:00') {
-                        $value = null;
-                    }
-                }
-            }
 
             if ($isModel) {
                 /** @var DTO $rule */
@@ -129,7 +121,12 @@ abstract class DTO implements JsonSerializable, Rule
     /**
      * @return array
      */
-    abstract public function getAttributeMap(): array;
+    abstract public function getAttributeMap();
+
+    public function forceDTOScalarTypes()
+    {
+        $this->forceScalarTypes($this->getAttributeMap());
+    }
 
     public function jsonSerialize()
     {
