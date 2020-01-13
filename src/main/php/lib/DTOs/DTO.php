@@ -159,13 +159,13 @@ abstract class DTO implements JsonSerializable
     protected function arrayToDBArray($items)
     {
         $res = [];
-        foreach ($items as $item) {
+        foreach ($items as $index => $item) {
             if (is_object($item) && $item instanceof self) {
                 $one = $item->toDBArray();
             } else {
                 $one = $item;
             }
-            $res[] = $one;
+            $res[$index] = $one;
         }
 
         return $res;
