@@ -6,6 +6,15 @@
 
 generator:
   process:
+    generators:
+      - com.kamicloud.stub.core.generators.OpenAPIGenerator
+      - com.kamicloud.stub.core.generators.PostmanGenerator
+      - com.kamicloud.stub.core.generators.TestCaseGenerator
+
+      - com.kamicloud.stub.laravel.LaravelGenerator
+      - com.kamicloud.stub.laravel.LaravelDocGenerator
+#      - com.kamicloud.stub.laravel.LaravelAutoTestGenerator
+
     defaults:
       - laravel
       - laravel-doc
@@ -22,9 +31,11 @@ generator:
 
   test-host: http://localhost
 
-  writers:
+  generators:
     force-suffix: .example
 
+    openapi:
+      path: ./src/output
     postman:
       path: ./src/output
     testcases:

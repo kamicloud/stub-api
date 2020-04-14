@@ -25,14 +25,14 @@ class GetArticleMessage extends Message
     public function requestRules()
     {
         return [
-            ['id', 'id', 'bail|integer', Constants::INTEGER, null],
+            ['id', 'id', 'bail|integer', Constants::INTEGER],
         ];
     }
 
     public function responseRules()
     {
         return [
-            ['article', 'article', ArticleDTO::class, Constants::MODEL, null],
+            ['article', 'article', ArticleDTO::class, Constants::MODEL],
         ];
     }
 

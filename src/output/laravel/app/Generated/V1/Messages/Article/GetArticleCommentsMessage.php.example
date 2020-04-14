@@ -34,15 +34,15 @@ class GetArticleCommentsMessage extends Message
     public function requestRules()
     {
         return [
-            ['articleId', 'article_id', 'bail|integer', Constants::INTEGER, null],
-            ['page', 'page', 'bail|integer', Constants::INTEGER, null],
+            ['articleId', 'article_id', 'bail|integer', Constants::INTEGER],
+            ['page', 'page', 'bail|integer', Constants::INTEGER],
         ];
     }
 
     public function responseRules()
     {
         return [
-            ['comments', 'comments', ArticleCommentDTO::class, Constants::MODEL | Constants::ARRAY, null],
+            ['comments', 'comments', ArticleCommentDTO::class, Constants::MODEL | Constants::ARRAY],
         ];
     }
 

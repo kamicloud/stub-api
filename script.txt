@@ -1,15 +1,15 @@
-java -classpath "..\..\..\build\libs\lib\tools.jar;..\..\..\build\libs\lib\spring-boot-2.0.4.RELEASE;..\..\..\build\libs\lib\tools.jar;." com.kamicloud.generator.Generator
+java -classpath "..\..\..\build\libs\lib\tools.jar;..\..\..\build\libs\lib\spring-boot-2.0.4.RELEASE;..\..\..\build\libs\lib\tools.jar;." com.kamicloud.stub.core.Generator
 
 
 
-java -Djava.ext.dirs=C:\Users\admin\IdeaProjects\APIGenerator\build\libs\lib com.kamicloud.generator.Generator
+java -Djava.ext.dirs=C:\Users\admin\IdeaProjects\APIGenerator\build\libs\lib com.kamicloud.stub.core.Generator
 
 
 
-java -classpath "..\..\..\build\libs\lib\*;." com.kamicloud.generator.Generator
+java -classpath "..\..\..\build\libs\lib\*;." com.kamicloud.stub.core.Generator
 
 
 javac -d C:\Users\admin\IdeaProjects\APIGenerator\out\production\classes -encoding UTF-8 -classpath "C:\Users\admin\IdeaProjects\APIGenerator\build\libs\lib\*;." .\com\kamicloud\generator\TemplateV1.java
 
 
-java -classpath "..\..\..\build\libs\lib\*;." com.kamicloud.generator.Generator
+java -classpath "..\..\..\build\libs\lib\*;." com.kamicloud.stub.core.Generator

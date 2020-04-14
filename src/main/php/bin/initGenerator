@@ -1,3 +1,0 @@
-#!/usr/bin/env bash
-cd ..
-./vendor/kamicloud/stub-api/gradlew -p vendor/kamicloud/stub-api release

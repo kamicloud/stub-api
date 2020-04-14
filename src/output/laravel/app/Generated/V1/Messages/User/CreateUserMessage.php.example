@@ -109,24 +109,24 @@ class CreateUserMessage extends Message
     public function requestRules()
     {
         return [
-            ['email', 'email', 'bail|xxxxx|string', Constants::STRING, null],
-            ['emails', 'emails', 'bail|string', Constants::STRING | Constants::ARRAY, null],
-            ['gender', 'gender', Gender::class, Constants::ENUM, null],
-            ['genders', 'genders', Gender::class, Constants::ENUM | Constants::ARRAY, null],
-            ['id', 'id', 'bail|integer', Constants::INTEGER, null],
-            ['ids', 'ids', 'bail|integer', Constants::INTEGER | Constants::ARRAY, null],
-            ['ym', 'ym', 'bail|date_format:Y-m', Constants::DATE, 'Y-m'],
-            ['ymarray', 'ymarray', 'bail|date_format:Y-m', Constants::DATE | Constants::ARRAY, 'Y-m'],
-            ['ymarrayn', 'ymarrayn', 'bail|date_format:Y-m', Constants::DATE | Constants::ARRAY, 'Y-m'],
-            ['file', 'file', 'bail|file', Constants::FILE, 'file'],
+            ['email', 'email', 'bail|xxxxx|string', Constants::STRING],
+            ['emails', 'emails', 'bail|string', Constants::STRING | Constants::ARRAY],
+            ['gender', 'gender', Gender::class, Constants::ENUM],
+            ['genders', 'genders', Gender::class, Constants::ENUM | Constants::ARRAY],
+            ['id', 'id', 'bail|integer', Constants::INTEGER],
+            ['ids', 'ids', 'bail|integer', Constants::INTEGER | Constants::ARRAY],
+            ['ym', 'ym', 'bail|date_format:Y-m', Constants::DATE],
+            ['ymarray', 'ymarray', 'bail|date_format:Y-m', Constants::DATE | Constants::ARRAY],
+            ['ymarrayn', 'ymarrayn', 'bail|date_format:Y-m', Constants::DATE | Constants::ARRAY],
+            ['file', 'file', 'bail|file', Constants::FILE],
         ];
     }
 
     public function responseRules()
     {
         return [
-            ['user', 'user', UserDTO::class, Constants::MODEL, null],
-            ['users', 'users', UserDTO::class, Constants::MODEL | Constants::ARRAY, null],
+            ['user', 'user', UserDTO::class, Constants::MODEL],
+            ['users', 'users', UserDTO::class, Constants::MODEL | Constants::ARRAY],
         ];
     }
 

@@ -28,7 +28,7 @@ class UserProfileDTO extends DTO
     public function getAttributeMap()
     {
         return [
-            ['name', 'name', 'bail|string', Constants::STRING, null],
+            ['name', 'name', 'bail|string', Constants::STRING],
         ];
     }
 

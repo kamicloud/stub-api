@@ -147,14 +147,14 @@ class ArticleDTO extends DTO
     public function getAttributeMap()
     {
         return [
-            ['id', 'id', 'bail|nullable|integer', Constants::INTEGER | Constants::OPTIONAL | Constants::MUTABLE, null],
-            ['title', 'title', 'bail|string', Constants::STRING, null],
-            ['content', 'content', 'bail|nullable|string', Constants::STRING | Constants::OPTIONAL, null],
-            ['user', 'user', UserDTO::class, Constants::MODEL, null],
-            ['commentsCount', 'comments_count', 'bail|nullable|integer', Constants::INTEGER | Constants::OPTIONAL, null],
-            ['favorite', 'favorite', 'bail|nullable|boolean', Constants::BOOLEAN | Constants::OPTIONAL, null],
-            ['hot', 'hot', 'bail|nullable|boolean', Constants::BOOLEAN | Constants::OPTIONAL, null],
-            ['createdAt', 'created_at', 'bail|date_format:Y-m-d H:i:s', Constants::DATE, 'Y-m-d H:i:s'],
+            ['id', 'id', 'bail|nullable|integer', Constants::INTEGER | Constants::OPTIONAL | Constants::MUTABLE],
+            ['title', 'title', 'bail|string', Constants::STRING],
+            ['content', 'content', 'bail|nullable|string', Constants::STRING | Constants::OPTIONAL],
+            ['user', 'user', UserDTO::class, Constants::MODEL],
+            ['commentsCount', 'comments_count', 'bail|nullable|integer', Constants::INTEGER | Constants::OPTIONAL],
+            ['favorite', 'favorite', 'bail|nullable|boolean', Constants::BOOLEAN | Constants::OPTIONAL],
+            ['hot', 'hot', 'bail|nullable|boolean', Constants::BOOLEAN | Constants::OPTIONAL],
+            ['createdAt', 'created_at', 'bail|date_format:Y-m-d H:i:s', Constants::DATE],
         ];
     }
 

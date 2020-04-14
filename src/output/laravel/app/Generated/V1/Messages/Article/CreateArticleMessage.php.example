@@ -34,15 +34,15 @@ class CreateArticleMessage extends Message
     public function requestRules()
     {
         return [
-            ['title', 'title', 'bail|string', Constants::STRING, null],
-            ['content', 'content', 'bail|string', Constants::STRING, null],
+            ['title', 'title', 'bail|string', Constants::STRING],
+            ['content', 'content', 'bail|string', Constants::STRING],
         ];
     }
 
     public function responseRules()
     {
         return [
-            ['article', 'article', ArticleDTO::class, Constants::MODEL, null],
+            ['article', 'article', ArticleDTO::class, Constants::MODEL],
         ];
     }
 

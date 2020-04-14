@@ -1,4 +1,4 @@
-# __api: /api/api/v1/user/create_user
+# __api: /api/v1/user/create_user
 __enabled: false
 __role:
 __user:

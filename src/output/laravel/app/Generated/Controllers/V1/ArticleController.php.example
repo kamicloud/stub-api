@@ -22,8 +22,10 @@ class ArticleController extends Controller
     public function getArticleComments(GetArticleCommentsMessage $message)
     {
         $message->validateInput();
+        $message->forceRequestScalarTypes();
         $this->handler->getArticleComments($message);
         $message->validateOutput();
+        $message->forceResponseScalarTypes();
         return $message->getResponse();
     }
 
@@ -31,8 +33,10 @@ class ArticleController extends Controller
     {
         return DB::transaction(function () use ($message) {
             $message->validateInput();
+            $message->forceRequestScalarTypes();
             $this->handler->createArticle($message);
             $message->validateOutput();
+            $message->forceResponseScalarTypes();
             return $message->getResponse();
         });
     }
@@ -40,16 +44,20 @@ class ArticleController extends Controller
     public function getArticle(GetArticleMessage $message)
     {
         $message->validateInput();
+        $message->forceRequestScalarTypes();
         $this->handler->getArticle($message);
         $message->validateOutput();
+        $message->forceResponseScalarTypes();
         return $message->getResponse();
     }
 
     public function getArticles(GetArticlesMessage $message)
     {
         $message->validateInput();
+        $message->forceRequestScalarTypes();
         $this->handler->getArticles($message);
         $message->validateOutput();
+        $message->forceResponseScalarTypes();
         return $message->getResponse();
     }
 

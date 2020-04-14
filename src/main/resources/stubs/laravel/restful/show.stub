@@ -5,14 +5,14 @@ namespace App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.
 use Kamicloud\StubApi\Concerns\ValueHelper;
 use Kamicloud\StubApi\Http\Messages\Message;
 use Kamicloud\StubApi\Utils\Constants;
-use App\Generated\[(${params.template.name})]\DTOs\[(${params.name})][(${params.dtoSuffix})];
+use App\Generated\[(${params.template.name})]\DTOs\[(${params.name})][(${config.generators.laravel.dtoSuffix})];
 
 class ShowMessage extends Message
 {
     use ValueHelper;
 
     protected $model;
-    protected $dtoClass = [(${params.name})][(${params.dtoSuffix})]::class;
+    protected $dtoClass = [(${params.name})][(${config.generators.laravel.dtoSuffix})]::class;
 
     public function requestRules()
     {

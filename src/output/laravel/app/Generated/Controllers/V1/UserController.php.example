@@ -20,16 +20,20 @@ class UserController extends Controller
     public function createUser(CreateUserMessage $message)
     {
         $message->validateInput();
+        $message->forceRequestScalarTypes();
         $this->handler->createUser($message);
         $message->validateOutput();
+        $message->forceResponseScalarTypes();
         return $message->getResponse();
     }
 
     public function getUsers(GetUsersMessage $message)
     {
         $message->validateInput();
+        $message->forceRequestScalarTypes();
         $this->handler->getUsers($message);
         $message->validateOutput();
+        $message->forceResponseScalarTypes();
         return $message->getResponse();
     }
 

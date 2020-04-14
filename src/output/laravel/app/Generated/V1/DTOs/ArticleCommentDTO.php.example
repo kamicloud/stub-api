@@ -71,10 +71,10 @@ class ArticleCommentDTO extends DTO
     public function getAttributeMap()
     {
         return [
-            ['id', 'id', 'bail|integer', Constants::INTEGER, null],
-            ['user', 'user', UserDTO::class, Constants::MODEL, null],
-            ['content', 'content', 'bail|string', Constants::STRING, null],
-            ['createdAt', 'created_at', 'bail|date_format:Y-m-d H:i:s', Constants::DATE, 'Y-m-d H:i:s'],
+            ['id', 'id', 'bail|integer', Constants::INTEGER],
+            ['user', 'user', UserDTO::class, Constants::MODEL],
+            ['content', 'content', 'bail|string', Constants::STRING],
+            ['createdAt', 'created_at', 'bail|date_format:Y-m-d H:i:s', Constants::DATE],
         ];
     }
 
