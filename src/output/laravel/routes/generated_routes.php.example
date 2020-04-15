@@ -1,5 +1,6 @@
 <?php
 
+Route::match(['POST', 'POST'], '/v1_1/pet/add_pet', 'V1_1\PetController@AddPet');
 Route::match(['POST', 'POST'], '/v1/user/create_user', 'V1\UserController@CreateUser');
 Route::match(['POST', 'DELETE', 'POST'], '/v1/user/get_users', 'V1\UserController@GetUsers')->middleware(['admin']);
 Route::match(['POST'], '/v1/article/get_article_comments', 'V1\ArticleController@GetArticleComments');

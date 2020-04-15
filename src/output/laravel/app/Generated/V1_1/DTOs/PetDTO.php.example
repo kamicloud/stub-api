@@ -1,0 +1,113 @@
+<?php
+
+namespace App\Generated\V1_1\DTOs;
+
+use Kamicloud\StubApi\Concerns\ValueHelper;
+use Kamicloud\StubApi\DTOs\DTO;
+use Kamicloud\StubApi\Utils\Constants;
+use App\Generated\V1_1\DTOs\CategoryDTO;
+use App\Generated\V1_1\DTOs\TagDTO;
+use App\Generated\V1_1\Enums\PetStatus;
+
+class PetDTO extends DTO
+{
+    use ValueHelper;
+
+    protected $id;
+    protected $category;
+    protected $name;
+    protected $photoUrls;
+    protected $tags;
+    protected $status;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return CategoryDTO
+     */
+    public function getCategory()
+    {
+        return $this->category;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPhotoUrls()
+    {
+        return $this->photoUrls;
+    }
+
+    /**
+     * @return TagDTO[]
+     */
+    public function getTags()
+    {
+        return $this->tags;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function setCategory($category)
+    {
+        $this->category = $category;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setPhotoUrls($photoUrls)
+    {
+        $this->photoUrls = $photoUrls;
+    }
+
+    public function setTags($tags)
+    {
+        $this->tags = $tags;
+    }
+
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+
+    public function getAttributeMap()
+    {
+        return [
+            ['id', 'id', 'bail|integer', Constants::INTEGER],
+            ['category', 'category', CategoryDTO::class, Constants::MODEL],
+            ['name', 'name', 'bail|string', Constants::STRING],
+            ['photoUrls', 'photo_urls', 'bail|string', Constants::STRING | Constants::ARRAY],
+            ['tags', 'tags', TagDTO::class, Constants::MODEL | Constants::ARRAY],
+            ['status', 'status', PetStatus::class, Constants::ENUM],
+        ];
+    }
+
+}

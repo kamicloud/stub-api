@@ -39,7 +39,7 @@ public class TestCaseGenerator extends BaseGenerator {
                         FileOutputStream fileOutputStream = new FileOutputStream(file);
                         OutputStreamWriter outputStreamWriter = new OutputStreamWriter(fileOutputStream);
 
-                        outputStreamWriter.write("# __api: /api" + url + "\n");
+                        outputStreamWriter.write("# __api: " + url + "\n");
                         outputStreamWriter.write("__enabled: false\n");
 //                        outputStreamWriter.write("# __version:\n");
 //                        outputStreamWriter.write("__controller: " + controllerStub.getName() + "\n");

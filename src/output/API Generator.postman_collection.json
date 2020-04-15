@@ -6,6 +6,74 @@
   },
   "item": [
     {
+      "name": "V1_1",
+      "item": [
+        {
+          "name": "RESTFul"
+        },
+        {
+          "name": "Pet ",
+          "item": [
+            {
+              "name": "AddPet Add a new pet to the store",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ],
+                  "urlencoded": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "url": {
+                  "protocol": "http",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1_1",
+                    "pet",
+                    "add_pet"
+                  ]
+                },
+                "description": "Add a new pet to the store"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "V1",
       "item": [
         {

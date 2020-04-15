@@ -1,0 +1,18 @@
+  - [OrderStatus](#OrderStatus)
+  - [PetStatusPet status in the store](#PetStatus)
+
+<a name="OrderStatus"></a>
+## OrderStatus
+|Key|Value|Description|
+|:-|:-|:-|
+|PLACED|0| |
+|APPROVED|1| |
+|DELIVERED|2| |
+<a name="PetStatus"></a>
+## PetStatusPet status in the store
+|Key|Value|Description|
+|:-|:-|:-|
+|AVAILABLE|0| |
+|PENDING|1| |
+|SOLD|2| |
+

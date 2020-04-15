@@ -6,7 +6,7 @@ import java.util.HashMap;
 public class TemplateList {
     public static Class<?>[] templates = new Class[] {
         TemplateV1.class,
-        // TemplateV1_1.class,
+        TemplateV1_1.class,
     };
 
     public static Class<? extends Enum<?>> errorsTemplate = Errors.class;
