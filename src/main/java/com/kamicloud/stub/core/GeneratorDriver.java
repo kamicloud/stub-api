@@ -4,7 +4,7 @@ import com.kamicloud.stub.core.config.DefaultProfileUtil;
 import com.kamicloud.stub.core.config.StubApiCoreProperties;
 import com.kamicloud.stub.core.parsers.DocParser;
 import com.kamicloud.stub.core.parsers.Parser;
-import com.kamicloud.stub.core.stubs.core.OutputStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
 import com.kamicloud.stub.core.generators.BaseGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

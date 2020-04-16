@@ -1,7 +1,7 @@
 package com.kamicloud.stub.core.generators;
 
-import com.kamicloud.stub.core.stubs.core.OutputStub;
-import com.kamicloud.stub.core.stubs.core.TemplateStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
+import com.kamicloud.stub.core.stubs.TemplateStub;
 import com.kamicloud.stub.core.generators.components.java.ClassAttributeCombiner;
 import com.kamicloud.stub.core.generators.components.java.ClassCombiner;
 import com.kamicloud.stub.core.generators.components.java.ClassMethodCombiner;

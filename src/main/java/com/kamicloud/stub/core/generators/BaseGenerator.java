@@ -1,7 +1,7 @@
 package com.kamicloud.stub.core.generators;
 
 import com.kamicloud.stub.core.config.StubApiCoreProperties;
-import com.kamicloud.stub.core.stubs.core.OutputStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
 import com.kamicloud.stub.core.utils.StringUtil;
 import com.kamicloud.stub.core.utils.UrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;

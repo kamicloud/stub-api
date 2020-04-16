@@ -2,9 +2,9 @@ package com.kamicloud.stub.core.generators;
 
 import com.kamicloud.stub.core.generators.components.common.FileCombiner;
 import com.kamicloud.stub.core.generators.components.openapi.v3.*;
-import com.kamicloud.stub.core.stubs.core.OutputStub;
-import com.kamicloud.stub.core.stubs.core.ParameterStub;
-import com.kamicloud.stub.core.stubs.core.TemplateStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
+import com.kamicloud.stub.core.stubs.ParameterStub;
+import com.kamicloud.stub.core.stubs.TemplateStub;
 import definitions.annotations.Get;
 import definitions.official.TypeSpec;
 import org.yaml.snakeyaml.DumperOptions;

@@ -1,8 +1,8 @@
 package com.kamicloud.stub.laravel;
 
 import com.kamicloud.stub.core.interfaces.PHPNamespacePathTransformerInterface;
-import com.kamicloud.stub.core.stubs.core.OutputStub;
-import com.kamicloud.stub.core.stubs.testcase.TestCaseStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
+import com.kamicloud.stub.core.generators.components.testcase.TestCaseStub;
 import com.kamicloud.stub.core.utils.UrlUtil;
 import com.kamicloud.stub.core.generators.BaseGenerator;
 import com.kamicloud.stub.core.generators.components.common.FileCombiner;

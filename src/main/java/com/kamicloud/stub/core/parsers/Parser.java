@@ -1,7 +1,7 @@
 package com.kamicloud.stub.core.parsers;
 
 import com.google.common.base.CaseFormat;
-import com.kamicloud.stub.core.stubs.core.*;
+import com.kamicloud.stub.core.stubs.*;
 import definitions.types.EnumType;
 import definitions.types.ModelType;
 import definitions.annotations.ErrorInterface;

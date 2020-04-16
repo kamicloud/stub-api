@@ -1,7 +1,6 @@
-package com.kamicloud.stub.core.stubs.core;
+package com.kamicloud.stub.core.stubs;
 
 import com.google.common.base.CaseFormat;
-import com.kamicloud.stub.core.config.DefaultProfileUtil;
 import com.kamicloud.stub.core.utils.CommentUtil;
 import com.kamicloud.stub.core.utils.StringUtil;
 import definitions.annotations.Extendable;

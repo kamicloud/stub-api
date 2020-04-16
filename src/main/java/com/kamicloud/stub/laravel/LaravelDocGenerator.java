@@ -7,10 +7,10 @@ import com.kamicloud.stub.core.generators.BaseGenerator;
 import com.kamicloud.stub.core.generators.components.common.FileCombiner;
 import com.kamicloud.stub.core.generators.components.common.MultiLinesCombiner;
 import definitions.annotations.*;
-import com.kamicloud.stub.core.stubs.core.EnumStub;
-import com.kamicloud.stub.core.stubs.core.OutputStub;
-import com.kamicloud.stub.core.stubs.core.TemplateStub;
-import com.kamicloud.stub.core.stubs.core.ParameterStub;
+import com.kamicloud.stub.core.stubs.EnumStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
+import com.kamicloud.stub.core.stubs.TemplateStub;
+import com.kamicloud.stub.core.stubs.ParameterStub;
 import com.kamicloud.stub.core.utils.FileUtil;
 import definitions.annotations.Optional;
 

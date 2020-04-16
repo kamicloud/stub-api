@@ -5,8 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.kamicloud.stub.core.utils.UrlUtil;
 import com.kamicloud.stub.core.generators.components.postman.*;
 import definitions.annotations.Request;
-import com.kamicloud.stub.core.stubs.core.OutputStub;
-import com.kamicloud.stub.core.stubs.core.TemplateStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
+import com.kamicloud.stub.core.stubs.TemplateStub;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -1,4 +1,4 @@
-package com.kamicloud.stub.core.stubs.testcase;
+package com.kamicloud.stub.core.generators.components.testcase;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

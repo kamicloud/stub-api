@@ -2,7 +2,7 @@ package com.kamicloud.stub.core.config;
 
 import com.kamicloud.stub.core.parsers.DocParser;
 import com.kamicloud.stub.core.parsers.Parser;
-import com.kamicloud.stub.core.stubs.core.OutputStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

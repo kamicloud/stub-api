@@ -2,7 +2,7 @@ package com.kamicloud.stub.laravel;
 
 import com.google.common.base.CaseFormat;
 import com.kamicloud.stub.core.interfaces.PHPNamespacePathTransformerInterface;
-import com.kamicloud.stub.core.stubs.core.*;
+import com.kamicloud.stub.core.stubs.*;
 import com.kamicloud.stub.core.utils.FileUtil;
 import com.kamicloud.stub.core.generators.BaseGenerator;
 import com.kamicloud.stub.core.generators.components.common.FileCombiner;

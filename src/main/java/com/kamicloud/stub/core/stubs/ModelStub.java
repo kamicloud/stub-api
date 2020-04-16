@@ -1,4 +1,4 @@
-package com.kamicloud.stub.core.stubs.core;
+package com.kamicloud.stub.core.stubs;
 
 import com.kamicloud.stub.core.interfaces.ResourceInterface;
 import definitions.annotations.RESTFul;

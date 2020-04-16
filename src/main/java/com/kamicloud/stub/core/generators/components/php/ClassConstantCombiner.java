@@ -1,6 +1,6 @@
 package com.kamicloud.stub.core.generators.components.php;
 
-import com.kamicloud.stub.core.stubs.core.EnumStub;
+import com.kamicloud.stub.core.stubs.EnumStub;
 import com.kamicloud.stub.core.interfaces.CombinerInterface;
 
 import java.util.ArrayList;

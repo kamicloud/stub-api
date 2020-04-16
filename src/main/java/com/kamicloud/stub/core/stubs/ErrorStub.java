@@ -1,4 +1,4 @@
-package com.kamicloud.stub.core.stubs.core;
+package com.kamicloud.stub.core.stubs;
 
 public class ErrorStub extends BaseWithAnnotationStub {
 

@@ -1,10 +1,8 @@
-package com.kamicloud.stub.core.stubs.core;
+package com.kamicloud.stub.core.stubs;
 
 import com.kamicloud.stub.core.parsers.DocParser;
 import com.kamicloud.stub.core.utils.UrlUtil;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.LinkedList;
 

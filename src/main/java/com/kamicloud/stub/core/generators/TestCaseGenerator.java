@@ -1,6 +1,6 @@
 package com.kamicloud.stub.core.generators;
 
-import com.kamicloud.stub.core.stubs.core.OutputStub;
+import com.kamicloud.stub.core.stubs.OutputStub;
 import com.kamicloud.stub.core.utils.UrlUtil;
 
 import java.io.*;

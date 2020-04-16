@@ -1,4 +1,4 @@
-package com.kamicloud.stub.core.stubs.core;
+package com.kamicloud.stub.core.stubs;
 
 import java.util.ArrayList;
 
