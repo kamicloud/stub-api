@@ -1,6 +1,8 @@
 package com.kamicloud.stub.core.config;
 
 import com.kamicloud.stub.core.generators.*;
+import com.kamicloud.stub.javaclient.JavaClientGenerator;
+import com.kamicloud.stub.jsclient.NodeJsClientGenerator;
 import com.kamicloud.stub.laravel.LaravelDocGenerator;
 import com.kamicloud.stub.laravel.LaravelAutoTestGenerator;
 import com.kamicloud.stub.laravel.LaravelGenerator;

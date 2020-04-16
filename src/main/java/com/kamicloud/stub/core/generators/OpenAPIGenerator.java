@@ -1,7 +1,7 @@
 package com.kamicloud.stub.core.generators;
 
-import com.kamicloud.stub.core.generators.components.common.FileCombiner;
-import com.kamicloud.stub.core.generators.components.openapi.v3.*;
+import com.kamicloud.stub.core.segments.common.FileCombiner;
+import com.kamicloud.stub.core.segments.openapi.v3.*;
 import com.kamicloud.stub.core.stubs.OutputStub;
 import com.kamicloud.stub.core.stubs.ParameterStub;
 import com.kamicloud.stub.core.stubs.TemplateStub;

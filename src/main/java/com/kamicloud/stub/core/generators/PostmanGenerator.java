@@ -3,7 +3,7 @@ package com.kamicloud.stub.core.generators;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.kamicloud.stub.core.utils.UrlUtil;
-import com.kamicloud.stub.core.generators.components.postman.*;
+import com.kamicloud.stub.core.segments.postman.*;
 import definitions.annotations.Request;
 import com.kamicloud.stub.core.stubs.OutputStub;
 import com.kamicloud.stub.core.stubs.TemplateStub;

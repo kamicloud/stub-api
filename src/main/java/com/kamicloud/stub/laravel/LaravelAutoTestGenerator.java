@@ -2,12 +2,12 @@ package com.kamicloud.stub.laravel;
 
 import com.kamicloud.stub.core.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.stub.core.stubs.OutputStub;
-import com.kamicloud.stub.core.generators.components.testcase.TestCaseStub;
+import com.kamicloud.stub.core.stubs.TestCaseStub;
 import com.kamicloud.stub.core.utils.UrlUtil;
 import com.kamicloud.stub.core.generators.BaseGenerator;
-import com.kamicloud.stub.core.generators.components.common.FileCombiner;
-import com.kamicloud.stub.core.generators.components.php.ClassCombiner;
-import com.kamicloud.stub.core.generators.components.php.ClassMethodCombiner;
+import com.kamicloud.stub.core.segments.common.FileCombiner;
+import com.kamicloud.stub.core.segments.php.ClassCombiner;
+import com.kamicloud.stub.core.segments.php.ClassMethodCombiner;
 import okhttp3.*;
 
 import java.io.*;
