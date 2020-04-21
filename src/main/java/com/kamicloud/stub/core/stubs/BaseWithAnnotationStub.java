@@ -1,6 +1,7 @@
 package com.kamicloud.stub.core.stubs;
 
 import com.google.common.base.CaseFormat;
+import com.kamicloud.stub.core.stubs.components.StringVal;
 import com.kamicloud.stub.core.utils.CommentUtil;
 import com.kamicloud.stub.core.utils.StringUtil;
 import definitions.annotations.Extendable;
@@ -14,7 +15,7 @@ import java.util.HashMap;
 public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInterface {
     private String classpath;
 
-    private String name;
+    private StringVal name;
     private String upperCamelName;
     private String lowerCamelName;
     private String lowerUnderScoreName;
@@ -29,20 +30,20 @@ public class BaseWithAnnotationStub implements AnnotationsInterface, CommentInte
      * @param name 类 / 变量名称 都将转成Upper camel
      */
     BaseWithAnnotationStub(
-        String name,
+        StringVal name,
         String classpath
     ) {
         this.name = name;
         this.classpath = classpath;
 
-        this.upperCamelName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, name);
-        this.lowerCamelName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
-        this.lowerUnderScoreName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
-        this.upperUnderScoreName = CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, name);
+        this.upperCamelName = name.getUPPER_CAMEL();
+        this.lowerCamelName = name.getLOWER_CAMEL();
+        this.lowerUnderScoreName = name.getLOWER_UNDERSCORE();
+        this.upperUnderScoreName = name.getUPPER_UNDERSCORE();
 
     }
 
-    public String getName() {
+    public StringVal getName() {
         return name;
     }
 

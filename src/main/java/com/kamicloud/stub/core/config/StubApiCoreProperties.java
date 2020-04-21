@@ -5,8 +5,9 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 
-@ConfigurationProperties(prefix = "generator", ignoreUnknownFields = false)
+@ConfigurationProperties(prefix = "stub-api", ignoreUnknownFields = false)
 @Component
+@SuppressWarnings("unused")
 public class StubApiCoreProperties {
     private Process process = new Process();
     private String env;
@@ -229,6 +230,11 @@ public class StubApiCoreProperties {
             private String dtoFolder = "DTOs";
             private String serviceSuffix;
             private String serviceFolder;
+            private String valueHelperNamespace;
+            private String baseDtoNamespace;
+            private String baseMessageNamespace;
+            private String baseEnumNamespace;
+            private String baseExceptionNamespace;
 
             public String getPath() {
                 return path;
@@ -284,6 +290,46 @@ public class StubApiCoreProperties {
 
             public void setServiceFolder(String serviceFolder) {
                 this.serviceFolder = serviceFolder;
+            }
+
+            public String getValueHelperNamespace() {
+                return valueHelperNamespace;
+            }
+
+            public void setValueHelperNamespace(String valueHelperNamespace) {
+                this.valueHelperNamespace = valueHelperNamespace;
+            }
+
+            public String getBaseDtoNamespace() {
+                return baseDtoNamespace;
+            }
+
+            public void setBaseDtoNamespace(String baseDtoNamespace) {
+                this.baseDtoNamespace = baseDtoNamespace;
+            }
+
+            public String getBaseMessageNamespace() {
+                return baseMessageNamespace;
+            }
+
+            public void setBaseMessageNamespace(String baseMessageNamespace) {
+                this.baseMessageNamespace = baseMessageNamespace;
+            }
+
+            public String getBaseEnumNamespace() {
+                return baseEnumNamespace;
+            }
+
+            public void setBaseEnumNamespace(String baseEnumNamespace) {
+                this.baseEnumNamespace = baseEnumNamespace;
+            }
+
+            public String getBaseExceptionNamespace() {
+                return baseExceptionNamespace;
+            }
+
+            public void setBaseExceptionNamespace(String baseExceptionNamespace) {
+                this.baseExceptionNamespace = baseExceptionNamespace;
             }
         }
 

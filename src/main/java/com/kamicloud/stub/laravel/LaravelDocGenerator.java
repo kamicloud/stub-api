@@ -24,13 +24,12 @@ public class LaravelDocGenerator extends BaseGenerator {
 
     @Override
     public void postConstruct() {
-
+        docPath = new File(config.getGenerators().getLaravelDoc().getPath() + "/resources/docs");
+        docPrefix = config.getGenerators().getLaravelDoc().getHttpPrefix();
     }
 
     @Override
     public void render(OutputStub output) {
-        docPath = new File(config.getGenerators().getLaravelDoc().getPath() + "/resources/docs");
-        docPrefix = config.getGenerators().getLaravelDoc().getHttpPrefix();
         output.getTemplates().forEach((version, templateStub) -> {
             outputDir = new File(docPath.getAbsolutePath() + "/" + version);
             File generatedDir = new File(outputDir.getAbsolutePath() + "/generated");
@@ -128,7 +127,7 @@ public class LaravelDocGenerator extends BaseGenerator {
 
                 // 菜单列表
                 controller.getActions().forEach((action) -> {
-                    String actionName = action.getName();
+                    String actionName = action.getName().toString();
 
                     String comment = action.getComment();
                     comment = comment != null ? CommentUtil.getTitle(comment) : "";
@@ -145,7 +144,7 @@ public class LaravelDocGenerator extends BaseGenerator {
 
                 file.addLine("");
                 controller.getActions().forEach((action) -> {
-                    String actionName = action.getName();
+                    String actionName = action.getName().toString();
 
                     file.addBlock(new MultiLinesCombiner(
                         "<a name=\"" + action.getName() + "\"></a>",
@@ -158,7 +157,7 @@ public class LaravelDocGenerator extends BaseGenerator {
                         file.addLine("`POST`");
                     }
                     file.addLine("");
-                    file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName(), actionName) + "`");
+                    file.addLine("`" + UrlUtil.getUrlWithPrefix(version, controller.getName().toString(), actionName) + "`");
                     file.addLine("");
                     if (action.hasCommentBody()) {
                         file.addLine("\n> {primary} " + transformLfToBr(action.getComment()) + "\n");
@@ -193,7 +192,7 @@ public class LaravelDocGenerator extends BaseGenerator {
                 // 输出模型每一个请求参数
                 blocks.addLine(
                     "|" + error.getCode() +
-                    "|" + CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, error.getName()) +
+                    "|" + error.getName().toUpperUnderscoreCase() +
                     "|" + comment + " |"
                 );
             });
@@ -223,7 +222,7 @@ public class LaravelDocGenerator extends BaseGenerator {
             file.setFileName(outputDir.getAbsolutePath() + "/generated/models.md");
 
             output.getModels().forEach((model) -> {
-                String modelName = model.getName();
+                String modelName = model.getName().toString();
 
                 String comment = model.getComment();
                 comment = comment != null ? CommentUtil.getTitle(comment) : "";
@@ -265,7 +264,7 @@ public class LaravelDocGenerator extends BaseGenerator {
             file.setFileName(outputDir.getAbsolutePath() + "/generated/enums.md");
 
             output.getEnums().forEach((enumStub) -> {
-                String enumName = enumStub.getName();
+                String enumName = enumStub.getName().toString();
 
                 String comment = enumStub.getComment();
                 comment = comment != null ? CommentUtil.getTitle(comment) : "";
@@ -298,7 +297,7 @@ public class LaravelDocGenerator extends BaseGenerator {
                 HashMap<String, EnumStub.EnumStubItem> enumItems = enumStub.getItems();
 
                 enumItems.forEach((key, value) -> {
-                    String valueName = enumStub.hasAnnotation(StringEnum.class) ? key : value.getName();
+                    String valueName = enumStub.hasAnnotation(StringEnum.class) ? key : value.getName().toString();
                     file.addLine(
                         "|" + key + "|" + valueName + "|" + (value.getComment() == null ? " " : transformLfToBr(value.getComment())) + "|"
                     );

@@ -54,11 +54,11 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
 
     @Override
     public void postConstruct() {
-
         boFolder = config.getGenerators().getLaravel().getBoFolder();
         serviceFolder = config.getGenerators().getLaravel().getServiceFolder();
         serviceSuffix = config.getGenerators().getLaravel().getServiceSuffix();
 
+//        config.getGenerators().getLaravel().getV
         valueHelperNamespace = env.getProperty(
             "generator.writers.laravel.value-helper-namespace",
             "Kamicloud\\StubApi\\Concerns\\ValueHelper"
@@ -131,7 +131,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
 
     private void writeModels(String version, TemplateStub templateStub) {
         templateStub.getModels().forEach((modelStub) -> {
-            String modelName = modelStub.getName();
+            String modelName = modelStub.getName().toString();
             if (modelStub.hasAnnotation(AsBO.class) &&
                 templateStub.isCurrent()
             ) {
@@ -143,7 +143,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
 
     private void writeModel(String version, ModelStub modelStub) {
         try {
-            String modelName = modelStub.getName();
+            String modelName = modelStub.getName().toString();
             ClassCombiner modelClassCombiner = new ClassCombiner(
                 "App\\Generated\\" + version + "\\" + config.getGenerators().getLaravel().getDtoFolder() +
                     "\\" + modelName + config.getGenerators().getLaravel().getDtoSuffix(),
@@ -172,7 +172,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
     }
 
     private void writeRESTFul(String version, ModelStub modelStub) {
-        String modelName = modelStub.getName();
+        String modelName = modelStub.getName().toString();
 
         try {
             FileCombiner.build(
@@ -243,7 +243,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
                 new ClassMethodParameterCombiner(constructor, "handler", serviceClassName);
 
                 controllerStub.getActions().forEach((action) -> {
-                    String actionName = action.getName();
+                    String actionName = action.getName().toString();
 
                     try {
                         String messageClassName = "App\\Generated\\" + version + "\\Messages\\" + controllerStub.getName() + "\\" + actionName + "Message";
@@ -253,7 +253,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
                             baseMessageNamespace
                         );
 
-                        String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName());
+                        String lowerCamelActionName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, action.getName().toString());
 
                         controllerClassCombiner.addUse(serviceClassName);
                         controllerClassCombiner.addUse("DB");
@@ -324,7 +324,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
                 );
                 mapConstant.addLine("[");
                 enumStub.getItems().forEach((key, value) -> {
-                    String valueName = value.getName();
+                    String valueName = value.getName().toString();
                     EnumStub.EnumStubItemType valueType = value.getType();
 
                     if (enumStub.hasAnnotation(StringEnum.class)) {
@@ -353,12 +353,12 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
             try {
                 // error code
                 ClassConstantCombiner constant = new ClassConstantCombiner(
-                    CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, error.getName()),
+                    error.getName().toUpperUnderscoreCase(),
                     null
                 );
                 constant.addLine(error.getCode());
                 errorCodeClassCombiner.addConstant(constant);
-                String exceptionName = error.getName();
+                String exceptionName = error.getName().toUpperCamelCaseCase();
                 ClassCombiner exceptionClassCombiner = new ClassCombiner(
                     "App\\Generated\\Exceptions\\" + exceptionName + "Exception",
                     baseExceptionNamespace
@@ -368,7 +368,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
                 new ClassMethodParameterCombiner(constructMethodCombiner, "message", null, "null");
                 constructMethodCombiner.addBody(
                     "parent::__construct($message, ErrorCode::" +
-                        CaseFormat.UPPER_CAMEL.to(CaseFormat.UPPER_UNDERSCORE, error.getName()) +
+                        error.getName().toUpperUnderscoreCase() +
                         ");"
                 );
 
@@ -387,7 +387,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
 
         o.getTemplates().forEach((version, templateStub) -> {
             templateStub.getControllers().forEach(controller -> controller.getActions().forEach((action) -> {
-                String actionName = action.getName();
+                String actionName = action.getName().toString();
 
                 AnnotationStub methodsAnnotation = action.getAnnotation(Methods.class);
                 ArrayList<String> allowMethods;
@@ -423,7 +423,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
     }
 
     private void writeParameterAttributes(LinkedList<ParameterStub> parameters, ClassCombiner classCombiner) {
-        parameters.forEach((parameterStub) -> new ClassAttributeCombiner(classCombiner, parameterStub.getName(), "protected"));
+        parameters.forEach((parameterStub) -> new ClassAttributeCombiner(classCombiner, parameterStub.getName().toString(), "protected"));
     }
 
     private void writeParameterGetters(LinkedList<ParameterStub> parameters, ClassCombiner classCombiner) {
@@ -447,7 +447,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
     private void writeParameterGetter(ParameterStub parameterStub, ClassCombiner classCombiner, String prefix) {
         Type type = parameterStub.getType();
 
-        String parameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, parameterStub.getName());
+        String parameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, parameterStub.getName().toString());
 
         parameterName = prefix + parameterName;
 
@@ -482,10 +482,10 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
     }
 
     private void writeParameterSetter(ParameterStub parameterStub, ClassCombiner classCombiner) {
-        String parameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, parameterStub.getName());
+        String parameterName = CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, parameterStub.getName().toString());
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, "set" + parameterName);
         classMethodCombiner.addBody("$this->" + parameterStub.getName() + " = $" + parameterStub.getName() + ";");
-        new ClassMethodParameterCombiner(classMethodCombiner, parameterStub.getName());
+        new ClassMethodParameterCombiner(classMethodCombiner, parameterStub.getName().toString());
     }
 
     private void writeMethodParameters(LinkedList<ParameterStub> parameters, ClassMethodCombiner classMethodCombiner) {
@@ -493,7 +493,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
     }
 
     private void writeMethodParameter(ParameterStub parameterStub, ClassMethodCombiner classMethodCombiner) {
-        new ClassMethodParameterCombiner(classMethodCombiner, parameterStub.getName());
+        new ClassMethodParameterCombiner(classMethodCombiner, parameterStub.getName().toString());
 
         classMethodCombiner.addBody("$this->" + parameterStub.getName() + " = $" + parameterStub.getName() + ";");
     }
@@ -507,7 +507,7 @@ public class LaravelGenerator extends BaseGenerator implements PHPNamespacePathT
         ClassMethodCombiner classMethodCombiner = new ClassMethodCombiner(classCombiner, methodName);
 
         parameters.forEach((parameterStub) -> {
-            String parameterName = parameterStub.getName();
+            String parameterName = parameterStub.getName().toString();
             String typeName = parameterStub.getTypeSimpleName();
             String rule;
             ArrayList<String> ruleList = new ArrayList<String>() {{

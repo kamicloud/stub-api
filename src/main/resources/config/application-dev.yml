@@ -4,7 +4,7 @@
 # 所有相对路径以本项目根目录为准
 # ===================================================================
 
-generator:
+stub-api:
   process:
     generators:
       - com.kamicloud.stub.core.generators.OpenAPIGenerator
@@ -50,6 +50,11 @@ generator:
       dto-folder: DTOs
       service-suffix: Service
       service-folder: Services
+      value-helper-namespace: 'Kamicloud\StubApi\Concerns\ValueHelper'
+      base-dto-namespace: 'Kamicloud\StubApi\DTOs\DTO'
+      base-message-namespace: 'Kamicloud\StubApi\Http\Messages\Message'
+      base-enum-namespace: 'Kamicloud\StubApi\BOs\Enum'
+      base-exception-namespace: 'Kamicloud\StubApi\Exceptions\BaseException'
     laravel-doc:
       path: ./src/output/larecipe
       http-prefix: docs

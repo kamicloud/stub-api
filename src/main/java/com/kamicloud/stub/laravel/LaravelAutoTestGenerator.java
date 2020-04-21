@@ -3,6 +3,7 @@ package com.kamicloud.stub.laravel;
 import com.kamicloud.stub.core.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.stub.core.stubs.OutputStub;
 import com.kamicloud.stub.core.stubs.TestCaseStub;
+import com.kamicloud.stub.core.utils.FileUtil;
 import com.kamicloud.stub.core.utils.UrlUtil;
 import com.kamicloud.stub.core.generators.BaseGenerator;
 import com.kamicloud.stub.core.segments.common.FileCombiner;
@@ -22,20 +23,21 @@ public class LaravelAutoTestGenerator extends BaseGenerator implements PHPNamesp
     private File outputDir;
     private File root;
     private LinkedList<TestCaseStub> rawTestCases = new LinkedList<>();
+    private boolean isAutoTestForceReplace;
 
     @Override
     public void postConstruct() {
+        outputDir = new File(config.getGenerators().getLaravelAutoTest().getPath());
+        root = new File(config.getGenerators().getLaravelAutoTest().getTestcasesPath());
 
     }
 
     @Override
     public void render(OutputStub output) {
-        outputDir = new File(Objects.requireNonNull(env.getProperty("generator.writers.laravel-auto-test.path")));
-        root = new File(env.getProperty("generator.writers.laravel-auto-test.testcases-path", ""));
         File testDir = new File(outputDir.getAbsolutePath() + "/tests/Generated");
-//        if (DefaultProfileUtil.isAutoTestForceReplace()) {
-//            FileUtil.deleteAllFilesOfDir(testDir);
-//        }
+        if (isAutoTestForceReplace) {
+            FileUtil.deleteAllFilesOfDir(testDir);
+        }
         try {
             ClassCombiner.setNamespacePathTransformer(this);
 
@@ -116,9 +118,9 @@ public class LaravelAutoTestGenerator extends BaseGenerator implements PHPNamesp
                 }
             });
             templateStub.getControllers().forEach(controllerStub -> controllerStub.getActions().forEach((actionStub) -> {
-                String actionName = actionStub.getName();
+                String actionName = actionStub.getName().toString();
 
-                String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName(), actionName);
+                String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName().toString(), actionName);
 
                 AtomicReference<Integer> i = new AtomicReference<>(0);
                 LinkedList<TestCaseStub> requests = apiMap.get(url);

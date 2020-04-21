@@ -1,5 +1,7 @@
 package com.kamicloud.stub.core.stubs;
 
+import com.kamicloud.stub.core.stubs.components.StringVal;
+
 import java.util.LinkedList;
 
 public class ActionStub extends BaseWithAnnotationStub {
@@ -9,7 +11,7 @@ public class ActionStub extends BaseWithAnnotationStub {
     private String uri;
     private String fullUri;
 
-    public ActionStub(String name, String classpath) {
+    public ActionStub(StringVal name, String classpath) {
         super(name, classpath);
     }
 

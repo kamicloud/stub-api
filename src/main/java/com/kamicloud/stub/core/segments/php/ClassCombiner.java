@@ -2,14 +2,14 @@ package com.kamicloud.stub.core.segments.php;
 
 import com.kamicloud.stub.core.interfaces.PHPNamespacePathTransformerInterface;
 import com.kamicloud.stub.core.interfaces.CombinerInterface;
-import com.kamicloud.stub.core.segments.common.FileWriter;
+import com.kamicloud.stub.core.interfaces.FileSerializable;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 
-public class ClassCombiner implements FileWriter, CombinerInterface, AddUseInterface {
+public class ClassCombiner implements FileSerializable, CombinerInterface, AddUseInterface {
     private static PHPNamespacePathTransformerInterface namespacePathTransformer;
     protected String fileName;
     private String namespace;

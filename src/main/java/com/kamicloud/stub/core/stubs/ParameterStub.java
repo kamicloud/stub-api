@@ -1,5 +1,6 @@
 package com.kamicloud.stub.core.stubs;
 
+import com.kamicloud.stub.core.stubs.components.StringVal;
 import definitions.types.Type;
 import definitions.official.TypeSpec;
 
@@ -16,7 +17,7 @@ public class ParameterStub extends BaseWithAnnotationStub {
 
     protected String typeClasspath;
 
-    public ParameterStub(String name, String classpath, String type, String typeClasspath) {
+    public ParameterStub(StringVal name, String classpath, String type, String typeClasspath) {
         super(name, classpath);
         this.typeSimpleName = type;
         this.typeClasspath = typeClasspath;

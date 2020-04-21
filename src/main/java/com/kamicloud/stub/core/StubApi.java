@@ -25,6 +25,7 @@ public class StubApi {
     }
 
     @PostConstruct
+    @SuppressWarnings("unused")
     public void initApplication() {
         log.debug("logger start");
 

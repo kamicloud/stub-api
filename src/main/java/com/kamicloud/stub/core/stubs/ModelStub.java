@@ -1,6 +1,7 @@
 package com.kamicloud.stub.core.stubs;
 
 import com.kamicloud.stub.core.interfaces.ResourceInterface;
+import com.kamicloud.stub.core.stubs.components.StringVal;
 import definitions.annotations.RESTFul;
 
 import java.util.LinkedList;
@@ -12,7 +13,7 @@ public class ModelStub extends BaseWithAnnotationStub implements ResourceInterfa
 
     private TemplateStub template;
 
-    public ModelStub(String name, String classpath, TemplateStub template) {
+    public ModelStub(StringVal name, String classpath, TemplateStub template) {
         super(name, classpath);
 
         this.template = template;

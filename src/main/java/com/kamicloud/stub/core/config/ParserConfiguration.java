@@ -2,6 +2,7 @@ package com.kamicloud.stub.core.config;
 
 import com.kamicloud.stub.core.parsers.DocParser;
 import com.kamicloud.stub.core.parsers.Parser;
+import com.kamicloud.stub.core.parsers.TestCaseParser;
 import com.kamicloud.stub.core.stubs.OutputStub;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,11 @@ public class ParserConfiguration {
     @Bean
     public DocParser docParser() {
         return new DocParser();
+    }
+
+    @Bean
+    public TestCaseParser testCaseParser() {
+        return new TestCaseParser();
     }
 
     @Bean

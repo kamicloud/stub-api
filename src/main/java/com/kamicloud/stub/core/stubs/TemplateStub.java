@@ -1,5 +1,7 @@
 package com.kamicloud.stub.core.stubs;
 
+import com.kamicloud.stub.core.stubs.components.StringVal;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 
@@ -11,7 +13,7 @@ public class TemplateStub extends BaseWithAnnotationStub {
 
     private boolean current = false;
 
-    public TemplateStub(String name, String classpath) {
+    public TemplateStub(StringVal name, String classpath) {
         super(name, classpath);
     }
 

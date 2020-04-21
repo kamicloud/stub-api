@@ -24,14 +24,14 @@ public class Combiner implements CombinerInterface {
 
     public String toString() {
         StringBuilder stringBuilder = new StringBuilder();
-        blocks.forEach(block -> stringBuilder.append(block));
+        blocks.forEach(stringBuilder::append);
 
         return stringBuilder.toString();
     }
 
     public void addMultiLines(String... lines) {
-        for (int i = 0; i < lines.length; i++) {
-            addLine(lines[i]);
+        for (String line : lines) {
+            addLine(line);
         }
     }
 }

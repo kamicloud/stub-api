@@ -2,6 +2,7 @@ package com.kamicloud.stub.core.parsers;
 
 import com.google.common.base.CaseFormat;
 import com.kamicloud.stub.core.stubs.*;
+import com.kamicloud.stub.core.stubs.components.StringVal;
 import definitions.types.EnumType;
 import definitions.types.ModelType;
 import definitions.annotations.ErrorInterface;
@@ -53,7 +54,7 @@ public class Parser {
         String version = template.getSimpleName();
         version = version.replace("Template", "");
         TemplateStub templateStub = new TemplateStub(
-            version,
+            new StringVal(version, CaseFormat.LOWER_UNDERSCORE),
             template.getCanonicalName()
         );
 
@@ -86,7 +87,7 @@ public class Parser {
 
 
                     ErrorStub errorStub = new ErrorStub(
-                        CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, error.getName()),
+                        new StringVal(error.getName(), CaseFormat.UPPER_UNDERSCORE),
                         fieldBuilder(error),
                         fillValue,
                         ""
@@ -104,7 +105,7 @@ public class Parser {
     private void parseControllers(Class<?>[] controllers, TemplateStub templateStub) {
         Arrays.asList(controllers).forEach(controller -> {
             ControllerStub controllerStub = new ControllerStub(
-                controller.getSimpleName(),
+                new StringVal(controller.getSimpleName(), CaseFormat.UPPER_CAMEL),
                 controller.getCanonicalName()
             );
             templateStub.addController(controllerStub);
@@ -114,7 +115,7 @@ public class Parser {
 
             Arrays.asList(controller.getDeclaredClasses()).forEach(action -> {
                 ActionStub actionStub = new ActionStub(
-                    CaseFormat.LOWER_CAMEL.to(CaseFormat.UPPER_CAMEL, action.getSimpleName()),
+                    new StringVal(action.getSimpleName(), CaseFormat.UPPER_CAMEL),
                     action.getCanonicalName()
                 );
                 controllerStub.addAction(actionStub);
@@ -142,7 +143,7 @@ public class Parser {
         Arrays.asList(enumsTemplate).forEach(enumTemplate -> {
             try {
                 EnumStub enumStub = new EnumStub(
-                    enumTemplate.getSimpleName(),
+                    new StringVal(enumTemplate.getSimpleName(), CaseFormat.UPPER_UNDERSCORE),
                     enumTemplate.getCanonicalName()
                 );
                 templateStub.addEnum(enumStub);
@@ -165,7 +166,7 @@ public class Parser {
                             fillValue = getValue.invoke(value).toString();
                         }
                         EnumStub.EnumStubItem item = new EnumStub.EnumStubItem(
-                            fillValue,
+                            new StringVal(fillValue, CaseFormat.UPPER_UNDERSCORE),
                             fieldBuilder(entryTemplate),
                             type
                         );
@@ -217,7 +218,7 @@ public class Parser {
     private void parseModels(Class<?>[] models, TemplateStub templateStub) {
         Arrays.asList(models).forEach(model -> {
             ModelStub modelStub = new ModelStub(
-                model.getSimpleName(),
+                new StringVal(model.getSimpleName(), CaseFormat.UPPER_CAMEL),
                 model.getCanonicalName(),
                 templateStub
             );
@@ -259,7 +260,7 @@ public class Parser {
 
 
             ParameterStub parameterStub = new ParameterStub(
-                parameter.getName(),
+                new StringVal(parameter.getName(), CaseFormat.LOWER_CAMEL),
                 fieldBuilder(parameter),
                 typeSimpleName,
                 parameterType.getCanonicalName()

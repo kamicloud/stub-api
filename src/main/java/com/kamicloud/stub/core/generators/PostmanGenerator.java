@@ -99,7 +99,7 @@ public class PostmanGenerator extends BaseGenerator {
                     UrlUtil.getUrlPrefix(true),
                     UrlUtil.transformVersion(version),
                     "restful",
-                    UrlUtil.transformAction(modelStub.getName())
+                    UrlUtil.transformAction(modelStub.getName().toString())
                 }));
 
                 storeRequest.setMethod("PUT");
@@ -109,7 +109,7 @@ public class PostmanGenerator extends BaseGenerator {
                     UrlUtil.getUrlPrefix(true),
                     UrlUtil.transformVersion(version),
                     "restful",
-                    UrlUtil.transformAction(modelStub.getName())
+                    UrlUtil.transformAction(modelStub.getName().toString())
                 }));
 
                 showRequest.setMethod("GET");
@@ -119,7 +119,7 @@ public class PostmanGenerator extends BaseGenerator {
                     UrlUtil.getUrlPrefix(true),
                     UrlUtil.transformVersion(version),
                     "restful",
-                    UrlUtil.transformAction(modelStub.getName()),
+                    UrlUtil.transformAction(modelStub.getName().toString()),
                     "1"
                 }));
 
@@ -130,7 +130,7 @@ public class PostmanGenerator extends BaseGenerator {
                     UrlUtil.getUrlPrefix(true),
                     UrlUtil.transformVersion(version),
                     "restful",
-                    UrlUtil.transformAction(modelStub.getName()),
+                    UrlUtil.transformAction(modelStub.getName().toString()),
                     "1"
                 }));
 
@@ -141,7 +141,7 @@ public class PostmanGenerator extends BaseGenerator {
                     UrlUtil.getUrlPrefix(true),
                     UrlUtil.transformVersion(version),
                     "restful",
-                    UrlUtil.transformAction(modelStub.getName()),
+                    UrlUtil.transformAction(modelStub.getName().toString()),
                     "1"
                 }));
 
@@ -156,7 +156,7 @@ public class PostmanGenerator extends BaseGenerator {
             postmanStub.addItem(itemSegment);
 
             controller.getActions().forEach((action) -> {
-                String actionName = action.getName();
+                String actionName = action.getName().toString();
 
                 ItemSegment actionStub = new ItemSegment(actionName + " " + (action.getComment() == null ? "" : action.getComment()));
                 itemSegment.addItem(actionStub);
@@ -177,15 +177,15 @@ public class PostmanGenerator extends BaseGenerator {
                 itemRequestUrlSegment.addHost("{{host}}");
                 itemRequestUrlSegment.addPath(UrlUtil.getUrlPrefix(true));
                 itemRequestUrlSegment.addPath(UrlUtil.transformVersion(version));
-                itemRequestUrlSegment.addPath(UrlUtil.transformController(controller.getName()));
-                itemRequestUrlSegment.addPath(UrlUtil.transformAction(action.getName()));
+                itemRequestUrlSegment.addPath(UrlUtil.transformController(controller.getName().toString()));
+                itemRequestUrlSegment.addPath(UrlUtil.transformAction(action.getName().toString()));
 
                 itemRequestBodySegment.addParameter(new ParameterSegment("__test_mode", "1"));
                 itemRequestBodySegment.addParameter(new ParameterSegment("__user", ""));
 
                 action.getRequests().forEach((parameter) -> {
                     if (parameter.hasAnnotation(Request.class)) {
-                        ParameterSegment parameterSegment = new ParameterSegment(parameter.getName());
+                        ParameterSegment parameterSegment = new ParameterSegment(parameter.getName().toString());
                         String comment = parameter.getComment();
                         if (comment != null) {
                             parameterSegment.setDescription(comment);

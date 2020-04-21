@@ -25,9 +25,9 @@ public class TestCaseGenerator extends BaseGenerator {
             template.getControllers().forEach(controllerStub -> {
                 controllerStub.getActions().forEach((actionStub) -> {
                     try {
-                        String actionName = actionStub.getName();
+                        String actionName = actionStub.getName().toString();
                         String path = "/" + version + "/" + controllerStub.getName() + "/" + actionName;
-                        String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName(), actionName);
+                        String url = UrlUtil.getUrlWithPrefix(version, controllerStub.getName().toString(), actionName);
                         File file = new File(outputDir.getAbsolutePath() + path + ".yml");
                         file.getParentFile().mkdirs();
                         if (file.exists()) {
@@ -51,7 +51,7 @@ public class TestCaseGenerator extends BaseGenerator {
 
                         actionStub.getRequests().forEach((requestStub) -> {
                             try {
-                                String requestName = requestStub.getName();
+                                String requestName = requestStub.getName().toString();
                                 outputStreamWriter.write("  " + requestName + ":\n");
                             } catch (Exception e) {
                                 e.printStackTrace();

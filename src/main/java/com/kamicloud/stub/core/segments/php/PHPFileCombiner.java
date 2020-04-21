@@ -3,11 +3,11 @@ package com.kamicloud.stub.core.segments.php;
 import com.kamicloud.stub.core.interfaces.CombinerInterface;
 import com.kamicloud.stub.core.segments.common.FileCombiner;
 import com.kamicloud.stub.core.segments.common.Combiner;
-import com.kamicloud.stub.core.segments.common.FileWriter;
+import com.kamicloud.stub.core.interfaces.FileSerializable;
 
 import java.io.IOException;
 
-public class PHPFileCombiner extends Combiner implements FileWriter, CombinerInterface {
+public class PHPFileCombiner extends Combiner implements FileSerializable, CombinerInterface {
     protected String fileName;
 
     @Override

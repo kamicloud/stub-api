@@ -78,7 +78,7 @@ public class OpenAPIGenerator extends BaseGenerator {
             controllerStub.getActions().forEach(actionStub -> {
                 PathSegment.PathEntity pathEntity = new PathSegment.PathEntity();
 
-                pathEntity.getTags().add(controllerStub.getName());
+                pathEntity.getTags().add(controllerStub.getName().toString());
                 pathEntity.setSummary(actionStub.getCommentBody());
 
                 PathSegment pathSegment = new PathSegment();
@@ -98,7 +98,7 @@ public class OpenAPIGenerator extends BaseGenerator {
 
 
                     actionStub.getRequests().forEach(requestStub -> {
-                        schemaSegment.getProperties().put(requestStub.getName(), createSchemaSegmentProperty(requestStub));
+                        schemaSegment.getProperties().put(requestStub.getName().toString(), createSchemaSegmentProperty(requestStub));
                     });
                     pathEntity.setRequestBody(pathRequestBodySegment);
                 }
@@ -111,7 +111,7 @@ public class OpenAPIGenerator extends BaseGenerator {
                 pathResponseContentEntity.setSchema(schemaSegment);
                 pathResponseSegment.getContent().put("application/json", pathResponseContentEntity);
                 actionStub.getResponses().forEach(response -> {
-                    schemaSegment.getProperties().put(response.getName(), createSchemaSegmentProperty(response));
+                    schemaSegment.getProperties().put(response.getName().toString(), createSchemaSegmentProperty(response));
                 });
 
 

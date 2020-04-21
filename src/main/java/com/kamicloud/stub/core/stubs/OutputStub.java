@@ -25,7 +25,7 @@ public class OutputStub {
     }
 
     public void addTemplate(TemplateStub templateStub) {
-        this.templates.put(templateStub.getName(), templateStub);
+        this.templates.put(templateStub.getName().toString(), templateStub);
     }
 
     /**
@@ -42,10 +42,10 @@ public class OutputStub {
         templates.forEach((version, templateStub) -> {
             templateStub.getControllers().forEach((controllerStub -> {
                 controllerStub.getActions().forEach((action) -> {
-                    String actionName = action.getName();
+                    String actionName = action.getName().toString();
 
                     String uri = "/" + UrlUtil.transformVersion(version) +
-                        "/" + UrlUtil.transformController(controllerStub.getName()) +
+                        "/" + UrlUtil.transformController(controllerStub.getName().toString()) +
                         "/" + UrlUtil.transformAction(actionName);
                     action.setUri(uri);
                     action.setFullUri("/api" + uri);

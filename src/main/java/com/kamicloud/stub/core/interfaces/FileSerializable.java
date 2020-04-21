@@ -1,8 +1,8 @@
-package com.kamicloud.stub.core.segments.common;
+package com.kamicloud.stub.core.interfaces;
 
 import java.io.IOException;
 
-public interface FileWriter {
+public interface FileSerializable {
 
     void setFileName(String fileName);
 

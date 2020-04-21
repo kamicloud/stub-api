@@ -2,6 +2,7 @@ package com.kamicloud.stub.core.segments.common;
 
 import com.kamicloud.stub.core.config.DefaultProfileUtil;
 import com.kamicloud.stub.core.interfaces.CombinerInterface;
+import com.kamicloud.stub.core.interfaces.FileSerializable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -9,7 +10,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
-public class FileCombiner extends Combiner implements FileWriter, CombinerInterface {
+public class FileCombiner extends Combiner implements FileSerializable, CombinerInterface {
     protected String fileName;
 
     public void setFileName(String fileName) {
