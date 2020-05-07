@@ -10,9 +10,17 @@ class UserDTO extends DTO
 {
     use ValueHelper;
 
-    protected $id;
     protected $name;
+    protected $id;
     protected $avatar;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
 
     /**
      * 一个注释
@@ -40,6 +48,11 @@ class UserDTO extends DTO
         return $this->avatar;
     }
 
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
     public function setId($id)
     {
         $this->id = $id;
@@ -58,6 +71,7 @@ class UserDTO extends DTO
     public function getAttributeMap()
     {
         return [
+            ['name', 'name', 'bail|string', Constants::STRING],
             ['id', 'id', 'bail|integer', Constants::INTEGER | Constants::MUTABLE],
             ['name', 'name', 'bail|string', Constants::STRING],
             ['avatar', 'avatar', 'bail|string', Constants::STRING],

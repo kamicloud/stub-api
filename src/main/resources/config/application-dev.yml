@@ -7,12 +7,12 @@
 stub-api:
   process:
     generators:
-      - com.kamicloud.stub.core.generators.OpenAPIGenerator
-      - com.kamicloud.stub.core.generators.PostmanGenerator
-      - com.kamicloud.stub.core.generators.TestCaseGenerator
+      - com.github.kamicloud.stub.core.generators.OpenAPIGenerator
+      - com.github.kamicloud.stub.core.generators.PostmanGenerator
+      - com.github.kamicloud.stub.core.generators.TestCaseGenerator
 
-      - com.kamicloud.stub.laravel.LaravelGenerator
-      - com.kamicloud.stub.laravel.LaravelDocGenerator
+      - com.github.kamicloud.stub.laravel.LaravelGenerator
+      - com.github.kamicloud.stub.laravel.LaravelDocGenerator
 #      - com.kamicloud.stub.laravel.LaravelAutoTestGenerator
 
     defaults:

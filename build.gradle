@@ -18,23 +18,18 @@ plugins {
 }
 
 apply plugin: 'java'
-
-sourceCompatibility=1.8
-targetCompatibility=1.8
-
 apply plugin: 'maven'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
 
-group = 'com.kamicloud.stub-api'
+group = 'com.github.kamicloud'
 version = '1.0-SNAPSHOT'
 
 description = ''
 
 springBoot {
-    mainClassName = 'com.kamicloud.stub.core.StubApi'
-    buildInfo()
+    mainClassName = 'com.github.kamicloud.stub.core.StubApi'
 }
 
 configurations {
@@ -84,7 +79,6 @@ wrapper {
 }
 
 jar {
-    version = '0.0.1'
     from {
         //添加依懒到打包文件
         configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }

@@ -10,6 +10,10 @@ import java.util.Date;
  */
 @SuppressWarnings("unused")
 class TemplateV1 {
+    public static class Constants {
+        public int INT_VALUE = 1;
+        public String STRING_VALUE = "test";
+    }
 
 
     public static class Enums {

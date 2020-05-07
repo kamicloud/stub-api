@@ -155,7 +155,7 @@ components:
         name: {type: string}
     User:
       properties:
-        id: {type: integer}
         name: {type: string}
+        id: {type: integer}
         avatar: {type: string}
 
