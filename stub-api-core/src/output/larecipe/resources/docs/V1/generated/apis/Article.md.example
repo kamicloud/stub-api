@@ -1,0 +1,74 @@
+# Article
+
+---
+
+  - [GetArticleComments](#GetArticleComments)
+  - [CreateArticle](#CreateArticle)
+  - [GetArticle](#GetArticle)
+  - [GetArticles](#GetArticles)
+
+<a name="GetArticleComments"></a>
+## GetArticleComments
+
+`POST`
+
+`/api/v1/article/get_article_comments`
+
+### Requests
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|articleId | |`Integer`|true|
+|page | |`Integer`|true|
+
+### Responses
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|comments | |[`Models.ArticleComment[]`](/docs/{{version}}/generated/models#ArticleComment)|true|
+
+<a name="CreateArticle"></a>
+## CreateArticle
+
+`POST`
+
+`/api/v1/article/create_article`
+
+### Requests
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|title | |`String`|true|
+|content | |`String`|true|
+
+### Responses
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|article | |[`Models.Article`](/docs/{{version}}/generated/models#Article)|true|
+
+<a name="GetArticle"></a>
+## GetArticle
+
+`POST`
+
+`/api/v1/article/get_article`
+
+### Requests
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|id | |`Integer`|true|
+
+### Responses
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|article | |[`Models.Article`](/docs/{{version}}/generated/models#Article)|true|
+
+<a name="GetArticles"></a>
+## GetArticles
+
+`POST`
+
+`/api/v1/article/get_articles`
+
+### Responses
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|articles | |[`Models.Article[]`](/docs/{{version}}/generated/models#Article)|true|
+

@@ -1,0 +1,13 @@
+# Pet
+
+---
+
+  - [AddPet](#AddPet)
+
+<a name="AddPet"></a>
+## AddPet
+
+`POST`
+
+`/api/v1_1/pet/add_pet`
+

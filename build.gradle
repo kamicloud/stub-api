@@ -1,123 +1,104 @@
-buildscript {
-    repositories {
-        mavenLocal()
-        mavenCentral()
-        maven { url "http://repo.spring.io/plugins-release" }
-        maven { url "https://plugins.gradle.org/m2/" }
-    }
-    dependencies {
-        classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
-//        classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
-        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
-    }
-}
-
-plugins {
-    id 'java'
-    id "io.spring.dependency-management" version "1.0.5.RELEASE"
-}
-
-apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'idea'
 
 group = 'com.github.kamicloud'
 version = '1.0-SNAPSHOT'
 
 description = ''
 
-springBoot {
-    mainClassName = 'com.github.kamicloud.stub.core.StubApi'
-}
-
 configurations {
     compile.exclude module: 'commons'
     providedRuntime
 }
 
-repositories {
-    mavenLocal()
-    mavenCentral()
-    maven { url "http://repo.spring.io/plugins-release" }
-    maven { url "https://plugins.gradle.org/m2/" }
-}
-
-
-dependencies {
-    // java抽象语法树
-    compile 'com.github.javaparser:javaparser-core:3.14.3'
-    compile 'com.github.javaparser:javaparser-symbol-solver-core:3.14.3'
-    compile 'com.github.javaparser:javaparser-core-serialization:3.14.3'
-    // google gson
-    compile 'com.google.code.gson:gson:2.8.6'
-    // 字符串处理库
-    compile 'com.google.guava:guava:26.0-jre'
-//    compile 'org.dom4j:dom4j:2.1.1'
-    compile 'org.yaml:snakeyaml'
-    compile 'com.squareup.okhttp3:okhttp:3.12.0'
-
-    compile 'org.thymeleaf:thymeleaf:3.0.11.RELEASE'
-//    compile "org.springframework.boot:spring-boot-starter-cache"
-    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-
-    compile "org.springframework.boot:spring-boot-loader-tools"
-//    compile "org.springframework.boot:spring-boot-starter-mail"
-    compile "org.springframework.boot:spring-boot-starter-logging"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-aop"
-
-
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile "org.springframework.boot:spring-boot-configuration-processor"
-    annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-}
-compileJava.dependsOn(processResources)
-wrapper {
-    gradleVersion = '5.6'
-}
-
-jar {
-    from {
-        //添加依懒到打包文件
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        configurations.runtime.collect{zipTree(it)}
-    }
-
-    manifest {
-        attributes "Manifest-Version": 1.0,
-            'Main-Class': 'com.kamicloud.generator.Generator'
+//repositories {
+////    mavenLocal()
+////    mavenCentral()
+//    jcenter()
+////    maven { url "http://jcenter.bintray.com"}
+//    maven { url 'https://jitpack.io' }
+//}
+allprojects {
+    repositories {
+        mavenLocal()
+        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url "https://plugins.gradle.org/m2/" }
+        jcenter()
+        // ADD IT HERE
+        maven { url "https://jitpack.io" }
     }
 }
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
 
-task clearLaravel(type: Delete) {
-    setDelete '../../../storage/generator'
+    sourceCompatibility = 1.8 // java 8
+    targetCompatibility = 1.8
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
 }
+//dependencies {
+//    implementation 'com.github.jitpack:gradle-simple:master-SNAPSHOT'
+//    implementation 'com.github.jitpack.gradle-modular:client:1.1'
+//    implementation 'com.github.kamicloud:test-jar:1.0.4'
+//
+//}
+//compileJava.dependsOn(processResources)
+//wrapper {
+//    gradleVersion = '5.6'
+//}
 
-task copyLaravel(type: Copy) {
-    from configurations.runtime
-    from 'build/classes/java/main'
-    into('../../../storage/generator')
-}
-
-task clearClient(type: Delete) {
-    setDelete '../storage/generator'
-}
-
-task copyClient(type: Copy) {
-    from configurations.runtime
-    from 'build/classes/java/main'
-    into('../storage/generator')
-}
-
-task sourcesJar(type: Jar, dependsOn: classes) {
-    from sourceSets.main.allSource
-}
-
-
-task release(type: Copy, dependsOn: [build, sourcesJar, clearLaravel, copyLaravel])
-
-task releaseClient(type: Copy, dependsOn: [build, sourcesJar, clearClient, copyClient])
-
-compileJava.dependsOn processResources
+//jar {
+//    from {
+//        //添加依懒到打包文件
+//        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+//        configurations.runtime.collect{zipTree(it)}
+//    }
+//
+//    manifest {
+//        attributes "Manifest-Version": 1.0,
+//            'Main-Class': 'com.kamicloud.generator.Generator'
+//    }
+//}
+//
+//task clearLaravel(type: Delete) {
+//    setDelete '../../../storage/generator'
+//}
+//
+//task copyLaravel(type: Copy) {
+//    from configurations.runtime
+//    from 'build/classes/java/main'
+//    into('../../../storage/generator')
+//}
+//
+//task clearClient(type: Delete) {
+//    setDelete '../storage/generator'
+//}
+//
+//task copyClient(type: Copy) {
+//    from configurations.runtime
+//    from 'build/classes/java/main'
+//    into('../storage/generator')
+//}
+//
+//task sourcesJar(type: Jar, dependsOn: classes) {
+//    from sourceSets.main.allSource
+//}
+//
+//
+//task release(type: Copy, dependsOn: [build, sourcesJar, clearLaravel, copyLaravel])
+//
+//task releaseClient(type: Copy, dependsOn: [build, sourcesJar, clearClient, copyClient])
+//
+//compileJava.dependsOn processResources

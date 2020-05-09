@@ -1,6 +1,7 @@
 .gradle
 .idea
 .settings
+.vscode
 classes/
 /out
 /build

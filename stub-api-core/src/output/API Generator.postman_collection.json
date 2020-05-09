@@ -1,0 +1,828 @@
+{
+  "info": {
+    "_postman_id": "xxxxxxxxxxxx",
+    "name": "API Generator",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "V1_1",
+      "item": [
+        {
+          "name": "RESTFul"
+        },
+        {
+          "name": "Pet ",
+          "item": [
+            {
+              "name": "AddPet ",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ],
+                  "urlencoded": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "url": {
+                  "protocol": "http",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1_1",
+                    "pet",
+                    "add_pet"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "V1",
+      "item": [
+        {
+          "name": "RESTFul",
+          "item": [
+            {
+              "name": "User ",
+              "item": [
+                {
+                  "name": "Index",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "name": "Store",
+                  "request": {
+                    "method": "PUT",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "name": "Update",
+                  "request": {
+                    "method": "PATCH",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user",
+                        "1"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "name": "Show",
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user",
+                        "1"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "name": "Destroy",
+                  "request": {
+                    "method": "DELETE",
+                    "header": [],
+                    "body": {
+                      "mode": "formdata",
+                      "formdata": [],
+                      "urlencoded": []
+                    },
+                    "url": {
+                      "protocol": "http",
+                      "host": [
+                        "{{host}}"
+                      ],
+                      "path": [
+                        "api",
+                        "v1",
+                        "restful",
+                        "user",
+                        "1"
+                      ]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "User ",
+          "item": [
+            {
+              "name": "CreateUser ",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "email",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "emails",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "gender",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "genders",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "id",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "ids",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "ym",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "ymarray",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "ymarrayn",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ],
+                  "urlencoded": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "email",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "emails",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "gender",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "genders",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "id",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "ids",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "ym",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "ymarray",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "ymarrayn",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "file",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "url": {
+                  "protocol": "http",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "user",
+                    "create_user"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetUsers ",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "id",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "gender",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "page",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "testUser",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "testUsers",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ],
+                  "urlencoded": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "id",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "gender",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "page",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "testUser",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "testUsers",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "url": {
+                  "protocol": "http",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "user",
+                    "get_users"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        {
+          "name": "Article ",
+          "item": [
+            {
+              "name": "GetArticleComments ",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "articleId",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "page",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ],
+                  "urlencoded": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "articleId",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "page",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "url": {
+                  "protocol": "http",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "article",
+                    "get_article_comments"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "CreateArticle ",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "title",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "content",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ],
+                  "urlencoded": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "title",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "content",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "url": {
+                  "protocol": "http",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "article",
+                    "create_article"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetArticle ",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "id",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ],
+                  "urlencoded": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "id",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "url": {
+                  "protocol": "http",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "article",
+                    "get_article"
+                  ]
+                }
+              }
+            },
+            {
+              "name": "GetArticles ",
+              "request": {
+                "method": "POST",
+                "header": [],
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ],
+                  "urlencoded": [
+                    {
+                      "key": "__test_mode",
+                      "value": "1",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    },
+                    {
+                      "key": "__user",
+                      "value": "",
+                      "type": "text",
+                      "description": "",
+                      "disabled": false
+                    }
+                  ]
+                },
+                "url": {
+                  "protocol": "http",
+                  "host": [
+                    "{{host}}"
+                  ],
+                  "path": [
+                    "api",
+                    "v1",
+                    "article",
+                    "get_articles"
+                  ]
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,4 @@
+<?php
+
+[# th:each="template : ${params.templates}"][# th:each="model : ${template.value.models}"][# th:if="${model.isResource()}"]
+Route::apiResource('/[(${#strings.toLowerCase(model.template.name)})]/restful/[(${model.name.LOWER_UNDERSCORE})]', '[(${model.template.name})]\RESTFul\[(${model.name})]Controller');[/][/][/]

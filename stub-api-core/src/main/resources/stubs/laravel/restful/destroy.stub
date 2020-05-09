@@ -1,0 +1,32 @@
+<?php
+
+namespace App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})];
+
+use Kamicloud\StubApi\Concerns\ValueHelper;
+use Kamicloud\StubApi\Http\Messages\Message;
+use Kamicloud\StubApi\Utils\Constants;
+use App\Generated\[(${params.template.name})]\DTOs\[(${params.name})][(${config.generators.laravel.dtoSuffix})];
+
+class DestroyMessage extends Message
+{
+    use ValueHelper;
+
+    protected $dtoClass = [(${params.name})][(${config.generators.laravel.dtoSuffix})]::class;
+
+    public function requestRules()
+    {
+        return [
+        ];
+    }
+
+    public function responseRules()
+    {
+        return [
+        ];
+    }
+
+    public function setResponse()
+    {
+    }
+
+}

@@ -1,0 +1,60 @@
+  - [Pet](#Pet)
+  - [Tag](#Tag)
+  - [User](#User)
+  - [Category](#Category)
+  - [Order](#Order)
+
+<a name="Pet"></a>
+## Pet
+### Attributes
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|id | |`int`|true|
+|category | |[`Models.Category`](/docs/{{version}}/generated/models#Category)|true|
+|name | |`String`|true|
+|photoUrls | |`String[]`|true|
+|tags | |[`Models.Tag[]`](/docs/{{version}}/generated/models#Tag)|true|
+|status | |[`Enums.PetStatus`](/docs/{{version}}/generated/enums#PetStatus)|true|
+
+<a name="Tag"></a>
+## Tag
+### Attributes
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|id | |`int`|true|
+|name | |`String`|true|
+
+<a name="User"></a>
+## User
+### Attributes
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|id | |`int`|true|
+|username | |`String`|true|
+|firstName | |`String`|true|
+|lastName | |`String`|true|
+|email | |`String`|true|
+|password | |`String`|true|
+|phone | |`String`|true|
+|userStatus | |`int`|true|
+
+<a name="Category"></a>
+## Category
+### Attributes
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|id | |`int`|true|
+|name | |`String`|true|
+
+<a name="Order"></a>
+## Order
+### Attributes
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+|id | |`int`|true|
+|petId | |`int`|true|
+|quantity | |`int`|true|
+|shipDate | |`Date`|true|
+|status | |[`Enums.OrderStatus`](/docs/{{version}}/generated/enums#OrderStatus)|true|
+|complete | |`boolean`|true|
+

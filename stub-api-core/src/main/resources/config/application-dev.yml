@@ -1,0 +1,80 @@
+# ===================================================================
+# 开发工具时时默认的配置
+#
+# 所有相对路径以本项目根目录为准
+# ===================================================================
+
+stub-api:
+  process:
+    generators:
+      - com.github.kamicloud.stub.core.generators.OpenAPIGenerator
+      - com.github.kamicloud.stub.core.generators.PostmanGenerator
+      - com.github.kamicloud.stub.core.generators.TestCaseGenerator
+
+      - com.github.kamicloud.stub.laravel.LaravelGenerator
+      - com.github.kamicloud.stub.laravel.LaravelDocGenerator
+#      - com.kamicloud.stub.laravel.LaravelAutoTestGenerator
+
+    defaults:
+      - laravel
+      - laravel-doc
+      - postman
+      - testcases
+      - openapi
+    laravel-auto-test:
+      - laravel-auto-test
+    client:
+      - nodejs-client
+  env: dev
+  api-prefix: api
+  template-path: ./src/main/java
+
+  test-host: http://localhost
+
+  generators:
+    force-suffix: .example
+
+    openapi:
+      path: ./src/output
+    postman:
+      path: ./src/output
+    testcases:
+      path: ./src/output/testcases
+
+    laravel:
+      path: ./src/output/laravel
+
+      bo-suffix: BO
+      bo-folder: BOs
+      dto-suffix: DTO
+      dto-folder: DTOs
+      service-suffix: Service
+      service-folder: Services
+      value-helper-namespace: 'Kamicloud\StubApi\Concerns\ValueHelper'
+      base-dto-namespace: 'Kamicloud\StubApi\DTOs\DTO'
+      base-message-namespace: 'Kamicloud\StubApi\Http\Messages\Message'
+      base-enum-namespace: 'Kamicloud\StubApi\BOs\Enum'
+      base-exception-namespace: 'Kamicloud\StubApi\Exceptions\BaseException'
+    laravel-doc:
+      path: ./src/output/larecipe
+      http-prefix: docs
+    laravel-auto-test:
+      path: ./src/output/tests
+      force-replace: false
+      testcases-path: ./src/output/testcases
+
+
+    nodejs-client:
+      output: ./src/output/nodejs-client
+    java-client:
+      path: ./src/output/java-client
+      classpath:
+
+spring:
+  profiles:
+    active: dev
+  thymeleaf:
+    mode: TEXT
+    suffix: .stub
+    encoding: UTF-8
+    prefix: classpath:/stubs/
