@@ -9,6 +9,9 @@ configurations {
     providedRuntime
 }
 
+wrapper {
+    gradleVersion = '6.1'
+}
 //repositories {
 ////    mavenLocal()
 ////    mavenCentral()
@@ -55,9 +58,6 @@ subprojects {
 //
 //}
 //compileJava.dependsOn(processResources)
-//wrapper {
-//    gradleVersion = '5.6'
-//}
 
 //jar {
 //    from {
