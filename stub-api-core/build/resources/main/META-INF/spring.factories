@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.github.kamicloud.stub.core.config.ApplicationProperties,\
-  com.github.kamicloud.stub.core.config.StubApiCoreProperties

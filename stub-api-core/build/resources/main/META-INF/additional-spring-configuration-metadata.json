@@ -1,9 +1,0 @@
-{
-    "properties": [
-        {
-            "name": "generator.process.services",
-            "type": "java.lang.String",
-            "description": "Description for generator.process.services."
-        }
-    ]
-}

@@ -37,7 +37,8 @@ subprojects {
     targetCompatibility = 1.8
 
     task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
+//        classifier = 'sourcesxxxxxx'
+//        archiveName = 'test.jar'
         from sourceSets.main.allSource
     }
 
