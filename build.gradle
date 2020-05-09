@@ -1,8 +1,8 @@
 
-group = 'com.github.kamicloud'
-version = '1.0-SNAPSHOT'
+//group = 'com.github.kamicloud'
+//version = '1.0-SNAPSHOT'
 
-description = ''
+//description = ''
 
 configurations {
     compile.exclude module: 'commons'
