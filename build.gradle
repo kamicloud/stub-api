@@ -1,10 +1,18 @@
+wrapper {
+    gradleVersion = '6.3'
+}
 allprojects {
 	// version = "1.0"
+    repositories {
+        mavenLocal()
+        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url "https://plugins.gradle.org/m2/" }
+        jcenter()
+        // ADD IT HERE
+        maven { url "https://jitpack.io" }
+    }
 }
 
-wrapper {
-    gradleVersion = '6.1'
-}
 
 subprojects {
 	apply plugin: 'java'
@@ -14,12 +22,12 @@ subprojects {
 	targetCompatibility = 1.8
 
 	task sourcesJar(type: Jar, dependsOn: classes) {
-	    classifier = 'sources'
+        archiveClassifier.set('sources')
 	    from sourceSets.main.allSource
 	}
 
 	task javadocJar(type: Jar, dependsOn: javadoc) {
-	    classifier = 'javadoc'
+        archiveClassifier.set('javadoc')
 	    from javadoc.destinationDir
 	}
 
