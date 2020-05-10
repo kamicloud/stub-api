@@ -1,1 +1,2 @@
 include 'stub-api-core'
+include 'stub-api-test'
