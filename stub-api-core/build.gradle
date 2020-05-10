@@ -1,16 +1,16 @@
-// buildscript {
-//     repositories {
-//         mavenLocal()
-//         mavenCentral()
-//         maven { url "http://repo.spring.io/plugins-release" }
-//         maven { url "https://plugins.gradle.org/m2/" }
-//     }
-//     dependencies {
-//         classpath "org.springframework.boot:spring-boot-gradle-plugin:2.2.3.RELEASE"
-// //        classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
-//         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
-//     }
-// }
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.2.3.RELEASE"
+//        classpath "io.spring.gradle:propdeps-plugin:0.0.10.RELEASE"
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.5.2"
+    }
+}
 
 // // configurations.all {
 // //     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
