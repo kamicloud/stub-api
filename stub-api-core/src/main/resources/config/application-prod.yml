@@ -1,0 +1,56 @@
+# ===================================================================
+# 开发工具时时默认的配置
+#
+# 所有相对路径以本项目根目录为准
+# ===================================================================
+
+generator:
+  process:
+    defaults:
+      - laravel
+      - laravel-doc
+      - postman
+    laravel-auto-test:
+      - laravel-auto-test
+    client:
+      - nodejs-client
+  env: dev
+  api-prefix: api
+  template-path: ./resources/generator
+
+  test-host: http://localhost
+
+  writers:
+    postman:
+      path: .
+    testcases:
+      path: ./resources/generator/testcases
+
+    laravel:
+      path: .
+
+      bo-suffix: BO
+      bo-folder: BOs
+      dto-suffix: DTO
+      dto-folder: DTOs
+      service-suffix: Service
+      service-folder: Services
+    laravel-doc:
+      path: .
+      http-prefix: docs
+    laravel-auto-test:
+      path: .
+      force-replace: false
+      testcases-path: ./resources/generator/testcases
+
+    nodejs-client:
+      output: ./resources/js/apis
+
+spring:
+  profiles:
+    active: prod
+  thymeleaf:
+    mode: TEXT
+    suffix: .stub
+    encoding: UTF-8
+    prefix: classpath:/stubs/

@@ -1,0 +1,12 @@
+[# th:each="model : ${params.models}"]
+  - [# th:inline="none"][[/][(${model.name})][(${model.commentTitle})][# th:inline="none"]][/][# th:if="${model.isResource()}"]`REST`[/](#[(${model.name})])[/]
+
+[# th:each="model : ${params.models}"]<a name="[(${model.name})]"></a>
+## [(${model.name})][(${model.commentTitle})]
+### Attributes
+|Key|Description|Type|Required|
+|:-|:-|:-|:-|
+[# th:each="parameter : ${model.parameters}"]
+|[(${parameter.name})] |[(${parameter.brCommentBody})] |[`Enums.NotificationSilentDelay`](/docs/{{version}}/generated/enums#NotificationSilentDelay)|true|
+[/]
+[/]

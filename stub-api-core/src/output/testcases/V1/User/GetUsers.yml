@@ -1,0 +1,13 @@
+# __api: /api/v1/user/get_users
+__enabled: false
+__role:
+__user:
+__anchor:
+__params:
+  id:
+  gender:
+  page:
+  testUser:
+  testUsers:
+# __testcases:
+

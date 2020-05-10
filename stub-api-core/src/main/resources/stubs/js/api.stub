@@ -1,0 +1,18 @@
+import axios from 'axios';
+
+export default {
+[# th:each="controller : ${template.controllers}"]  [(${controller.lowerCamelName})]: {
+[# th:each="action : ${controller.actions}"]    [(${action.lowerCamelName})]: async (data) => {
+      return await axios.post('[(${action.fullUri})]', data);
+
+        [# th:if="${not #strings.isEmpty(action.comment)}"]
+           Congratulations![(${action.commentTitle})]
+        [/]
+    },
+[/]
+  },
+[/]
+}
+
+
+

@@ -1,0 +1,10 @@
+# __api: /api/v1/article/create_article
+__enabled: false
+__role:
+__user:
+__anchor:
+__params:
+  title:
+  content:
+# __testcases:
+

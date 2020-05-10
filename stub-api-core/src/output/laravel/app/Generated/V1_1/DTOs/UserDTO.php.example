@@ -1,0 +1,140 @@
+<?php
+
+namespace App\Generated\V1_1\DTOs;
+
+use Kamicloud\StubApi\Concerns\ValueHelper;
+use Kamicloud\StubApi\DTOs\DTO;
+use Kamicloud\StubApi\Utils\Constants;
+
+class UserDTO extends DTO
+{
+    use ValueHelper;
+
+    protected $id;
+    protected $username;
+    protected $firstName;
+    protected $lastName;
+    protected $email;
+    protected $password;
+    protected $phone;
+    protected $userStatus;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername()
+    {
+        return $this->username;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPassword()
+    {
+        return $this->password;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhone()
+    {
+        return $this->phone;
+    }
+
+    /**
+     * @return int
+     */
+    public function getUserStatus()
+    {
+        return $this->userStatus;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function setUsername($username)
+    {
+        $this->username = $username;
+    }
+
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    public function setPassword($password)
+    {
+        $this->password = $password;
+    }
+
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+    }
+
+    public function setUserStatus($userStatus)
+    {
+        $this->userStatus = $userStatus;
+    }
+
+    public function getAttributeMap()
+    {
+        return [
+            ['id', 'id', 'bail|integer', Constants::INTEGER],
+            ['username', 'username', 'bail|string', Constants::STRING],
+            ['firstName', 'first_name', 'bail|string', Constants::STRING],
+            ['lastName', 'last_name', 'bail|string', Constants::STRING],
+            ['email', 'email', 'bail|string', Constants::STRING],
+            ['password', 'password', 'bail|string', Constants::STRING],
+            ['phone', 'phone', 'bail|string', Constants::STRING],
+            ['userStatus', 'user_status', 'bail|integer', Constants::INTEGER],
+        ];
+    }
+
+}

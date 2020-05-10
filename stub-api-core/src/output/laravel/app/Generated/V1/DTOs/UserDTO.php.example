@@ -1,0 +1,79 @@
+<?php
+
+namespace App\Generated\V1\DTOs;
+
+use Kamicloud\StubApi\Concerns\ValueHelper;
+use Kamicloud\StubApi\DTOs\DTO;
+use Kamicloud\StubApi\Utils\Constants;
+
+class UserDTO extends DTO
+{
+    use ValueHelper;
+
+    protected $name;
+    protected $id;
+    protected $avatar;
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+    }
+
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    public function getAttributeMap()
+    {
+        return [
+            ['name', 'name', 'bail|string', Constants::STRING],
+            ['id', 'id', 'bail|integer', Constants::INTEGER | Constants::MUTABLE],
+            ['name', 'name', 'bail|string', Constants::STRING],
+            ['avatar', 'avatar', 'bail|string', Constants::STRING],
+        ];
+    }
+
+}

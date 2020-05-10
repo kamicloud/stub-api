@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info: {title: API, version: V1_1}
+paths:
+  /api/v1_1/pet/add_pet:
+    post:
+      tags: [Pet]
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                properties: {}
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              properties: {}
+components:
+  schemas:
+    Pet:
+      properties:
+        id: {type: integer}
+        category: {type: object, $ref: '#/components/schemas/Category'}
+        name: {type: string}
+        photoUrls: {type: string}
+        tags: {type: object, $ref: '#/components/schemas/Tags'}
+        status: {type: string}
+    Tag:
+      properties:
+        id: {type: integer}
+        name: {type: string}
+    User:
+      properties:
+        id: {type: integer}
+        username: {type: string}
+        firstName: {type: string}
+        lastName: {type: string}
+        email: {type: string}
+        password: {type: string}
+        phone: {type: string}
+        userStatus: {type: integer}
+    Category:
+      properties:
+        id: {type: integer}
+        name: {type: string}
+    Order:
+      properties:
+        id: {type: integer}
+        petId: {type: integer}
+        quantity: {type: integer}
+        shipDate: {type: string}
+        status: {type: string}
+        complete: {type: boolean}
+

@@ -1,0 +1,10 @@
+# __api: /api/v1/article/get_article_comments
+__enabled: false
+__role:
+__user:
+__anchor:
+__params:
+  articleId:
+  page:
+# __testcases:
+
