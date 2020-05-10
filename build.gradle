@@ -17,17 +17,20 @@ allprojects {
 subprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
 	sourceCompatibility = 1.8 // java 8
 	targetCompatibility = 1.8
 
+
 	task sourcesJar(type: Jar, dependsOn: classes) {
-        archiveClassifier.set('sources')
+//        archiveClassifier.set('sources')
 	    from sourceSets.main.allSource
 	}
 
 	task javadocJar(type: Jar, dependsOn: javadoc) {
-        archiveClassifier.set('javadoc')
+//        archiveClassifier.set('javadoc')
 	    from javadoc.destinationDir
 	}
 
