@@ -35,14 +35,14 @@ stub-api:
     force-suffix: .example
 
     openapi:
-      path: ./src/output
+      path: ./output
     postman:
-      path: ./src/output
+      path: ./output
     testcases:
-      path: ./src/output/testcases
+      path: ./output/testcases
 
     laravel:
-      path: ./src/output/laravel
+      path: ./output/laravel
 
       bo-suffix: BO
       bo-folder: BOs
@@ -56,18 +56,18 @@ stub-api:
       base-enum-namespace: 'Kamicloud\StubApi\BOs\Enum'
       base-exception-namespace: 'Kamicloud\StubApi\Exceptions\BaseException'
     laravel-doc:
-      path: ./src/output/larecipe
+      path: ./output/larecipe
       http-prefix: docs
     laravel-auto-test:
-      path: ./src/output/tests
+      path: ./output/tests
       force-replace: false
-      testcases-path: ./src/output/testcases
+      testcases-path: ./output/testcases
 
 
     nodejs-client:
-      output: ./src/output/nodejs-client
+      output: ./output/nodejs-client
     java-client:
-      path: ./src/output/java-client
+      path: ./output/java-client
       classpath:
 
 spring:
