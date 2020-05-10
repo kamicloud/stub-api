@@ -1,7 +1,0 @@
--classpath '/Users/Kamicloud/IdeaProjects/gradle-modular/server/build/classes/java/main:/Users/Kamicloud/IdeaProjects/gradle-modular/server/build/resources/main:/Users/Kamicloud/IdeaProjects/gradle-modular/client/build/libs/client-master-6bccaef1c4-1.jar'
--d '/Users/Kamicloud/IdeaProjects/gradle-modular/server/build/docs/javadoc'
--doctitle 'server master-6bccaef1c4-1 API'
--notimestamp 
--quiet 
--windowtitle 'server master-6bccaef1c4-1 API'
-'/Users/Kamicloud/IdeaProjects/gradle-modular/server/src/main/java/Server.java'
