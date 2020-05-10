@@ -1,0 +1,7 @@
+-classpath '/Users/Kamicloud/IdeaProjects/gradle-modular/client/build/classes/java/main:/Users/Kamicloud/IdeaProjects/gradle-modular/client/build/resources/main'
+-d '/Users/Kamicloud/IdeaProjects/gradle-modular/client/build/docs/javadoc'
+-doctitle 'client master-6bccaef1c4-1 API'
+-notimestamp 
+-quiet 
+-windowtitle 'client master-6bccaef1c4-1 API'
+'/Users/Kamicloud/IdeaProjects/gradle-modular/client/src/main/java/Client.java'

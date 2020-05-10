@@ -1,105 +1,30 @@
-
-//group = 'com.github.kamicloud'
-//version = '1.0-SNAPSHOT'
-
-//description = ''
-
-//configurations {
-//    compile.exclude module: 'commons'
-//    providedRuntime
-//}
+allprojects {
+	// version = "1.0"
+}
 
 wrapper {
     gradleVersion = '6.1'
 }
-//repositories {
-////    mavenLocal()
-////    mavenCentral()
-//    jcenter()
-////    maven { url "http://jcenter.bintray.com"}
-//    maven { url 'https://jitpack.io' }
-//}
-allprojects {
-    repositories {
-        mavenLocal()
-        maven { url "http://repo.spring.io/plugins-release" }
-        maven { url "https://plugins.gradle.org/m2/" }
-        jcenter()
-        // ADD IT HERE
-        maven { url "https://jitpack.io" }
-    }
-}
+
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'maven'
+	apply plugin: 'java'
+	apply plugin: 'maven'
 
-    sourceCompatibility = 1.8 // java 8
-    targetCompatibility = 1.8
+	sourceCompatibility = 1.8 // java 8
+	targetCompatibility = 1.8
 
-    task sourcesJar(type: Jar, dependsOn: classes) {
-        classifier = 'sources'
-//        archiveName = 'test.jar'
-        from sourceSets.main.allSource
-    }
+	task sourcesJar(type: Jar, dependsOn: classes) {
+	    classifier = 'sources'
+	    from sourceSets.main.allSource
+	}
 
-    task javadocJar(type: Jar, dependsOn: javadoc) {
-        classifier = 'javadoc'
-        from javadoc.destinationDir
-    }
+	task javadocJar(type: Jar, dependsOn: javadoc) {
+	    classifier = 'javadoc'
+	    from javadoc.destinationDir
+	}
 
-    artifacts {
-        archives sourcesJar
-        archives javadocJar
-    }
+	artifacts {
+	    archives sourcesJar
+	    archives javadocJar
+	}
 }
-//dependencies {
-//    implementation 'com.github.jitpack:gradle-simple:master-SNAPSHOT'
-//    implementation 'com.github.jitpack.gradle-modular:client:1.1'
-//    implementation 'com.github.kamicloud:test-jar:1.0.4'
-//
-//}
-//compileJava.dependsOn(processResources)
-
-//jar {
-//    from {
-//        //添加依懒到打包文件
-//        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-//        configurations.runtime.collect{zipTree(it)}
-//    }
-//
-//    manifest {
-//        attributes "Manifest-Version": 1.0,
-//            'Main-Class': 'com.kamicloud.generator.Generator'
-//    }
-//}
-//
-//task clearLaravel(type: Delete) {
-//    setDelete '../../../storage/generator'
-//}
-//
-//task copyLaravel(type: Copy) {
-//    from configurations.runtime
-//    from 'build/classes/java/main'
-//    into('../../../storage/generator')
-//}
-//
-//task clearClient(type: Delete) {
-//    setDelete '../storage/generator'
-//}
-//
-//task copyClient(type: Copy) {
-//    from configurations.runtime
-//    from 'build/classes/java/main'
-//    into('../storage/generator')
-//}
-//
-//task sourcesJar(type: Jar, dependsOn: classes) {
-//    from sourceSets.main.allSource
-//}
-//
-//
-//task release(type: Copy, dependsOn: [build, sourcesJar, clearLaravel, copyLaravel])
-//
-//task releaseClient(type: Copy, dependsOn: [build, sourcesJar, clearClient, copyClient])
-//
-//compileJava.dependsOn processResources

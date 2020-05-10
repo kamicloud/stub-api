@@ -1,2 +1,2 @@
-include 'stub-api-core'
-include 'stub-api-test'
+include 'client'
+include 'server'
