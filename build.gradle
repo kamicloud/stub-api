@@ -18,10 +18,6 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven'
 
-	sourceCompatibility = 1.8 // java 8
-	targetCompatibility = 1.8
-
-
 	task sourcesJar(type: Jar, dependsOn: classes) {
         archiveClassifier.set('sources')
         from sourceSets.main.allSource
