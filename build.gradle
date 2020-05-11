@@ -24,7 +24,7 @@ subprojects {
 
 	task sourcesJar(type: Jar, dependsOn: classes) {
         archiveClassifier.set('sources')
-	    from sourceSets.main.allSource
+        from sourceSets.main.allSource
 	}
 	task sourcesJarx(type: Jar, dependsOn: classes) {
 	    from sourceSets.main.allSource
