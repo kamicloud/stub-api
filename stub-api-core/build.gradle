@@ -29,8 +29,9 @@ jar {
     }
 
     manifest {
-        attributes "Manifest-Version": 1.0,
-            'Main-Class': 'com.kamicloud.generator.Generator'
+        attributes "Manifest-Version": 1.0.1,
+            'Main-Class': 'com.github.kamicloud.stub.core.StubApi',
+            'Export-Package': 'com.github.kamicloud.stub'
     }
 }
 
