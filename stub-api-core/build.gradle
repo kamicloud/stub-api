@@ -29,7 +29,8 @@ jar {
     }
 
     manifest {
-        attributes "Manifest-Version": 1.0
+        attributes "Manifest-Version": 1.0,
+            'Main-Class': 'com.github.kamicloud.stub.core.StubApi'
     }
 }
 
