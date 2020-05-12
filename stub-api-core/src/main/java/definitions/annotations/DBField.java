@@ -7,6 +7,7 @@ import java.lang.annotation.*;
 public @interface DBField {
     /**
      * 变量原名，使用驼峰命名，网络传输转换成下划线
+     * @return String
      */
     String value() default "";
 }

@@ -14,6 +14,7 @@ import templates.TemplateList;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class Parser {
     /**
      * 标量数据对应的类型
      */
-    private final HashMap<String, Type> typeMap = new HashMap<String, Type>() {{
+    private final HashMap<String, Type> typeMap = new HashMap<>() {{
         put("int", new ScalarInteger());
         put("Integer", new ScalarInteger());
         put("long", new ScalarInteger());
@@ -59,12 +60,16 @@ public class Parser {
         );
 
         Arrays.asList(template.getDeclaredClasses()).forEach(part -> {
-            if (part.getSimpleName().equals("Enums")) {
-                parseEnums(part.getDeclaredClasses(), templateStub);
-            } else if (part.getSimpleName().equals("Controllers")) {
-                parseControllers(part.getDeclaredClasses(), templateStub);
-            } else if (part.getSimpleName().equals("Models")) {
-                parseModels(part.getDeclaredClasses(), templateStub);
+            switch (part.getSimpleName()) {
+                case "Enums":
+                    parseEnums(part.getDeclaredClasses(), templateStub);
+                    break;
+                case "Controllers":
+                    parseControllers(part.getDeclaredClasses(), templateStub);
+                    break;
+                case "Models":
+                    parseModels(part.getDeclaredClasses(), templateStub);
+                    break;
             }
         });
 
@@ -157,9 +162,9 @@ public class Parser {
                     try {
                         String key = entryTemplate.getName();
                         Enum<?> value = Enum.valueOf(clazz, entryTemplate.getName());
-                        Integer ordinal = value.ordinal();
+                        int ordinal = value.ordinal();
                         EnumStub.EnumStubItemType type = EnumStub.EnumStubItemType.INTEGER;
-                        String fillValue = ordinal.toString();
+                        String fillValue = Integer.toString(ordinal);
                         if (FixedEnumValueInterface.class.isAssignableFrom(enumTemplate)) {
                             Method getValue = enumTemplate.getMethod("getValue");
                             getValue.setAccessible(true);
@@ -274,11 +279,11 @@ public class Parser {
             } else if (typeName.contains("$Enums$")) {
                 type = new EnumType();
             } else if (parameterType.isAssignableFrom(Type.class)) {
-                type = (Type) parameterType.newInstance();
+                type = (Type) parameterType.getDeclaredConstructor().newInstance();
             } else {
                 type = typeMap.get(typeSimpleName);
                 if (type == null) {
-                    type = (Type) parameterType.newInstance();
+                    type = (Type) parameterType.getDeclaredConstructor().newInstance();
                 }
             }
 
@@ -289,7 +294,10 @@ public class Parser {
             parseComment(fieldBuilder(parameter), parameterStub);
 
             return parameterStub;
-        } catch (IllegalAccessException | InstantiationException e) {
+        } catch (IllegalAccessException |
+            InstantiationException |
+            NoSuchMethodException |
+            InvocationTargetException e) {
             e.printStackTrace();
             return null;
         }
