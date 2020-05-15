@@ -21,19 +21,26 @@ springBoot {
     mainClassName = 'com.github.kamicloud.stub.core.StubApi'
 }
 
-jar {
-    from {
-        //添加依懒到打包文件
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        configurations.runtime.collect{zipTree(it)}
-    }
-
-    manifest.attributes.put('Main-Class', 'com.github.kamicloud.stub.core.StubApi')
-//
-//    manifest {
-//        attributes "Manifest-Version": 1.0
-//        attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi'
+//jar {
+//    from {
+//        //添加依懒到打包文件
+//        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+//        configurations.runtime.collect{zipTree(it)}
 //    }
+//
+//    manifest.attributes.put('Main-Class', 'com.github.kamicloud.stub.core.StubApi')
+////
+////    manifest {
+////        attributes "Manifest-Version": 1.0
+////        attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi'
+////    }
+//}
+
+install {
+    manifest {
+        attributes "Manifest-Version": 1.0
+        attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi'
+    }
 }
 
 dependencies {
