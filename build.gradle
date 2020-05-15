@@ -20,6 +20,11 @@ subprojects {
 
 	task sourcesJar(type: Jar, dependsOn: classes) {
         archiveClassifier.set('sources')
+        manifest.attributes.put('Main-Class', 'xxx')
+//        manifest {
+//            setProperty('Main-Class', 'xxxx')
+//        }
+//        archiveClassifier.set('', 'xxx')
         from sourceSets.main.java.outputDir
 	}
 	task sourcesJarx(type: Jar, dependsOn: classes) {
