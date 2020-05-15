@@ -31,13 +31,20 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven'
 
-	task sourcesJar(type: Jar, dependsOn: classes) {
-        archiveClassifier.set('sources')
+	task binaryJar(type: Jar, dependsOn: classes) {
+        manifest {
+            attributes 'Main-Class': 'com.github.kamicloud.stub.core.StubApi'
+        }
         from sourceSets.main.java.outputDir
         from sourceSets.main.resources
 	}
-	task sourcesJarx(type: Jar, dependsOn: classes) {
-	    from sourceSets.main.java.outputDir
+	task sourcesJar(type: Jar, dependsOn: classes) {
+        manifest {
+            attributes 'Main-Class': 'com.github.kamicloud.stub.core.StubApi'
+        }
+        archiveClassifier.set('sources')
+        from sourceSets.main.java.outputDir
+        from sourceSets.main.resources
 	}
 
 	task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -46,7 +53,7 @@ subprojects {
 	}
 
 	artifacts {
-        archives sourcesJarx
+        archives binaryJar
 	    archives sourcesJar
 	    archives javadocJar
 	}

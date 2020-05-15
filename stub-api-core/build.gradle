@@ -8,33 +8,6 @@ springBoot {
     mainClassName = 'com.github.kamicloud.stub.core.StubApi1'
 }
 
-jar {
-    from {
-        //添加依懒到打包文件
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
-        configurations.runtime.collect{zipTree(it)}
-    }
-
-    manifest.attributes.put('Main-Class', 'com.github.kamicloud.stub.core.StubApi2')
-//
-//    manifest {
-//        attributes "Manifest-Version": 1.0
-//        attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi'
-//    }
-}
-
-install {
-    bootJar {
-        enabled = true
-    }
-    jar {
-        manifest {
-            attributes "Manifest-Version": 1.0
-            attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi3'
-        }
-    }
-}
-
 dependencies {
 
     // java抽象语法树
