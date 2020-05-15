@@ -31,23 +31,10 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven'
 
-
-    jar {
-        manifest {
-            attributes 'Implementation-Title': 'Gradle Quickstart',
-//                'Implementation-Version': version,
-                'Main-Class': 'hello.helloWorld'
-        }
-    }
-
 	task sourcesJar(type: Jar, dependsOn: classes) {
         archiveClassifier.set('sources')
-        manifest.attributes.put('Main-Class', 'xxx')
-//        manifest {
-//            setProperty('Main-Class', 'xxxx')
-//        }
-//        archiveClassifier.set('', 'xxx')
         from sourceSets.main.java.outputDir
+        from sourceSets.main.resources
 	}
 	task sourcesJarx(type: Jar, dependsOn: classes) {
 	    from sourceSets.main.java.outputDir

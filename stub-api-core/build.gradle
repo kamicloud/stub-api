@@ -5,7 +5,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
 
 springBoot {
-    mainClassName = 'com.github.kamicloud.stub.core.StubApi'
+    mainClassName = 'com.github.kamicloud.stub.core.StubApi1'
 }
 
 jar {
@@ -15,7 +15,7 @@ jar {
         configurations.runtime.collect{zipTree(it)}
     }
 
-    manifest.attributes.put('Main-Class', 'com.github.kamicloud.stub.core.StubApi')
+    manifest.attributes.put('Main-Class', 'com.github.kamicloud.stub.core.StubApi2')
 //
 //    manifest {
 //        attributes "Manifest-Version": 1.0
@@ -28,10 +28,9 @@ install {
         enabled = true
     }
     jar {
-        print('install jar')
         manifest {
             attributes "Manifest-Version": 1.0
-            attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi'
+            attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi3'
         }
     }
 }
