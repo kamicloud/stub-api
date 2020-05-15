@@ -28,10 +28,12 @@ jar {
         configurations.runtime.collect{zipTree(it)}
     }
 
-    manifest {
-        attributes "Manifest-Version": 1.0
-        attributes 'Main-Class': 'com.github.kamicloud.stub.core.StubApi'
-    }
+    manifest.attributes.put('Main-Class', 'com.github.kamicloud.stub.core.StubApi')
+//
+//    manifest {
+//        attributes "Manifest-Version": 1.0
+//        attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi'
+//    }
 }
 
 dependencies {

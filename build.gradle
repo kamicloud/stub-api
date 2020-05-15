@@ -18,6 +18,10 @@ subprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven'
 
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+
 	task sourcesJar(type: Jar, dependsOn: classes) {
         archiveClassifier.set('sources')
         manifest.attributes.put('Main-Class', 'xxx')
