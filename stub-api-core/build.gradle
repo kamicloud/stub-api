@@ -37,9 +37,11 @@ springBoot {
 //}
 
 install {
-    manifest {
-        attributes "Manifest-Version": 1.0
-        attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi'
+    jar {
+        manifest {
+            attributes "Manifest-Version": 1.0
+            attributes "Main-Class": 'com.github.kamicloud.stub.core.StubApi'
+        }
     }
 }
 
