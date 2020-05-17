@@ -1,0 +1,29 @@
+<?php
+
+namespace Tests\Generated\V1\[(${params.first.controller})];
+
+use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Tests\TestCase;
+
+class [(${params.first.action})]Test extends TestCase
+{
+    use DatabaseTransactions;
+[# th:each="request, iterStat : ${params}"]
+    public function testCase[(${iterStat.index})]()
+    {
+        $response = $this->post('[(${request.api})]', [
+            '__role' => '',
+            '__user' => '[(${request.user})]',[# th:each="parameter : ${request.parameters}"]
+            '[(${parameter.key})]' => '[(${parameter.value})]',
+[/]
+        ]);
+        $actual = $response->getContent();
+        $expect = '
+[(${request.responseContent})]
+';
+        $expect = json_encode(json_decode($expect));
+        $this->assertJsonStringEqualsJsonString($expect, $actual);
+    }
+[/]
+
+}

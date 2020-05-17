@@ -46,12 +46,12 @@ task binaryJar(type: Jar, dependsOn: classes) {
         attributes 'Class-Path': configurations.implementation.collect { it.getName() }.join(' ')
     }
     from sourceSets.main.java.outputDir
-//    from sourceSets.main.resources
+    from sourceSets.main.resources
 }
 task sourcesJar(type: Jar, dependsOn: classes) {
     archiveClassifier.set('sources')
     from sourceSets.main.java.outputDir
-//    from sourceSets.main.resources
+    from sourceSets.main.resources
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {

@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Http\Services\V1\RESTFul;
+
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\IndexMessage;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\ShowMessage;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\StoreMessage;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\UpdateMessage;
+use App\Generated\[(${params.template.name})]\Messages\RESTFul\[(${params.name})]\DestroyMessage;
+
+class [(${params.name})]Service
+{
+    public function index(IndexMessage $message)
+    {
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
+    }
+
+    public function show(ShowMessage $message, int $id)
+    {
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
+    }
+
+    public function store(StoreMessage $message)
+    {
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
+    }
+
+    public function update(UpdateMessage $message, int $id)
+    {
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
+    }
+
+    public function destroy(DestroyMessage $message, int $id)
+    {
+        throw new \Kamicloud\StubApi\Exceptions\ApiNotFoundException('Api not found!');
+    }
+}
