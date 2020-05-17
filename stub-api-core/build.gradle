@@ -7,7 +7,6 @@ apply plugin: 'idea'
 springBoot {
     mainClassName = 'com.github.kamicloud.stub.core.StubApi1'
 }
-
 dependencies {
 
     // java抽象语法树
@@ -37,3 +36,32 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-configuration-processor"
     annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 }
+
+configurations.implementation.setCanBeResolved(true)
+
+
+task binaryJar(type: Jar, dependsOn: classes) {
+    manifest {
+        attributes 'Main-Class': 'com.github.kamicloud.stub.core.StubApi'
+        attributes 'Class-Path': configurations.implementation.collect { it.getName() }.join(' ')
+    }
+    from sourceSets.main.java.outputDir
+    from sourceSets.main.resources
+}
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.java.outputDir
+    from sourceSets.main.resources
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives binaryJar
+    archives sourcesJar
+    archives javadocJar
+}
+

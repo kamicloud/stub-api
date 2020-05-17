@@ -26,35 +26,8 @@ allprojects {
     }
 }
 
-
 subprojects {
 	apply plugin: 'java'
 	apply plugin: 'maven'
 
-	task binaryJar(type: Jar, dependsOn: classes) {
-        manifest {
-            attributes 'Main-Class': 'com.github.kamicloud.stub.core.StubApi'
-        }
-        from sourceSets.main.java.outputDir
-        from sourceSets.main.resources
-	}
-	task sourcesJar(type: Jar, dependsOn: classes) {
-        manifest {
-            attributes 'Main-Class': 'com.github.kamicloud.stub.core.StubApi'
-        }
-        archiveClassifier.set('sources')
-        from sourceSets.main.java.outputDir
-        from sourceSets.main.resources
-	}
-
-	task javadocJar(type: Jar, dependsOn: javadoc) {
-        archiveClassifier.set('javadoc')
-	    from javadoc.destinationDir
-	}
-
-	artifacts {
-        archives binaryJar
-	    archives sourcesJar
-	    archives javadocJar
-	}
 }
