@@ -5,7 +5,7 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'idea'
 
 springBoot {
-    mainClassName = 'com.github.kamicloud.stub.core.StubApi1'
+    mainClassName = 'com.github.kamicloud.stub.core.StubApi'
 }
 dependencies {
 
