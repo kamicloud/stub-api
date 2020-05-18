@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.SpringApplication;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 
 
 @SpringBootApplication
@@ -28,6 +29,8 @@ public class StubApi {
     @SuppressWarnings("unused")
     public void initApplication() {
         log.debug("logger start");
+
+        System.out.println(new File(".").getAbsolutePath());
 
         this.generatorDriver.run();
     }
